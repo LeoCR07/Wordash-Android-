@@ -1,0 +1,60 @@
+ID;Diccionario;Dictionary;Aleman;Holandes;Frances;Italiano;Dicionário
+0;Vegetales;Vegetables;Gemüse;Groenten;Des légumes;Verdure;Legumes
+1;Animales;Animals;Tiere;Dieren;Animaux;Animali;Animais
+2;Frutas;Fruit;Frucht;Fruit;Fruit;Frutta;Fruta
+3;Trabajos;Jobs;Arbeitsplätze;Banen;Travaux;Lavori;Empregos
+4;Ropa;Clothing;Kleidung;Kleding;Vêtements;Capi di abbigliamento;Roupas
+5;Hogar;Home;Zuhause;Thuis;Maison;Casa;Lar
+6;Transportes;transportation;Transport;vervoer;transport;trasporto;transporte
+7;Familia;Family;Familie;Familie;Famille;Famiglia;Família
+8;Días;Days;Tage;dagen;Journées;Giorni;Dias
+9;Meses;Months;Monate;Maanden;Mois;Mesi;Meses
+10;Cuerpo;Body;Körper;Lichaam;Corps;Corpo;Corpo
+11;Países;Countries;Länder;Landen;Des pays;Paesi;Países
+12;Bebidas;Beverage;Getränk;Drank;Boisson;Bevanda;Bebida
+13;Comidas;Foods;Lebensmittel;voedsel;nourriture;Alimenti;Alimentos
+14;Nacionalidades;Nationalities;Nationalitäten;nationaliteiten;Nationalités;Nazionalità;Nacionalidades
+15;Tecnología;Technology;Technologie;Technologie;La technologie;Tecnologia;Tecnologia
+16;Números;Numbers;Zahlen;Cijfers;Nombres;Numeri;Números
+17;Deportes;Sports;Sport;Sport;Des sports;Gli sport;Esportes
+18;Colores;Colors;Farben;kleuren;Couleurs;Colori;Cores
+19;Formas Geométricas;Geometric forms;Geometrische Formen;geometrische vormen;Formes géométriques;Forme geometriche;Formas geométricas
+20;Herramientas;Tools;Werkzeuge;Gereedschap;Outils;Utensili;Ferramentas
+21;Edificios;Buildings;Gebäude;Gebouwen;Bâtiments;Edifici;Edifícios
+22;Clima;Weather;Wetter;Weer;Temps;Tempo metereologico;Clima
+23;Naturaleza;Nature;Natur;Natuur;Nature;Natura;Natureza
+24;Espacio;Space;Raum;Ruimte;Espacer;Spazio;Espaço
+25;Abecedario;Alphabet;Alphabet;Alfabet;Alphabet;Alfabeto;Alfabeto
+26;Eventos;Events;Veranstaltungen;evenementen;événements;eventi;eventos
+27;Marcas;brands;Marken;merken;marques;Marche;marcas
+28;Medidas;Measures;Mittel;Maatregelen;Les mesures;Le misure;Medidas
+29;Religiones;religions;Religionen;religies;religions;religioni;religiões
+30;Elementos químicos;Chemical elements;Chemische Elemente;Chemische elementen;Éléments chimiques;Elementi chimici;Elementos químicos
+31;Descripciones;Descriptions;Beschreibungen;Beschrijvingen;Descriptions;Descrizioni;Descrições
+32;Descripciones de personas;Descriptions of people;Personenbeschreibungen;Beschrijvingen van mensen;Descriptions des personnes;Descrizioni di persone;Descrições de pessoas
+33;Mascotas;Pets;Haustiere;Huisdieren;Animaux domestiques;Animali domestici;Animais de estimação
+34;Enfermedades;Diseases;Krankheiten;Ziekten;Maladies;Malattie;Doenças
+35;Síntomas;Symptoms;Symptome;Symptomen;Les symptômes;Sintomi;Sintomas
+36;Geografía;Geography;Erdkunde;Geografie;Géographie;Geografia;Geografia
+37;Vehículos;Vehicles;Fahrzeuge;Voertuigen;Véhicules;Veicoli;Veículos
+38;Verbos Normal 1;Normal Verbs 1;Normale Verben 1;Normale werkwoorden 1;Verbes normaux 1;Verbi normali 1;Verbos normais 1
+39;Verbos Normal 2;Normal Verbs 2;Normale Verben 2;Normale werkwoorden 2;Verbes normaux 2;Verbi normali 2;Verbos normais 2
+40;Verbos Normal 3;Normal Verbs 3;Normale Verben 3;Normale werkwoorden 3;Verbes normaux 3;Verbi normali 3;Verbos normais 3
+41;Verbos Normal 4;Normal Verbs 4;Normale Verben 4;Normale werkwoorden 4;Verbes normaux 4;Verbi normali 4;Verbos normais 4
+42;Super Verbos 1;Super Verbs 1;Superverben 1;Superwerkwoorden 1;Super verbes 1;Super verbi 1;Superverbos 1
+43;Frases del trabajo;work phrases;Arbeitsphrasen;werkzinnen;phrases de travail;frasi di lavoro;frases de trabalho
+44;Expresiones;Expressions;Expressions;Uitdrukkingen;Expressions;Espressioni;Expressões
+45;Pandemia ;Pandemic;Pandemie;Pandemie;Pandémie;Pandemia;Pandemia
+46;Super Verbos 2;Super Verbs 2;Superverben 2;Superwerkwoorden 2;Super verbes 2;Super verbi 2;Superverbos 2
+47;Viajes;Travels;Voyages;reizen;Voyages;Viaggi;Viagens
+48;Saludos;Greetings;Grüße;Hartelijk groeten;Salutations;Saluti;Saudações
+49;Despedidas;goodbyes;Auf Wiedersehen;vaarwel;au revoir;Arrivederci;despedidas
+50;Preguntas personales;Personal questions;Persönliche Fragen;Persoonlijke vragen;Questions personnelles;Domande personali;Questões pessoais
+51;Frases aeropuerto;airport phrases;Flughafen Phrasen;luchthavenuitdrukkingen;phrases d'aéroport;frasi aeroportuali;frases de aeroporto
+52;Informacion ;Information;Information;Informatie;Informations;Informazione;Em formação
+53;Expresiones restaurante;restaurant expressions;Restaurantausdrücke;restaurantuitdrukkingen;expressions de restaurants;espressioni del ristorante;expressões de restaurante
+54;Aseo personal;personal hygiene;Körperhygiene;persoonlijke hygiëne;hygiène personnelle;igiene personale;higiene pessoal
+55;Expresiones del clima;weather expressions;Wetterausdrücke;weeruitdrukkingen;expressions météorologiques;espressioni meteorologiche;expressões meteorológicas
+56;Expresiones del hogar;expressions of home;Ausdruck von Heimat;uitdrukkingen van thuis;expressions de la maison;espressioni di casa;expressões de casa
+57;Expresiones de amor;love expressions;Liebesausdrücke;liefdesuitdrukkingen;expressions d'amour;espressioni d'amore;expressões de amor
+58;Expresiones de la escuela;school expressions;Schulausdrücke;schooluitdrukkingen;expression scolaire;espressioni scolastiche;expressões escolares
