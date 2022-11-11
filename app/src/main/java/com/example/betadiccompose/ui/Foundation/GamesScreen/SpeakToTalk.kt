@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.betadiccompose.Domain.Provider.SpeechRecognizerContract
 import com.example.betadiccompose.Foundation.ScreenMenu.GetLogo
+import com.example.betadiccompose.R
+import com.example.betadiccompose.ui.Foundation.Shared.Animation
 import com.example.betadiccompose.ui.Foundation.Shared.NameGame
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -39,6 +41,7 @@ fun SpeakToTalk(viewModel: VocabularyViewModel, function: () -> Unit) {
     SideEffect {
         permissionState.launchPermissionRequest()
     }
+
 
     val speechRecognizerLauncher = rememberLauncherForActivityResult(
         contract = SpeechRecognizerContract(),
@@ -64,19 +67,24 @@ fun SpeakToTalk(viewModel: VocabularyViewModel, function: () -> Unit) {
 
         //fondo("")
 
+        Animation(animacion = R.raw.singing,modifier = Modifier.size(250.dp))
         Spacer(modifier = Modifier.height(0.dp))
 
         Text(text = "Palabra", fontSize = 30.sp)
 
         Spacer(modifier = Modifier.height(50.dp))
 
+
         if (viewModel.state.text != null) {
+            /*
             Text(
                 text = viewModel.state.text!!,
                 fontSize = 24.sp
             )
-            Spacer(modifier = Modifier.height(76.dp))
+            Spacer(modifier = Modifier.height(76.dp))*/
+            println("${ viewModel.state.text}")
         }
+
         Button(
             modifier = Modifier
                 .clip(CircleShape)

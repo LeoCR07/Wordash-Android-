@@ -117,6 +117,10 @@ class VocabularyViewModel @Inject constructor (
         return gameProvider.MakeWrongWritten(lst)
     }
 
+    fun GetSoundChoose(lst:List<DataWorld>): List<DataWorld> {
+        return gameProvider.SoundChoose(lst)
+    }
+
 
     fun getCurrentIdGame(): Int {
         currentID.value = gameProvider.currentID

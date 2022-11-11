@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.betadiccompose.Domain.Provider.Prefs
 import com.example.betadiccompose.Domain.Provider.Provider
+import com.example.betadiccompose.ui.Foundation.GamesScreen.SpeakToTalk
 import com.example.betadiccompose.ui.Foundation.ScreenNiveles.Nivel
 import com.example.betadiccompose.ui.Foundation.Shared.Sonido
 import com.example.betadiccompose.ui.Foundation.Shared.currentRoute
@@ -174,9 +175,9 @@ fun Navegation(provider: Provider, prefs: Prefs, VocaVM: VocabularyViewModel) {
         composable("N2"){
           //  Nivel(viewModel = VocaVM, prefs = prefs, context = context)
            //Easy()
-            //SpeakToTalk(viewModel = VocaVM) {}
+            SpeakToTalk(viewModel = VocaVM) {}
             //Hard()
-            com.example.betadiccompose.ui.Foundation.GamesScreen.Sonido(VocaVM,{})
+           // com.example.betadiccompose.ui.Foundation.GamesScreen.Sonido(VocaVM,{})
            // WrongWritten()
 
         }

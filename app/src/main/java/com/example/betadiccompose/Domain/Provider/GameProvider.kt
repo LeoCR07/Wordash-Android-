@@ -10,10 +10,55 @@ class GameProvider @Inject constructor() {
 
     var currentID = 0
     var currentImg = ""
+
     val lst:List<DataWorld> = emptyList() //Lista completa de palabras
 
     val lstEasy:List<DataWorld> = emptyList() //Lista de los botones de easy
 
+
+    fun SoundChoose(lista:List<DataWorld>): ArrayList<DataWorld> {
+
+        var listaWord :ArrayList<DataWorld> = ArrayList<DataWorld>()
+        val end = lista[lista.size-1].id
+        val start = lista[0].id
+
+        var lst:ArrayList<Int> = ArrayList() //Lista de los 6 ids
+        //  var id = 0      //Id respuesta
+
+        //Genera el id principal
+        var id = (lista[0].id until lista.size).random()
+        lst.add(id) //lo guardo
+
+        //Generar 5 id mas diferentes paras las opciones
+        do{
+
+            var contandor = 0
+            var valor = Random.nextInt(start,end)
+
+            for (e in lst){
+                if(e!=valor){
+                    contandor++
+                }
+            }
+
+            if(contandor == lst.size){
+                lst.add(valor)
+            }
+
+        }while (lst.size<6)
+
+        for (i in 0 until lst.size){
+            for (j in 0 until  lista.size){
+
+                if(lst[i] == lista[j].id){
+                    listaWord.add(lista[j])
+                }
+            }
+        }
+
+
+        return listaWord
+    }
 
     public fun MakeEasy(lista:List<DataWorld>) :List<DataWorld>{
 
@@ -28,7 +73,7 @@ class GameProvider @Inject constructor() {
        var id = (lista[0].id until lista.size).random()
         lst.add(id) //lo guardo
 
-        //Generar 3 id mas diferentes paras las opciones
+        //Generar 5 id mas diferentes paras las opciones
         do{
 
             var contandor = 0
@@ -68,7 +113,6 @@ class GameProvider @Inject constructor() {
        // return RandomText(listaWord)
        return listaWord
     }
-
 
     public fun MakeWrongWritten(lista:List<DataWorld>):List<DataWorld>{
 
@@ -131,7 +175,7 @@ class GameProvider @Inject constructor() {
 
         return listaWord
     }
-
+    
     fun GenerarTexto(i:Int,palabra:String): String {
       val valor =  when(i){
             0->EliminarWord(palabra)
@@ -143,8 +187,7 @@ class GameProvider @Inject constructor() {
 
         return valor
     }
-
-
+    
     private fun ReemplazarWord(valor: String):String {
 
         val lstalphabet:List<String> = listOf("q","w","r","t","y","p","s","d","f","g","h","j","k"

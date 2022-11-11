@@ -9,6 +9,7 @@ import com.example.betadiccompose.data.network.model.DataWorld
 
 @Composable
 fun OutlinedButtonSample(onMediaClick: () -> Unit, lsteasy: DataWorld, modifier: Modifier) {
+
     OutlinedButton(
         modifier = modifier,
         onClick = { onMediaClick() })

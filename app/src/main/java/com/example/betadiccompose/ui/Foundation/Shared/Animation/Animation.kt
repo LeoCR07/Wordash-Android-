@@ -16,12 +16,14 @@ import com.example.betadiccompose.R
 
 
 @Composable
-fun Animation(animacion:Int,modifier: Modifier) {
+fun Animation(animacion:Int,modifier: Modifier = Modifier,speed :Float = 1f) {
 
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(animacion))
+
     LottieAnimation(
         modifier = modifier,
         composition = composition,
+        speed = speed,
         iterations = LottieConstants.IterateForever)
 
 }

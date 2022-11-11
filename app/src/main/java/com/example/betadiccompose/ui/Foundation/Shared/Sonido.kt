@@ -16,17 +16,13 @@ fun Sonido(id: Int, category:String) {
 
     CoroutineScope(Dispatchers.IO).launch {
         try {
-
            Media(category, id)
-
            // Exo(category, id, context)
-
         }catch (e:Exception){
             println("El error es: ${e.message}")
         }
     }
 
-   // exoPlayer.seekToDefaultPosition()
 }
 
 private fun Media(category: String, id: Int) {

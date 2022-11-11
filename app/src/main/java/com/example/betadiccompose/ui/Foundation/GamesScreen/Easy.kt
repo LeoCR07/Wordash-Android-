@@ -93,7 +93,6 @@ fun Easy (
                     )
                 })
 
-
         LazyColumn() {
             items(lstrandon) { item ->
                 OutlinedButtonSample(

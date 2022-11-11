@@ -12,15 +12,19 @@ import kotlin.collections.ArrayList
 class SpeechRecognizerContract: ActivityResultContract<Unit, ArrayList<String>?>() {
     override fun createIntent(context: Context, input: Unit): Intent {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-            RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH)
+          RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH
+
+
+        )
         intent.putExtra(
             RecognizerIntent.EXTRA_LANGUAGE,
-            Locale.getDefault()
+            "en-US"
         )
         intent.putExtra(
             RecognizerIntent.EXTRA_PROMPT,
-            "Speak Something"
+            "Come on, just say it"
         )
 
         return intent

@@ -50,8 +50,22 @@ fun Nivel(viewModel: VocabularyViewModel, prefs: Prefs, context: Context) {
                     })
                 8,15,-> Hard(viewModel,0) { viewModel.Step.value += 1}
                 9,16 -> Hard(viewModel,1) { viewModel.Step.value += 1}
-                5,11 -> SpeakToTalk(viewModel = viewModel) { viewModel.Step.value += 1}
-                3,4,13-> Sonido(viewModel) { viewModel.Step.value += 1}
+                4,11 -> SpeakToTalk(viewModel = viewModel) { viewModel.Step.value += 1}
+                3,5,13-> Sonido( index = index,
+                    lista = lst.value,
+                    viewModel =  viewModel,
+                    prefs = prefs,
+                    onMediaClick = { item ,id ->
+
+                        println("Eligida: ${item} --  Respuesta: $id " )
+
+                        if(id == id){
+                            SonidoLocal(context)
+                            index++
+                        }else {
+                            SonidoWrong(context)
+                        }
+                    })
                 1,10,14-> WrongWritten(
                     index = index,
                     lista = lst.value,
