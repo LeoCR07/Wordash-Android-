@@ -1,0 +1,7 @@
+ID;Ruta;Inicio;final;Niveles;Levels;Aleman;Holandes;Frances;Italiano;Portugues;Stars
+0;Vegetales;null;null;Vegetales;Vegetables;Gem¸se;Groenten;Des lÈgumes;Verdure;Legumes;15
+1;Animales;0;22;DomÈsticos;Domestic;Inl‰ndisch;Huiselijk;National;Domestico;DomÈstico;5
+2;Animales;23;36;Salavajes;Wild;Wild;Wild;Sauvage;Selvaggio;Selvagem;7
+3;Animales;57;76;Marinos;Marine;Marine;marinier;Marin;Marino;Marinho;10
+4;Animales;77;98;Insectos;Insects;Insekten;insecten;Insectes;Insetti;Insetos;2
+5;Animales;99;116;Aves;Birds;Vˆgel;vogels;Des oiseaux;Uccelli;Aves;3
