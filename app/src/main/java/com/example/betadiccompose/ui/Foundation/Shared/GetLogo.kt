@@ -32,7 +32,8 @@ fun GetLogo (icon:Boolean,titulo:String) {
                     .align(Alignment.Bottom)
                     .weight(1f)
             ){
-                Icon(Icons.Default.Clear,contentDescription = null,
+                Icon(
+                    Icons.Default.Clear,contentDescription = null,
                     modifier = Modifier
                         .align(Alignment.BottomStart)
                         .size(30.dp))
@@ -47,7 +48,7 @@ fun GetLogo (icon:Boolean,titulo:String) {
                     .align(Alignment.Bottom)
                     .weight(1f)
             ){
-                IconToggleButtonSample()
+               // IconToggleButtonSample(myfavorite = myfavorite, item = item)
             }
 
 

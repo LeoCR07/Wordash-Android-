@@ -9,23 +9,17 @@ import com.example.betadiccompose.Runtime.MyApp
 import com.example.betadiccompose.data.network.model.DataWorld
 import com.example.betadiccompose.ui.Foundation.ScreenSentes.ListSentes
 import com.example.betadiccompose.ui.Foundation.Shared.Floating
+import com.example.betadiccompose.ui.Foundation.Shared.TopApp
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 
 @Composable
 fun SentesScreen(onMediaClick: (DataWorld) -> Unit, viewmodel: VocabularyViewModel) {
 
     MyApp {
-        Scaffold {
+        Scaffold (topBar = { TopApp(title = viewmodel.GetCategoryName(), viewModel = viewmodel) }){
             Column {
-                GetLogo(true,"Sentes")
                 ListSentes(viewmodel = viewmodel)
             }
-
-            Floating()
-
-            //
-            //GetListMenu(onMediaClick)
-            //MediaList(onMediaClick = onMediaClick,modifier = Modifier.padding(it))
         }
     }
 

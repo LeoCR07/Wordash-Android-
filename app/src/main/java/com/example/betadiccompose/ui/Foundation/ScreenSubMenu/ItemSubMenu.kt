@@ -31,9 +31,7 @@ fun ItemSubMenu(item: DataSubMenu, onclick: () -> Unit) {
         elevation = 8.dp,
         shape = RoundedCornerShape(8.dp),
     ) {
-
         Column() {
-            //println(item.Img+"")
             Thumb(item.Img)
             title(
                 item.name, modifier = Modifier
@@ -41,8 +39,6 @@ fun ItemSubMenu(item: DataSubMenu, onclick: () -> Unit) {
                     .background(MaterialTheme.colors.onSecondary)
                     .padding(13.dp)
             )
-            // title(item.category_2,FontWeight.Normal)
-
         }
 
     }

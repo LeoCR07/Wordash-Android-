@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.tooling.preview.Preview
 import com.airbnb.lottie.LottieComposition
+import com.airbnb.lottie.LottieProperty
 import com.airbnb.lottie.compose.*
 import com.example.betadiccompose.R
 
@@ -18,12 +19,12 @@ import com.example.betadiccompose.R
 @Composable
 fun Animation(animacion:Int,modifier: Modifier = Modifier,speed :Float = 1f) {
 
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(animacion))
+   val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(animacion))
 
     LottieAnimation(
         modifier = modifier,
         composition = composition,
-        speed = speed,
+        isPlaying = true,
         iterations = LottieConstants.IterateForever)
 
 }

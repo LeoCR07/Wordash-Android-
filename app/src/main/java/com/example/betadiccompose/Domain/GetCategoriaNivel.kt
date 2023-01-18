@@ -13,9 +13,9 @@ class GetCategoriaNivel @Inject constructor(private val repository : CategoryRes
         val resp = repository.getWords()
 
         return if(resp.isNotEmpty()){
+
             repository.clearWords()
             repository.InsertWord(resp.map { it.toDatabase() })
-
             repository.getAllwordFromDataBaseByID()
 
         }else{

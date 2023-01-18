@@ -6,29 +6,21 @@ import androidx.compose.runtime.Composable
 import com.example.betadiccompose.Foundation.ScreenMenu.GetLogo
 import com.example.betadiccompose.Runtime.MyApp
 import com.example.betadiccompose.data.network.model.DataWorld
+import com.example.betadiccompose.ui.Foundation.ScreenSentes.ListSentes
+import com.example.betadiccompose.ui.Foundation.ScreenVerbs.ListVerb
 import com.example.betadiccompose.ui.Foundation.Shared.AnimationUrl
+import com.example.betadiccompose.ui.Foundation.Shared.TopApp
+import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 import java.lang.reflect.Modifier
 
 @Composable
-fun GramarScreen(onMediaClick: (DataWorld) -> Unit) {
+fun GramarScreen(onMediaClick: (DataWorld) -> Unit, viewmodel: VocabularyViewModel) {
 
     MyApp {
-        Scaffold {
-            Column() {
-                GetLogo(true,"Gramar")
-                AnimationUrl(
-                    url = "https://dicvocabulary.s3.us-east-2.amazonaws.com/beta.json"
-                )
-                /*
-                GetListWorld(
-                    onMediaClick = onMediaClick,
-                    provider = provider,
-                    modifier = Modifier.padding(it))*/
+        Scaffold (topBar = { TopApp(title = viewmodel.GetCategoryName(), viewModel = viewmodel) }){
+            Column {
+                ListVerb(viewmodel = viewmodel)
             }
-
-            //
-            //GetListMenu(onMediaClick)
-            //MediaList(onMediaClick = onMediaClick,modifier = Modifier.padding(it))
         }
     }
 

@@ -1,39 +1,75 @@
 package com.example.betadiccompose.Domain.Provider
 
+import android.content.Context
+import android.media.MediaPlayer
 import com.example.betadiccompose.data.network.model.DataWorld
-import java.util.*
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 import kotlin.random.Random
 
-class GameProvider @Inject constructor() {
+class GameProvider @Inject constructor(@ApplicationContext context: Context) {
 
+    val cont = context
     var currentID = 0
     var currentImg = ""
 
-    val lst:List<DataWorld> = emptyList() //Lista completa de palabras
+    val prefs  = Prefs(cont)
+
+
 
     val lstEasy:List<DataWorld> = emptyList() //Lista de los botones de easy
 
 
+    //Talk and Sort
+    fun GetOneWord(lista:List<DataWorld>):DataWorld{
+        var word:DataWorld = DataWorld(0,"","ll","")
+
+        val start = prefs.GetIndexIGameInit()
+        val end = prefs.GetIndexIGameEnd()
+        //generear el id
+     //   var id = (lista[0].id until lista.size).random()
+
+        var id = Random.nextInt(start,end+1)
+
+        //Buscar el dataword con ese id
+        for (i in 0 until lista.size){
+            println("Buscando")
+            if( id == lista[i].id){
+
+                word = lista[i]
+            }
+        }
+
+        println("el id es $id ")
+
+        return word
+       // return lista[0]
+    }
+
     fun SoundChoose(lista:List<DataWorld>): ArrayList<DataWorld> {
 
+        val start = prefs.GetIndexIGameInit()
+        val end = prefs.GetIndexIGameEnd()
+
         var listaWord :ArrayList<DataWorld> = ArrayList<DataWorld>()
-        val end = lista[lista.size-1].id
-        val start = lista[0].id
+        //val end = lista[lista.size-1].id
+        //val start = lista[0].id
 
         var lst:ArrayList<Int> = ArrayList() //Lista de los 6 ids
         //  var id = 0      //Id respuesta
 
         //Genera el id principal
-        var id = (lista[0].id until lista.size).random()
+        //var id = (lista[0].id until lista.size).random()
+        var id =  Random.nextInt(start,end+1)
+
         lst.add(id) //lo guardo
 
         //Generar 5 id mas diferentes paras las opciones
         do{
 
             var contandor = 0
-            var valor = Random.nextInt(start,end)
+            var valor = Random.nextInt(start,end+1)
 
             for (e in lst){
                 if(e!=valor){
@@ -60,27 +96,31 @@ class GameProvider @Inject constructor() {
         return listaWord
     }
 
-    public fun MakeEasy(lista:List<DataWorld>) :List<DataWorld>{
+    public fun MakeEasyAndHard(lista:List<DataWorld>) :List<DataWorld>{
 
-        val end = lista[lista.size-1].id
-        val start = lista[0].id
+       // val end = lista[lista.size-1].id
+        //val start = lista[0].id
+
+        val start = prefs.GetIndexIGameInit()
+        val end = prefs.GetIndexIGameEnd()
 
         var listaWord :ArrayList<DataWorld> = ArrayList<DataWorld>()
         var lst:ArrayList<Int> = ArrayList() //Lista de los 4 ids
       //  var id = 0      //Id respuesta
 
         //Genera el id principal
-       var id = (lista[0].id until lista.size).random()
+      // var id = (lista[0].id until lista.size).random()
+        var id =  Random.nextInt(start,end+1)
         lst.add(id) //lo guardo
 
-        //Generar 5 id mas diferentes paras las opciones
+        println("valor ${id}")
+        //Generar 3 id mas diferentes paras las opciones
         do{
 
             var contandor = 0
-            var valor = Random.nextInt(start,end)
+            var valor = Random.nextInt(start,end+1)
 
             for (e in lst){
-
                 if(e!=valor){
                     contandor++
                 }
@@ -88,23 +128,31 @@ class GameProvider @Inject constructor() {
 
             if(contandor == lst.size){
                 lst.add(valor)
+                println("valor ${valor}")
             }
+
 
         }while (lst.size<4)
 
+
+        println("+++++++++++++++++++++++")
 
         for (i in 0 until lst.size){
             for (j in 0 until  lista.size){
 
                 if(lst[i] == lista[j].id){
                     listaWord.add(lista[j])
+                    println(lista[j].World_1)
                 }
 
+                /*
+                i think, i got delete it
                 if(i == 0 && j == 0 ){
                     currentID = id
                     //println("la respuesta es ${lista[lst[i]].World_1}")
-
                 }
+
+                */
             }
         }
 
@@ -116,25 +164,29 @@ class GameProvider @Inject constructor() {
 
     public fun MakeWrongWritten(lista:List<DataWorld>):List<DataWorld>{
 
+     //   val end = lista[lista.size-1].id
+        //val start = lista[0].id
+        val start = prefs.GetIndexIGameInit()
+        val end = prefs.GetIndexIGameEnd()
 
-        val end = lista[lista.size-1].id
-        val start = lista[0].id
 
         println("$start --  $end")
         var listaWord :ArrayList<DataWorld> = ArrayList<DataWorld>()
         var lst:ArrayList<Int> = ArrayList() //Lista de los 4 ids
-        var id = 0      //Id respuesta
+           //Id respuesta
 
         //Genero el id principal
         //id = Random.nextInt(lista[0].id, lista.size)
-        id = (lista[0].id..lista.size-1).random()
+        //id = (lista[0].id..lista.size-1).random()
+        var id = Random.nextInt(start,end+1)
+
         println()
         lst.add(id) //lo guardo
 
         //Generar 3 id mas diferentes paras las demas opciones
         do{
             var contandor = 0
-            var valor = Random.nextInt(start,end)
+            var valor = Random.nextInt(start,end+1)
 
             for (e in lst){
 
@@ -189,6 +241,7 @@ class GameProvider @Inject constructor() {
     }
     
     private fun ReemplazarWord(valor: String):String {
+
 
         val lstalphabet:List<String> = listOf("q","w","r","t","y","p","s","d","f","g","h","j","k"
             ,"l","ñ","z","x","c","v","b","n","m")
@@ -350,5 +403,9 @@ class GameProvider @Inject constructor() {
 
     }
 
+    fun KeySound(beat :Int){
+        var mediaPlayer = MediaPlayer.create(cont, beat)
+        mediaPlayer.start()
+    }
 
 }

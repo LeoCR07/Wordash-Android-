@@ -9,5 +9,8 @@ data class DataCategory(
     @SerializedName("sub") val issub:Boolean,
     @SerializedName("doc") val doc:Int,
     @SerializedName("img") val img:Int,
-    @SerializedName("subcat") val subcat:Int
+    @SerializedName("subcat") val subcat:Int,
+    @SerializedName("stars") val stars:Int,
+    @SerializedName("inicio") val inicio:Int,
+    @SerializedName("fin") val fin:Int
 )

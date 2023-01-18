@@ -17,7 +17,7 @@ object NetworkModule {
     @Provides
     fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://dicvocabulary.s3.us-east-2.amazonaws.com/Datos/")
+            .baseUrl("https://duq14sjq9c7gs.cloudfront.net/Datos/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

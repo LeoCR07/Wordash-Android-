@@ -6,21 +6,40 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+
+private const val TEXT_SCALE_REDUCTION_INTERVAL = 0.9f
 
 @Composable
 fun title(text: String, weight: FontWeight = FontWeight.Bold, modifier: Modifier) {
+
+    var textSize by remember { mutableStateOf(15.sp) }
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
     ){
         Text(
             text = text,
-        fontWeight = weight
+        fontWeight = weight,
+            maxLines = 1,
+            fontSize = textSize,
+            overflow = TextOverflow.Ellipsis,
+            onTextLayout = { textLayoutResult ->
+                val maxCurrentLineIndex: Int = textLayoutResult.lineCount - 1
+
+                if (textLayoutResult.isLineEllipsized(maxCurrentLineIndex)) {
+                    textSize = textSize.times(TEXT_SCALE_REDUCTION_INTERVAL)
+                }
+            }
         )
     }
+
 }

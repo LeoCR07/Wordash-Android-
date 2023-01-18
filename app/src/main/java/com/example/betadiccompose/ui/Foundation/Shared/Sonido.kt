@@ -12,11 +12,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-fun Sonido(id: Int, category:String) {
+fun Sonido(id: Int = 0, category: String = "", url: String = "", vocalview: VocabularyViewModel) {
 
     CoroutineScope(Dispatchers.IO).launch {
         try {
-           Media(category, id)
+
+              Media(category,id,url,vocalview)
+
            // Exo(category, id, context)
         }catch (e:Exception){
             println("El error es: ${e.message}")
@@ -25,9 +27,16 @@ fun Sonido(id: Int, category:String) {
 
 }
 
-private fun Media(category: String, id: Int) {
+private fun Media(category: String, id: Int, uri: String, vocalview: VocabularyViewModel) {
 
-    val url = "https://d1i3grysbjja6f.cloudfront.net/Sonido/$category/1/$id.mp3"
+    var url = ""
+
+    if(uri != ""){
+        url = uri
+    }else{
+        url = "https://duq14sjq9c7gs.cloudfront.net/Sounds/${vocalview.GetLearnLenguage()}/$category/$id.mp3"
+    }
+
 
     val mediaPlayer = MediaPlayer().apply {
         setAudioAttributes(

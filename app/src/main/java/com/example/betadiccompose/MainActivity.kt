@@ -8,7 +8,9 @@ import com.example.betadiccompose.Domain.Provider.Prefs
 
 import com.example.betadiccompose.Foundation.Category.Navegation.Navegation
 import com.example.betadiccompose.Domain.Provider.Provider
+import com.example.betadiccompose.data.network.model.DataUser
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
+import com.example.betadiccompose.ui.screens.GeneradorJsonScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -38,13 +40,12 @@ class MainActivity : ComponentActivity() {
             println("Este es el autor: ${it.author}")
         })*/
 
-        provider.createSub()
-        //provider.CreateWord()
+        provider.CreateJson()
 
-        provider.createNivels()
-        VocaVM.getList()
 
         setContent {
+
+            //GeneradorJsonScreen(provider)
             Navegation(provider,prefs,VocaVM)
         }
 

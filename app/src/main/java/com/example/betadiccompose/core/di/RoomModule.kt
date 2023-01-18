@@ -20,7 +20,9 @@ object RoomModule {
     @Singleton
     @Provides
     fun provideRoom(@ApplicationContext context: Context)=
-        Room.databaseBuilder(context, DataBase::class.java,QUOTE_DATA_BASE).build()
+        Room.databaseBuilder(context, DataBase::class.java,QUOTE_DATA_BASE)
+            .fallbackToDestructiveMigration()
+            .build()
 
     @Singleton
     @Provides

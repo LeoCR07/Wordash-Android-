@@ -1,14 +1,19 @@
 package com.example.betadiccompose.data.repository
 
 import com.example.betadiccompose.Domain.Provider.Prefs
+import com.example.betadiccompose.Domain.model.DataGramar
 import com.example.betadiccompose.Domain.model.DataNiveles
 import com.example.betadiccompose.Domain.model.DataSentes
 import com.example.betadiccompose.Domain.model.DataSubMenu
 import com.example.betadiccompose.data.database.dao.GameDao
+import com.example.betadiccompose.data.database.entity.FavoriteWordEntity
 import com.example.betadiccompose.data.database.entity.GameEntity
+import com.example.betadiccompose.data.database.entity.UserEntity
+import com.example.betadiccompose.data.database.model.DataMyFavoriteWord
+import com.example.betadiccompose.data.database.model.toDomain
 import com.example.betadiccompose.data.network.model.DataVocabulary
 import com.example.betadiccompose.data.network.model.DataWorld
-import com.example.betadiccompose.data.network.CategoryService
+import com.example.betadiccompose.data.network.model.DataUser
 import com.example.betadiccompose.data.network.model.toDomain
 //import com.example.betadiccompose.data.network.model.toDomain
 import javax.inject.Inject
@@ -25,7 +30,6 @@ class CategoryRespository @Inject constructor(
         val response = api.getCategorys()
         //return response
 
-        print("llamando repositoy....")
        val result:List<DataVocabulary> = response.mapIndexed { index, it ->
             DataVocabulary(
                 id = index,
@@ -33,7 +37,7 @@ class CategoryRespository @Inject constructor(
                 sub = it.issub,
                 path = it.path,
                 document = it.doc,
-                img = "https://d1i3grysbjja6f.cloudfront.net/IMG/Diccionario/${index}.jpg"
+                img = "https://duq14sjq9c7gs.cloudfront.net/Images/Diccionario/${index}.jpg"
 
             )
         }
@@ -43,9 +47,9 @@ class CategoryRespository @Inject constructor(
 
     //Words
     suspend fun getWords():List<DataWorld>{
-        val response = api.getwordNew()
-        val response_2 = api.getwordOld()
-        //return response
+        val response = api.getwordNew()  //spanish
+        val response_2 = api.getwordOld() //english
+
 
         var lst :ArrayList<DataWorld> = ArrayList()
         for (i in 0 until response.size){
@@ -57,17 +61,16 @@ class CategoryRespository @Inject constructor(
                         id = response[i].id,
                         World_1= response[i].name,
                         World_2 = response_2[i].name,
-                        Img = "https://d1i3grysbjja6f.cloudfront.net/IMG/${prefs.GetCategory()}/${response[i].id}.jpg")
+                        Img = "https://duq14sjq9c7gs.cloudfront.net/Images/${prefs.GetCategory()}/${response[i].id}.jpg")
                 )
             }else{
-                print("otro")
                 if(prefs.GetNumberCategory() == response[i].subcat){
                   lst.add(
                       DataWorld(
                           id = response[i].id,
                           World_1= response[i].name,
                           World_2 = response_2[i].name,
-                          Img = "https://d1i3grysbjja6f.cloudfront.net/IMG/${prefs.GetCategory()}/${response[i].id}.jpg")
+                          Img = "https://duq14sjq9c7gs.cloudfront.net/Images/${prefs.GetCategory()}/${response[i].id}.jpg")
 
                   )
 
@@ -93,7 +96,8 @@ class CategoryRespository @Inject constructor(
             DataSubMenu(
                 id = it.id,
                 name = it.name,
-                Img = "https://d1i3grysbjja6f.cloudfront.net/IMG/${prefs.GetCategory()}/${it.doc}.jpg"
+                Img = "https://duq14sjq9c7gs.cloudfront.net/Images/${prefs.GetCategory()}/${it.img}.jpg",
+                doc = it.doc
             )
 
         }
@@ -105,7 +109,6 @@ class CategoryRespository @Inject constructor(
     suspend fun getsentes():List<DataSentes>{
         val response = api.getwordNew()
         val response_2 = api.getwordOld()
-        //return response
 
         var lst :ArrayList<DataSentes> = ArrayList()
 
@@ -125,16 +128,52 @@ class CategoryRespository @Inject constructor(
         return list
     }
 
-    //Niveles
+    /** Gramar **/
+    suspend fun getgramar():List<DataGramar>{
+        val gramar_new= api.getwordNew()
+        val gramar_old = api.getwordOld()
+
+        val example_old = api.getgramarOld()
+        val example_new = api.getgramarNew()
+
+
+        var lst :ArrayList<DataGramar> = ArrayList()
+
+        for (i in 0 until gramar_new.size){
+            val id = gramar_new[i].id
+
+            lst.add(
+                DataGramar(
+                    id = id,
+                    gramar_1 = gramar_new[i].name,
+                    gramar_2 = gramar_old[i].name,
+                    example_1= example_new[i].name,
+                    example_2 = example_old[i].name
+                )
+            )
+
+        }
+
+        val list:List<DataGramar> = lst.toList()
+
+        return list
+    }
+
+
+    //Lista de niveles
     suspend fun getniveles():List<DataNiveles>{
         val response = api.getdatanivel()
 
         val result:List<DataNiveles> = response.mapIndexed { index, it ->
+
             DataNiveles(
-                id = index,
+                id = index+1,
                 name = it.name,
-                animation = "https://dicvocabulary.s3.us-east-2.amazonaws.com/Animaciones/${index}.json",
-                dir = it.path.trim()
+                animation = "https://dicvocabulary.s3.us-east-2.amazonaws.com/lottie/${index}.json",
+                dir = it.path.trim(),
+                stars =  it.stars,
+                inicio = it.inicio,
+                fin = it.fin
             )
         }
 
@@ -161,5 +200,54 @@ class CategoryRespository @Inject constructor(
         val response :List<GameEntity> = dao.getallQuotesByID()
         return response.map { it.toDomain() }
     }
+
+    /**  My favorite word **/
+
+    suspend fun GetAllMyFavoriteWord():List<DataMyFavoriteWord>{
+        val response :List<FavoriteWordEntity> = dao.GetAllMyWordFavorite()
+        return response.map { it.toDomain() }
+    }
+
+    suspend fun InsertMyFavoriteWord(palabra :FavoriteWordEntity){
+        dao.insertmyfavoriteword(palabra)
+    }
+
+    suspend fun DeleteMyWordByImg(img:String){
+         dao.deleteMyFavorityWordByImg(img)
+    }
+
+
+    /**  User data **/
+    suspend fun InsertUser(userdata:UserEntity){
+        dao.insertUser(userdata)
+    }
+
+    suspend fun DeleteUser(){
+        dao.deleteAllUser()
+    }
+
+    suspend fun GetDetaillsUser():DataUser{
+        val result = dao.getDetaillsUser()
+        val obj = DataUser()
+
+        return  obj
+        //return  result.toDomain()
+    }
+
+    suspend fun UpdateExpUser(exp:Int){
+        var value = dao.getExp() + exp
+        dao.updateExp(value)
+    }
+
+    suspend fun UpdateStarsUser(stars:Int){
+        var value = dao.getStars() + stars
+        dao.updateStars(value)
+    }
+
+    suspend fun UpdateLevelUser(level:Int){
+        var value = dao.getLevel()+ level
+        dao.updateLevel(value)
+    }
+
 
 }

@@ -8,5 +8,4 @@ data class DataWorld(
     val World_2:String,
     val Img:String)
 
-
 fun GameEntity.toDomain() = DataWorld(id, World_1, World_2, Img)

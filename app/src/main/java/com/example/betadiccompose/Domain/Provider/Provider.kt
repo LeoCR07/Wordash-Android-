@@ -92,8 +92,8 @@ class Provider (val ass: AssetManager, val context: Context) {
     }
 
     fun SaveIndex(dato: DataVocabulary){
-
         prefs.SaveIndex(dato.id)  //Category ID
+        prefs.SaveNameCategory(dato.name)
         prefs.SavePath(dato.path)  //Direccion para aceder a todos los datos
         prefs.SaveDocument(dato.document) //Guarda el tipo de documento
         prefs.IsSaveSubMenu(dato.sub) //Determina si tiene un sub menu
@@ -145,33 +145,35 @@ class Provider (val ass: AssetManager, val context: Context) {
         var lst: ArrayList<DataVocabulary> = ArrayList()
 
         val idir = 1
-        val iname = 1
-        val idoc = 4
-        val isub = 2
+        val iname = 5
+        val inicio = 2
+        val ifin =3
+        val istars = 11
 
         var nombre = ""
         var dir = ""
-        var sub = false
-        var doc = 0
+        var Iinicio = ""
+        var fin = ""
+        var stars = ""
+
 
 
 
         //Name
-        val inputStream: InputStream = ass.open("Categorias")
+        val inputStream: InputStream = ass.open("todos")
         val inputString = inputStream.reader().use { it.readText() }
         val data: List<String> = inputString.split('\n')
 
         //Document and sub
-        val inputStreamDocument: InputStream = ass.open("PathMenu")
+        /*val inputStreamDocument: InputStream = ass.open("PathMenu")
         val inputStringDocument = inputStreamDocument.reader().use { it.readText() }
         val dataDoc: List<String> = inputStringDocument.split('\n')
+        */
 
         var total = ""
 
         for (i in 1 until data.size) {
-            if(i==1){
-                print("[")
-            }
+
 
             if(i>1){
                 total+=","
@@ -179,36 +181,40 @@ class Provider (val ass: AssetManager, val context: Context) {
             }
 
             //name
-            nombre = data[i].split(";")[iname]
-
-            //dir
-            dir = dataDoc[i].split(";")[idir]
-
-            //sub
-            val asub = dataDoc[i].split(";")[isub].trim().toInt()
-            sub = asub != 0
-
-            //doc
-            val adoc = dataDoc[i].split(";")[idoc].trim().toInt()
-            doc = adoc-2
+            nombre = data[i].split(";")[iname].trim()
+            dir = data[i].split(";")[idir].trim()
+            Iinicio = data[i].split(";")[inicio].trim()
+            fin = data[i].split(";")[ifin].trim()
+            stars = data[i].split(";")[istars].trim()
 
             val DIR = "\"dir\":\"${dir}\","
             val NAME = "\"name\":\"$nombre\","
-            val SUB = "\"sub\":${sub},"
-            val DOC = "\"doc\":${doc}"
+            val INICIO = "\"inicio\":${Iinicio},"
+            val FIN = "\"fin\":${fin},"
+            val STARS = "\"stars\":${stars}"
 
-            val texto = ("{" +
-                    DIR +
-                    NAME +
-                    "$SUB" +
-                    "$DOC}")
+
+            var texto = ""
+
+            if(Iinicio != "null"){
+                texto = ("{" +
+                        DIR +
+                        NAME +
+                        INICIO +
+                        FIN +
+                        STARS
+                        + "}")
+            }else{
+                texto = ("{" +
+                        DIR +
+                        NAME +
+                        STARS
+                        + "}")
+            }
+
 
 
             total += texto
-
-            if(i == data.size-1){
-                print("]")
-            }
 
         }
 

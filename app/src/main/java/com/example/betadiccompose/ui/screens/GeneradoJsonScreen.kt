@@ -78,6 +78,7 @@ fun boton(categoria: String, idioma: String, check: Boolean, provide: Provider) 
     Button(
         modifier = Modifier.fillMaxWidth(),
         onClick = {
+
                   provide.CreateWord(categoria= categoria,idioma = idioma,subv= check)
         },
         // Uses ButtonDefaults.ContentPadding by default

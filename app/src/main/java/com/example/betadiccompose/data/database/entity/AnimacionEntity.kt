@@ -11,7 +11,9 @@ data class AnimacionEntity(
 
     @PrimaryKey()
     @ColumnInfo(name = "id") val id:Int,
-    @ColumnInfo(name = "animacion") val animacion: String)
+    @ColumnInfo(name = "animacion") val animacion: String
+
+    )
 
 
 

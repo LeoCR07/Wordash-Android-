@@ -14,6 +14,9 @@ class Prefs @Inject constructor(@ApplicationContext context: Context) {
     private val KeyOld:String= "keyOld"
     private val KeyNew:String = "KeyNew"
     private val KeyNumberCategory:String = "KeyNumberCategory"
+    private val KeyGameInit:String = "KeyIndexInitGame"
+    private val KeyGameEnd:String = "KeyIndexEndGame"
+    private val KeyCatName:String = "KeyIndexCat"
 
     val storage = context.getSharedPreferences(db,0)
 
@@ -21,6 +24,21 @@ class Prefs @Inject constructor(@ApplicationContext context: Context) {
     fun SavePath(category:String){
         storage.edit().putString(KeyCategory,category).apply()
     }
+
+    fun SaveIndexGame(start:Int,end:Int){
+        storage.edit().putInt(KeyGameInit,start).apply()
+        storage.edit().putInt(KeyGameEnd,end).apply()
+    }
+
+    fun GetIndexIGameInit() :Int{
+        return storage.getInt(KeyGameInit,0)!!
+    }
+
+    fun GetIndexIGameEnd():Int{
+        return storage.getInt(KeyGameEnd,0)!!
+    }
+
+
 
     fun GetCategory():String{
         return storage.getString(KeyCategory,"")!!
@@ -54,24 +72,22 @@ class Prefs @Inject constructor(@ApplicationContext context: Context) {
     }
 
     /** Languages new **/
-    fun SaveNew(language:Int){
-        storage.edit().putInt(KeyNew,language).apply()
+    fun SaveLearnLanguage(language:String){
+        storage.edit().putString(KeyNew,language).apply()
     }
 
-    fun GetNew():Int{
-       // return storage.getInt(KeyNew,0)
-        return 1
+    fun GetLearnLanguage(): String{
+       return storage.getString(KeyNew,"English")!!
     }
 
 
     /** Languages old **/
-    fun SaveOld(language:Int){
-        storage.edit().putInt(KeyOld,language).apply()
+    fun SaveLocalLanguage(language:String){
+        storage.edit().putString(KeyOld,language).apply()
     }
 
-    fun GetOld():Int{
-       // return storage.getInt(KeyOld,0)
-        return 0
+    fun GetLocalLanguage():String{
+        return storage.getString(KeyOld,"Spanish")!!
     }
 
 
@@ -85,20 +101,13 @@ class Prefs @Inject constructor(@ApplicationContext context: Context) {
         return storage.getInt(KeyNumberCategory,0)
     }
 
-    /********* Respuesta de NIVEL */
+    fun SaveNameCategory(name: String) {
+        storage.edit().putString(KeyCatName,name).apply()
+    }
 
+    fun GetNameCategory():String {
+        return storage.getString(KeyCatName,"")!!
+    }
 
-
-    fun dirreccion() = "vocabulario.json"
-
-    fun vegetales_1() = "Categorias/0/Vegetales.json"
-
-    fun vegetales_2() = "Categorias/1/Vegetales.json"
-
-    fun  subpath() = "subcat/1/sub.json"
-
-    fun  getlink_1() = "subcat/0/1.json"
-
-    fun  getlink_2() = "subcat/0/1.json"
 
 }
