@@ -1,25 +1,34 @@
 package com.example.betadiccompose.Foundation.Category.Navegation
 import android.app.Activity
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.betadiccompose.Domain.Provider.Prefs
-import com.example.betadiccompose.Domain.Provider.Provider
+import com.example.authentication.Presentation.LoginScreen
+import com.example.authentication.ui.Presentation.SingUpScreen
+import com.example.betadiccompose.Domain.Game_Provider.Local_Provider
 import com.example.betadiccompose.ui.Foundation.ScreenNiveles.Nivel
-import com.example.betadiccompose.ui.Foundation.Shared.Sonido
+import com.example.betadiccompose.ui.Foundation.Shared.Books.PlayerListener
+import com.example.betadiccompose.ui.Foundation.Shared.NoIntenet
 import com.example.betadiccompose.ui.Foundation.Shared.currentRoute
+import com.example.betadiccompose.ui.Navigation.routes.LoginRoutes
 import com.example.betadiccompose.ui.Navigation.routes.MenuRoutes
 import com.example.betadiccompose.ui.Navigation.routes.SettingRoute
 import com.example.betadiccompose.ui.Navigation.routes.SubRoutes
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 import com.example.betadiccompose.ui.screens.*
+import com.example.betadiccompose.ui.screens.Menu.LibraryScreen
+import com.example.betadiccompose.ui.screens.Menu.MusicPlayer
 import com.example.betadiccompose.ui.screens.Settings.OpcionScreen
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 @Composable
-fun Navegation(provider: Provider, prefs: Prefs, VocaVM: VocabularyViewModel) {
+fun Navegation(VocaVM: VocabularyViewModel,startDestination :String) {
 
     val navController = rememberNavController()
     val context = LocalContext.current
@@ -27,27 +36,61 @@ fun Navegation(provider: Provider, prefs: Prefs, VocaVM: VocabularyViewModel) {
     val activity = (LocalContext.current as? Activity)
     NavHost(
         navController = navController,
-        startDestination = MenuRoutes.play.name
-        //startDestination = com.example.betadiccompose.ui.Foundation.Category.Navegation.NavData.Menu.route
+        startDestination = startDestination
+       // startDestination = MenuRoutes.play.name
     ) {
 
-        composable(MenuRoutes.learn.name) { navback ->
+        composable(LoginRoutes.Login.name){
+            LoginScreen(
+                loginViewModel = VocaVM,
+                ClickSingUpFacebook = {},
+                ClickSingUpMicrosoft = {},
+                NavToAccountScreen = {
+                    navController.navigate(MenuRoutes.play.name) {
+                        launchSingleTop = true
 
+                        popUpTo(route = LoginRoutes.Login.name) {
+                            inclusive = true
+                        }
+                    }
+                },
+                ClickForgotPassword = {},
+                NavToSingUpScreen = {
+                    navController.navigate(LoginRoutes.SingUp.name) {
+                        launchSingleTop = true
+                    }
+                })
+        }
+
+        composable(LoginRoutes.SingUp.name){
+            SingUpScreen(
+                loginViewModel = VocaVM,
+                onNavToAccount = {
+                    navController.navigate(MenuRoutes.play.name) {
+                        launchSingleTop = true
+
+                        popUpTo(route = LoginRoutes.SingUp.name) {
+                            inclusive = true
+                        }
+                    }
+                },
+                ClickSingUp = {})
+        }
+
+        composable(MenuRoutes.learn.name) { navback ->
             val current = currentRoute(navController = navController)
-            VocaVM.getList()
+            VocaVM.loadSubMenu.value = true
 
             VocabularyScreen(
 
                 current = current,
-                navController = navController,
                 vocalview = VocaVM,
-                provider = provider,
                 onMediaClick = {
 
-                    provider.SaveIndex(it)
-                    val indice = provider.getkindocument()
+                    VocaVM.SavePreferences(it)
+                    val indice =  VocaVM.GetKindDocument()
 
-                    if (!provider.getsubmenu()) {
+                    if (!VocaVM.IsSub()) {
                         when (indice) {
                             0 -> navController.navigate("WorldScreen")
                             2 -> navController.navigate("GramarScreen")
@@ -71,20 +114,19 @@ fun Navegation(provider: Provider, prefs: Prefs, VocaVM: VocabularyViewModel) {
         }
 
         composable(MenuRoutes.play.name) {
-            //GeneradorJsonScreen(provider)
             val current = currentRoute(navController = navController)
+
             PlayScreen(
                 current = current,
                 vocalview = VocaVM,
                 onMediaClick = {
-                    println(it.dir)
+
+                    VocaVM.SaveAllSubNameCategory(it.doc)
+                    VocaVM.SavePath(it.dir.split("_")[0])
+
+                    println("dirrecion "+it)
                     VocaVM.cleanAllWords()
-
-                    prefs.SaveIndexGame(it.inicio,it.fin)
-                    prefs.SavePath(it.dir)
-
-                    VocaVM.getlevel()
-
+                    VocaVM.getListOfWordsToPlayForLevel()
                     navController.navigate(SubRoutes.nivel.name)
                 },
                 onclickNav = {
@@ -97,6 +139,26 @@ fun Navegation(provider: Provider, prefs: Prefs, VocaVM: VocabularyViewModel) {
                     //navController.popBackStack()
                 }
             )
+        }
+
+        composable(MenuRoutes.library.name) {
+            val current = currentRoute(navController = navController)
+            LibraryScreen(
+                    current = current,
+            vocalview = VocaVM,
+            onMediaClick = {
+                navController.navigate("MusicPlayer")
+            },
+            onclickNav = {
+                navController.navigate(it.route){
+                    launchSingleTop = true
+                    popUpTo(MenuRoutes.learn.name){
+                        inclusive = true
+                    }
+                }
+            })
+
+
         }
 
         composable(MenuRoutes.account.name) {
@@ -116,15 +178,23 @@ fun Navegation(provider: Provider, prefs: Prefs, VocaVM: VocabularyViewModel) {
             navToSeeMyWords = {
                 navController.navigate("MyWords")
             },
-            onBack = {
-                navController.popBackStack()
-            })
+                navToSeeMySentes = {
+                    navController.navigate("MySentes")
+                                 },
+                navToSeeMyGramar = {
+                    navController.navigate("MyGramar")
+                },
+
+                onBack = {
+                    navController.popBackStack()
+                })
         }
 
         composable(MenuRoutes.store.name) {
             val current = currentRoute(navController = navController)
 
             StoreScreen(
+                context = context,
                 viewmodel = VocaVM,
                 current = current,
                 onclickNav = {
@@ -141,12 +211,14 @@ fun Navegation(provider: Provider, prefs: Prefs, VocaVM: VocabularyViewModel) {
         }
 
         composable("SubMenuScreen") {
-
+            //
+           // VocaVM.loadWords.value = true
             SubMenuScreen(
                 viewmodel = VocaVM,
                 onMediaClick = {
-                    prefs.SaveNumberCategory(it.id)
-                    prefs.SaveNameCategory(it.name)
+
+                    VocaVM.SaveSubNumberCategory(it.id)
+                    VocaVM.SaveWordCategoryName(it.name)
 
                     when(it.doc){
                         0->navController.navigate("WorldScreen")
@@ -159,15 +231,18 @@ fun Navegation(provider: Provider, prefs: Prefs, VocaVM: VocabularyViewModel) {
         }
 
         composable("GramarScreen") {
-            GramarScreen(onMediaClick = {}, viewmodel = VocaVM)
+            VocaVM.loadGramar.value = true
+
+            GramarScreen(onMediaClick = {
+                CoroutineScope(Dispatchers.IO).launch {
+                    VocaVM.updateExp()
+                }
+            }, viewmodel = VocaVM)
         }
 
         composable(SubRoutes.nivel.name) {
-
             Nivel(
                 viewModel = VocaVM,
-                prefs = prefs,
-                context = context,
                 onBack = {
                     navController.popBackStack()
                     //    VocaVM.step = 0
@@ -182,22 +257,54 @@ fun Navegation(provider: Provider, prefs: Prefs, VocaVM: VocabularyViewModel) {
         }
 
         composable("SentesScreen") {
-            SentesScreen(onMediaClick = {}, viewmodel = VocaVM)
+
+            VocaVM.loadSentes.value = true
+            SentesScreen(
+                onClick = {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        VocaVM.updateExp()
+                    }
+                    VocaVM.soundFromUrl(id=it.id)
+                }, viewmodel = VocaVM)
         }
 
         composable("WorldScreen") {
-            WorldScreen(
+
+            VocaVM.loadWords.value = true
+
+            WordScreen(
+
                 viewmodel = VocaVM,
-                provider = prefs,
                 onMediaClick = {
-                    Sonido(it.id, provider.getCategory(), vocalview = VocaVM)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        VocaVM.updateExp()
+                    }
+                    VocaVM.soundFromUrl(id=it.id)
                 })
         }
 
         composable("MyWords"){
-            SeeMoreMyWords(
+            MyWords(
+                vocalview = VocaVM,
+                context = context
+            )
+        }
+
+        composable("MySentes"){
+            MySentes(
                 vocalview = VocaVM
             )
+        }
+
+        composable("MyGramar"){
+            MyGramar(
+                vocalview = VocaVM
+            )
+        }
+
+        composable("MusicPlayer"){
+            //MusicPlayer()
+            PlayerListener()
         }
 
         composable(SettingRoute.SettingsScreen.name){

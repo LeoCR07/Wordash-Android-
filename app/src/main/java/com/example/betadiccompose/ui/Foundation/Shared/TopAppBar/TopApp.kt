@@ -1,5 +1,6 @@
 package com.example.betadiccompose.ui.Foundation.Shared
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -14,7 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.betadiccompose.R
-import com.example.betadiccompose.data.network.model.DataUser
+import com.example.betadiccompose.data.network_database.model.DataUser
 import com.example.betadiccompose.ui.Foundation.Shared.TopAppBar.topAppBarIcon
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 
@@ -24,10 +25,13 @@ fun TopApp(
     viewModel: VocabularyViewModel,
     opcion:Int = 0,
     title: String? = null,
-    navToSomeWhere:()->Unit = {}) {
-    /* 0 - details
+    navToSomeWhere:()->Unit = {}){
+    /*
+    0 - details
     1 - account
-    2 - settings*/
+    2 - settings
+    4 - store
+    */
 
     var showAlertDialog by remember { mutableStateOf(false) }
 
@@ -35,8 +39,7 @@ fun TopApp(
         mutableStateOf(DataUser())
     }
 
-    viewModel.GetDataUser()
-
+    viewModel.getDataUser()
     datauser = viewModel.lstdatauser.value
 
     if(showAlertDialog){
@@ -50,17 +53,16 @@ fun TopApp(
 
 
     var opendialog = remember { mutableStateOf(false) }
-    DialogChageLenguage(
+    DialogLenguage(
         viewModel = viewModel,
         show = opendialog.value,
         dimisissDialog =  {opendialog.value = false})
 
 
     TopAppBar(
-        backgroundColor =Color.White,
+        backgroundColor = MaterialTheme.colors.onPrimary,
         title = {  if(title!=null) Text(text = title) },
         navigationIcon = {
-
             Spacer(modifier = Modifier.width(10.dp))
 
             if(opcion == 3){
@@ -119,7 +121,7 @@ fun TopApp(
                         modifier = Modifier
                             .clickable { showAlertDialog = true }
                             .size(28.dp),
-                        tint = Color.Unspecified
+                        tint = MaterialTheme.colors.secondaryVariant
                     )
 
                     Spacer(modifier = Modifier.width(10.dp))
@@ -136,6 +138,10 @@ fun TopApp(
 
                     Spacer(modifier = Modifier.width(10.dp))
                 }
+                else if(opcion == 4){
+                    topAppBarIcon(icon = R.drawable.star_on, value = datauser.stars)
+                    Spacer(modifier = Modifier.width(10.dp))
+                }
             }
 
 
@@ -143,9 +149,8 @@ fun TopApp(
         },
         modifier = Modifier
             .fillMaxWidth()
+            .background(MaterialTheme.colors.onSecondary)
             .padding(0.dp, 0.dp, 0.dp, 1.dp)
-        // .clip(RoundedCornerShape(10.dp, 10.dp, 10.dp, 10.dp))
-        // .clip(CutCornerShape(0.dp,0.dp,5.dp,5.dp))
     )
 }
 

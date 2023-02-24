@@ -6,14 +6,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.example.betadiccompose.Domain.model.DataNiveles
+import com.example.betadiccompose.data.network_database.model.DataNiveles
 
 import com.example.betadiccompose.R
 import com.example.betadiccompose.Runtime.MyApp
-import com.example.betadiccompose.ui.Foundation.ScreenNiveles.ListNiveles
-import com.example.betadiccompose.ui.Foundation.Shared.Animation
+import com.example.betadiccompose.ui.Foundation.Game.ScreenNiveles.ListNiveles
+import com.example.betadiccompose.ui.Foundation.MyThemeSplash
+import com.example.betadiccompose.ui.Foundation.Shared.Local_Animation
 import com.example.betadiccompose.ui.Foundation.Shared.NavToBackDialog
 import com.example.betadiccompose.ui.Foundation.Shared.TopApp
+import com.example.betadiccompose.ui.Foundation.Shared.Vocabulary.CircleProgress
 import com.example.betadiccompose.ui.Foundation.Shared.navegationinferior
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 import com.example.betadiccompose.ui.Navigation.ItemsMenu
@@ -28,35 +30,22 @@ fun PlayScreen(
 ) {
     NavToBackDialog(onBack,)
 
-    MyApp {
+    MyThemeSplash() {
         Scaffold (
             topBar = {
             TopApp(vocalview) },
-            bottomBar = { navegationinferior(menu,current,onclickNav) }){
-
-            /*
-            Column() {
-                //vocalview.getNiveles()
-
-                if (vocalview.isloding_5.value) {
-                    Animation(R.raw.animacion,     modifier = Modifier
-                        .fillMaxSize(),)
-                } else {
-                    Column() {
-
-                       // GetLogo(false, "Niveles")
-                        ListNiveles(
-                            viewmodel = vocalview,
-                            modifier = Modifier.padding(it),
-                            onMediaClick = onMediaClick
-                        )
-                    }
-                   // Floating()
-                }
-
+            bottomBar = {
+                navegationinferior(menu,current,onclickNav) }){
+            if (vocalview.isloding_5.value) {
+                CircleProgress()
             }
-
-             */
+            else {
+                ListNiveles(
+                    viewmodel = vocalview,
+                    modifier = Modifier.padding(it),
+                    onMediaClick = onMediaClick
+                )
+            }
         }
     }
 }

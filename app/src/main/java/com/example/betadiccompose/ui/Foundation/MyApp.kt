@@ -15,20 +15,20 @@ public fun MyApp(content:@Composable () -> Unit) {
 
 
     BetaDicComposeTheme() {
-
         val systemUiController = rememberSystemUiController()
+        val col = MaterialTheme.colors.onPrimary
+
         SideEffect {
-            systemUiController.setStatusBarColor(color = Color.White)
+            systemUiController.setStatusBarColor(col)
+            systemUiController.setSystemBarsColor(col)
         }
 
         Surface(
             modifier = Modifier.fillMaxSize(),
-        //    color = MaterialTheme.colors.secondary
-        color = Color.Red
+            color = MaterialTheme.colors.background
         ) {
             content()
 
         }
     }
-
 }

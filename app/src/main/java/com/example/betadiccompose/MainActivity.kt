@@ -4,52 +4,81 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import com.example.betadiccompose.Domain.Provider.Prefs
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 
 import com.example.betadiccompose.Foundation.Category.Navegation.Navegation
-import com.example.betadiccompose.Domain.Provider.Provider
-import com.example.betadiccompose.data.network.model.DataUser
+import com.example.betadiccompose.data.network_database.model.DataUser
+import com.example.betadiccompose.ui.Navigation.routes.LoginRoutes
+import com.example.betadiccompose.ui.Navigation.routes.MenuRoutes
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
-import com.example.betadiccompose.ui.screens.GeneradorJsonScreen
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val VocaVM : VocabularyViewModel by viewModels()
+    private val viewModel : VocabularyViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val prefs:Prefs = Prefs(applicationContext)
-        val provider = Provider(assets,applicationContext)
-        //val list = provider.createListMenu()
-        //for (item in list) println(item.Menu_1)
-       // provider.CreateJson()
+        //Splash
+        val screenSplash = installSplashScreen()
 
-        /** ViewModel **/
-        //VocaVM.onCreate()
-        //VocaVM.getList()
-       // val lista = VocaVM.categoryModel.value
+        //Start destination when no tenga el usuario
+        var startDestination = LoginRoutes.Login.name
 
+        CoroutineScope(Dispatchers.IO).launch {
 
-        println("Hola")
+            //La primera vez que instalo el app
+            if(viewModel.counAllUser()==0){
+                viewModel.insertDataUser(dataUser = DataUser(id = 0,exp=0,level=1, stars = 0))
+            }else{
 
-        /*
-        VocaVM.rquote.observe(this, Observer {
-            println("Este es el autor: ${it.author}")
-        })*/
+                print("Ya existe")
+            }
+        }
 
-        provider.CreateJson()
+        //Niveles
+        viewModel.getListOfAlllevel()
+
+        //Categorias
+        viewModel.getListOfAllCategories()
+
+        //Favoritos
+        viewModel.getMyFavoriteWords()
+        viewModel.getMyFavoriteSentes()
+        viewModel.getMyFavoriteGramar()
+
 
 
         setContent {
+            screenSplash.setKeepOnScreenCondition{false}
 
-            //GeneradorJsonScreen(provider)
-            Navegation(provider,prefs,VocaVM)
+            if (viewModel?.hasUser){
+                //Si el usuario ya esta reguistrado
+                startDestination = MenuRoutes.play.name
+            }
+
+            Navegation(viewModel,startDestination)
         }
-
-
     }
 }
 

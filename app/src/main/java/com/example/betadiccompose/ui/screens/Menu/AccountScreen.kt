@@ -17,10 +17,11 @@ import com.example.authentication.ui.Foundation.Account.HListWord
 import com.example.authentication.ui.Foundation.Account.HeaderAccount
 import com.example.authentication.ui.Foundation.Account.SubTitles
 import com.example.betadiccompose.Runtime.MyApp
-import com.example.betadiccompose.ui.Foundation.ScreenAccount.LineColor
-import com.example.betadiccompose.ui.Foundation.Shared.NavToBackDialog
 import com.example.betadiccompose.ui.Foundation.Shared.TopApp
 import com.example.betadiccompose.ui.Foundation.Shared.navegationinferior
+import com.example.betadiccompose.ui.Foundation.Vocabulary.MyGramar.HListGramar
+import com.example.betadiccompose.ui.Foundation.Vocabulary.MySentes.HListSentes
+import com.example.betadiccompose.ui.Foundation.Vocabulary.ScreenAccount.LineColor
 import com.example.betadiccompose.ui.Navigation.ItemsMenu
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 
@@ -30,14 +31,26 @@ fun AccountScreen(
     onclickNav: (ItemsMenu) -> Unit,
     vocalview: VocabularyViewModel,
     navToSeeMyWords: () -> Unit,
+    navToSeeMySentes: () -> Unit,
     onBack: () -> Unit,
+    navToSeeMyGramar: () -> Unit
 ) {
 
 
-   vocalview.GetMyFavoriteWords()
-    val lstmyfavoritewords by remember {
-        mutableStateOf(vocalview.lstfavoritewords.value)
+
+    val lstmyfavoritewords  = vocalview.lstfavoritewords.value
+
+    val lstmyfavoritesentes by remember {
+        mutableStateOf(vocalview.lstfavoritesentes.value)
     }
+
+
+    val lstmyfavoritegramar by remember {
+        mutableStateOf(vocalview.lstfavoritegramar.value)
+    }
+
+
+
 
     MyApp {
         Scaffold(
@@ -47,8 +60,14 @@ fun AccountScreen(
 
         content = {
 
+            vocalview.getMyFavoriteWords()
+            vocalview.getMyFavoriteSentes()
+            vocalview.getMyFavoriteGramar()
+
 
             Column() {
+
+
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Top,
@@ -61,19 +80,17 @@ fun AccountScreen(
                             UserName = "Lionel Messi"/*loginViewModel.username*/ ,
                             UserEmail = "elmessias@gmail.com"/*loginViewModel.username*/,
                             UserPhoto =  Uri.parse("https://upload.wikimedia.org/wikipedia/commons/c/c1/Lionel_Messi_20180626.jpg")/*loginViewModel.username*/,
-                            Stars = 9/*loginViewModel.username*/,
-                            Level = 0,
-                            Exp = 0)
+                            Stars = 9/*loginViewModel.username*/)
 
                         LineColor(height = 10f)
                         SubTitles("My favorites words",click = navToSeeMyWords )
-                        HListWord(lstmyfavoritewords, vocalview = vocalview)
+                        HListWord(lstmyfavoritewords,vocalview = vocalview)
                         LineColor(height = 5f)
-                        SubTitles("My favorites Sentes", click = {})
-                        HListWord(lstmyfavoritewords, vocalview)
+                        SubTitles("My favorites Sentes", click = {navToSeeMySentes()})
+                        HListSentes(lstmyfavoritesentes, vocalview)
                         LineColor(height = 5f)
-                        SubTitles("My favorites Gramar", click = {})
-                        HListWord(lstmyfavoritewords, vocalview)
+                        SubTitles("My favorites Gramar", click = {navToSeeMyGramar()})
+                        HListGramar(lstmyfavoritegramar, vocalview)
 
 
                     }

@@ -1,213 +1,542 @@
 package com.example.betadiccompose.ui.ViewModel
 
+import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.media.MediaPlayer.OnPreparedListener
+import android.media.PlaybackParams
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
+import android.os.Build
+import android.widget.Toast
 import androidx.compose.runtime.*
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.*
 import com.example.betadiccompose.Domain.*
-import com.example.betadiccompose.Domain.Provider.GameProvider
-import com.example.betadiccompose.Domain.Provider.Prefs
-import com.example.betadiccompose.Domain.UserData.*
-import com.example.betadiccompose.Domain.model.DataGramar
-import com.example.betadiccompose.Domain.model.DataNiveles
-import com.example.betadiccompose.Domain.model.DataSentes
-import com.example.betadiccompose.Domain.model.DataSubMenu
-import com.example.betadiccompose.data.database.model.DataMyFavoriteWord
-import com.example.betadiccompose.data.network.model.DataUser
-import com.example.betadiccompose.data.network.model.DataVocabulary
-import com.example.betadiccompose.data.network.model.DataWorld
+import com.example.betadiccompose.Domain.Game_Provider.GameProvider
+import com.example.betadiccompose.Domain.Game_Provider.Prefs
+import com.example.betadiccompose.data.local_database.model.DataMyFavoriteGramar
+import com.example.betadiccompose.data.local_database.model.DataMyFavoriteSentes
+import com.example.betadiccompose.data.local_database.model.DataMyFavoriteWord
+import com.example.betadiccompose.data.network_database.model.*
+import com.example.betadiccompose.data.repository.Authrepository
 import com.example.betadiccompose.ui.Navigation.MainScreenState
+import com.google.firebase.auth.AuthCredential
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
 @HiltViewModel
 class VocabularyViewModel @Inject constructor (
-    val useCases : GetCategorys,
-    val gramar: GetGramar,
-    val words :GetWords,
-    val sentes :GetSentes,
-    val submenu: GetSubMenu,
-    val niveles : GetNiveles,
-    val woo :GetFrom,
-    val gameProvider :GameProvider,
-    val level:GetCategoriaNivel,
-    val clean :CleanWord,
+    @ApplicationContext context: Context,
+    val game_provider :GameProvider,
     val prefs: Prefs,
-    val getfavoritewords :GetMyFavoriteWord,
-    val insertMyFavoriteWord: InsertMyFavoriteWord,
-    val deletemyFavoriteWord: DeleteMyFavoriteWord,
+    val favorite : Favorite,
+    val level : Level,
+    val user : User,
+    val vocabulary: Vocabulary,
+    val books: Books,
+    val auth: Authrepository ): ViewModel() {
 
-    val insertuserdata :InsertDataUser,
-    val deletedatauser: DeleteUserData,
-    val getDataUser: GetDataUser,
-    val updateExpUser: UpdateExpUser,
-    val updateLevelUser: UpdateLevelUser,
-    val updateStarsUser: UpdateStarsUser
+    /************  login **************/
 
-): ViewModel() {
+    val currentUser = auth.currentUser
+    val userId = auth.getUserId()
+    val username = auth.getUserName()
+    val useremail = auth.getUserEmail()
+    val userphoto = auth.getUserPhoto()
 
+    val stars :MutableState<Int> = mutableStateOf(1)
+
+    val hasUser: Boolean
+        get() = auth.hasUser()
+
+    var loginUiState by mutableStateOf(LoginUiState())
+        private set
+
+    fun onUserNameChange(userName: String) {
+        loginUiState = loginUiState.copy(userName = userName)
+    }
+
+    fun onPasswordNameChange(password: String) {
+        loginUiState = loginUiState.copy(password = password)
+    }
+
+    fun onUserNameChangeSignup(userName: String) {
+        loginUiState = loginUiState.copy(userEmailSignUp = userName)
+    }
+
+    fun onPasswordChangeSignup(password: String) {
+        loginUiState = loginUiState.copy(passwordSignUp = password)
+    }
+
+    fun onConfirmPasswordChange(password: String) {
+        loginUiState = loginUiState.copy(confirmPasswordSignUp = password)
+    }
+
+    private fun validateLoginForm() =
+        loginUiState.userName.isNotBlank() &&
+                loginUiState.password.isNotBlank()
+
+    private fun validateSignupForm() =
+        loginUiState.userEmailSignUp.isNotBlank() &&
+                loginUiState.passwordSignUp.isNotBlank() &&
+                loginUiState.confirmPasswordSignUp.isNotBlank()
+
+    fun createUser(context: Context) = viewModelScope.launch {
+        try {
+            if (!validateSignupForm()) {
+                throw IllegalArgumentException("email and password can not be empty")
+            }
+
+            if(loginUiState.passwordSignUp.length < 8){
+                throw IllegalArgumentException("password need to have more than 8 words")
+            }
+            loginUiState = loginUiState.copy(isLoading = true)
+
+            if (loginUiState.passwordSignUp != loginUiState.confirmPasswordSignUp
+            ) {
+                throw IllegalArgumentException(
+                    "Password do not match"
+                )
+            }
+
+            //loginUiState = loginUiState.copy(signUpError = null)
+
+            auth.createUser(
+                loginUiState.userEmailSignUp,
+                loginUiState.passwordSignUp
+            ) { isSuccessful ->
+                if (isSuccessful) {
+                    Toast.makeText(
+                        context,
+                        "success Login",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    loginUiState = loginUiState.copy(isSuccessLogin = true)
+                } else {
+                    /*
+                    Toast.makeText(
+                        context,
+                        "Failed Login",
+                        Toast.LENGTH_SHORT
+                    ).show()*/
+                    loginUiState = loginUiState.copy(isSuccessLogin = false)
+                }
+
+            }
+
+
+        } catch (e: Exception) {
+            // loginUiState = loginUiState.copy(signUpError = e.localizedMessage+" mistake")
+            e.printStackTrace()
+            println("Este es el error ${e.message}")
+
+            var error = ""
+
+            if("The email address is already in use by another account." == e.message){
+
+                loginUiState = loginUiState.copy(signUpErrorEmail = e.localizedMessage)
+                loginUiState = loginUiState.copy(signUpErrorPassword = null)
+                loginUiState = loginUiState.copy(signUpErrorConfirPassword = null)
+            }
+            if("email and password can not be empty" == e.message){
+                loginUiState = loginUiState.copy(signUpErrorEmail = e.localizedMessage)
+                loginUiState = loginUiState.copy(signUpErrorPassword = e.localizedMessage)
+                loginUiState = loginUiState.copy(signUpErrorConfirPassword = e.localizedMessage)
+            }
+
+            if("password need to have more than 8 words" == e.message){
+
+                loginUiState = loginUiState.copy(signUpErrorEmail = null)
+                loginUiState = loginUiState.copy(signUpErrorPassword = e.localizedMessage)
+                loginUiState = loginUiState.copy(signUpErrorConfirPassword = e.localizedMessage)
+            }
+
+            if("The email address is badly formatted." == e.message){
+
+                loginUiState = loginUiState.copy(signUpErrorEmail = e.localizedMessage)
+                loginUiState = loginUiState.copy(signUpErrorPassword = null)
+                loginUiState = loginUiState.copy(signUpErrorConfirPassword = null)
+            }
+
+            if("Password do not match" == e.message){
+                loginUiState = loginUiState.copy(signUpErrorEmail = null)
+                loginUiState = loginUiState.copy(signUpErrorPassword = e.localizedMessage)
+                loginUiState = loginUiState.copy(signUpErrorConfirPassword = e.localizedMessage)
+            }
+
+            Toast.makeText(context, "${e.message}", Toast.LENGTH_SHORT).show()
+
+
+        } finally {
+            loginUiState = loginUiState.copy(isLoading = false)
+        }
+
+
+    }
+
+    fun loginUser(context: Context) = viewModelScope.launch {
+        try {
+            if (!validateLoginForm()) {
+                throw IllegalArgumentException("email and password can not be empty")
+            }
+            loginUiState = loginUiState.copy(isLoading = true)
+            loginUiState = loginUiState.copy(loginError = null)
+
+            auth.loginUser(
+                loginUiState.userName.trim(),
+                loginUiState.password.trim()
+            ) { isSuccessful ->
+                if (isSuccessful) {
+                    Toast.makeText(
+                        context,
+                        "Hi, Welcome",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    loginUiState = loginUiState.copy(isSuccessLogin = true)
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Your email or password is wrong",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    loginUiState = loginUiState.copy(isSuccessLogin = false)
+                }
+
+            }
+
+
+        } catch (e: Exception) {
+            loginUiState = loginUiState.copy(loginError = e.localizedMessage)
+            e.printStackTrace()
+        } finally {
+            loginUiState = loginUiState.copy(isLoading = false)
+        }
+
+
+    }
+
+    fun SingOut() = auth.SingOut()
+
+    fun SingInGoogleFirebase(
+        credential: AuthCredential,
+        context: Context,
+        OnNavToHome:()->Unit) = viewModelScope.launch{
+        try {
+            loginUiState = loginUiState.copy(isLoading = true)
+            auth.SingGoogle(credential){
+                if(it){
+                    Toast.makeText(
+                        context,
+                        "success Login",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    loginUiState = loginUiState.copy(isLoading = false)
+                    OnNavToHome.invoke()
+
+                }else{
+                    loginUiState = loginUiState.copy(isLoading = false)
+                    Toast.makeText(
+                        context,
+                        "Failed Login",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }catch (E:Exception){
+            Toast.makeText(
+                context,
+                "${E.message}",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    fun GetDataUser() {
+
+        viewModelScope.launch {
+            try {
+                auth.GetDataUserFromFirebase().addOnSuccessListener {
+                    println("las stars son ${it.get("stars")}")
+                    //    stars.value = it.get("stars")
+                }
+            }catch (e:Exception){
+                println(e.message)
+            }
+        }
+
+
+
+    }
+
+    fun sendPasswordResetEmail(context: Context){
+        viewModelScope.launch {
+            try {
+                auth.sendPasswordResetEmail { isSuccessful->
+
+                    if(isSuccessful){
+                        Toast.makeText(
+                            context,
+                            "UnSuccessfull",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }else{
+                        Toast.makeText(
+                            context,
+                            "UnSuccessfull",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+            }catch (e:Exception){
+
+            }
+        }
+    }
+
+    /************* login ***************/
+
+    val contexto:Context = context
 
     /** Nivel **/
-    var Step =  mutableStateOf(0)
-
     var state by mutableStateOf(MainScreenState())
         private set
 
     var step by mutableStateOf(0)
 
     /** Listas **/
-    val rquote : MutableState<List<DataVocabulary>> = mutableStateOf(listOf())
-    val lstwords : MutableState<List<DataWorld>> = mutableStateOf(listOf())
-    val lstgramar : MutableState<List<DataGramar>> = mutableStateOf(listOf())
-    val lstsubmenu : MutableState<List<DataSubMenu>> = mutableStateOf(listOf())
-    val lstsentes  : MutableState<List<DataSentes>> = mutableStateOf(listOf())
+    val lstBooks: MutableState<List<DataBooks>> = mutableStateOf(listOf())
+    val lstVocabulary: MutableState<List<DataVocabulary>> = mutableStateOf(listOf())
+    val lstWords: MutableState<List<DataWorld>> = mutableStateOf(listOf())
+    val lstGramar: MutableState<List<DataGramar>> = mutableStateOf(listOf())
+    val lstsubmenu: MutableState<List<DataSubMenu>> = mutableStateOf(listOf())
+    val lstsentes: MutableState<List<DataSentes>> = mutableStateOf(listOf())
 
     /** Nivel **/
-    val lstniveles  : MutableState<List<DataNiveles>> = mutableStateOf(listOf()) //Lista de niveles
-    val lstnivel  : MutableState<List<DataWorld>> = mutableStateOf(listOf()) //Toda las palabras de una categoria
-    val lstPlaying  : MutableState<List<DataWorld>> = mutableStateOf(listOf())
-    private val currentID  : MutableState<Int> = mutableStateOf(0)
+    val lstniveles: MutableState<List<DataNiveles>> = mutableStateOf(listOf()) //Lista de niveles
+    val lstnivel: MutableState<List<DataWorld>> = mutableStateOf(listOf()) //Toda las palabras de una categoria
+    val lstPlaying: MutableState<List<DataWorld>> = mutableStateOf(listOf())
+    private val currentID: MutableState<Int> = mutableStateOf(0)
 
-   /** Progress **/
-    val isloding : MutableState<Boolean> = mutableStateOf(true)
-    val isloding_2 : MutableState<Boolean> = mutableStateOf(true)
-    val isloding_3 : MutableState<Boolean> = mutableStateOf(true)
-    val isloding_4 : MutableState<Boolean> = mutableStateOf(true)
-    val isloding_5 : MutableState<Boolean> = mutableStateOf(true)
-    val isloding_level : MutableState<Boolean> = mutableStateOf(true)
+    /** Progress **/
+    val loadVocabulary: MutableState<Boolean> = mutableStateOf(true)
+    val loadBooks: MutableState<Boolean> = mutableStateOf(true)
+    val loadWords: MutableState<Boolean> = mutableStateOf(true)
+    val loadSubMenu: MutableState<Boolean> = mutableStateOf(true)
+    val loadSentes: MutableState<Boolean> = mutableStateOf(true)
+    val loadGramar: MutableState<Boolean> = mutableStateOf(true)
+    val isloding_5: MutableState<Boolean> = mutableStateOf(true)
+    val isloding_level: MutableState<Boolean> = mutableStateOf(true)
 
+    //Books
+
+  //  private val cm:ConnectivityManager = contexto.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+
+    var context_view: Context = contexto
 
     /** My favorite words */
-    var lstfavoritewords  : MutableState<List<DataMyFavoriteWord>> = mutableStateOf(listOf())
+    var lstfavoritewords: MutableState<List<DataMyFavoriteWord>> = mutableStateOf(listOf())
+
+    /** My favorite words */
+    var lstfavoritesentes: MutableState<List<DataMyFavoriteSentes>> = mutableStateOf(listOf())
+
+    /** My favorite Gramar */
+    var lstfavoritegramar: MutableState<List<DataMyFavoriteGramar>> = mutableStateOf(listOf())
+
 
     /** data user **/
-    var lstdatauser :MutableState<DataUser> = mutableStateOf(DataUser())
+    var lstdatauser: MutableState<DataUser> = mutableStateOf(DataUser())
 
 
-    /** Metodos **/
-    fun getList(){
+    /************************  Categories  ******************************/
+
+    fun getListOfAllCategories() {
+
         viewModelScope.launch {
-            val resp = useCases()
-            isloding.value = true
 
-            if(!resp.isNullOrEmpty()){
+            try{
+                val resp = vocabulary.GetListOfAllCategories()
+                loadVocabulary.value = true
 
-                rquote.value = resp
-                isloding.value = false
+                if (!resp.isNullOrEmpty()) {
+                    lstVocabulary.value = resp
+                    loadVocabulary.value = false
+                }
+
+            }catch (e:Exception){
+
+                //it happens when it don't have intenet
+                if(e.message == "Unable to resolve host \"duq14sjq9c7gs.cloudfront.net\": No address associated with hostname"){
+
+                    val resp_2 =  vocabulary.GetListOfAllVocabularyFromRoom()
+
+                    if(!resp_2.isNullOrEmpty()){
+                        loadVocabulary.value = false
+                        lstVocabulary.value = resp_2
+                    }
+                }
+            }
+
+
+
+        }
+    }
+
+
+    fun getListOfSubMenu(){
+        viewModelScope.launch {
+            try {
+                val result = vocabulary.GetListOfSubMenu()
+                loadSubMenu.value = true
+                //loadWords.value = true
+                if(!result.isNullOrEmpty()){
+                    lstsubmenu.value = result
+                    loadSubMenu.value = false
+                    // loadWords.value = false
+                }            }catch (e:Exception){
+
+            }
+
+
+        }
+    }
+
+
+
+    /************************  Words  ******************************/
+
+    fun getListOfWordsFromRoom() {
+        viewModelScope.launch {
+            try {
+                val resp = vocabulary.GetListOfWordsFromRoom()
+                loadWords.value = true
+                if (!resp.isNullOrEmpty()) {
+                    lstWords.value = resp
+                    loadWords.value = false
+                }
+            }catch (e:Exception){
+
+            }
+
+        }
+    }
+
+    fun getListOfSentesFromRoom() {
+        viewModelScope.launch {
+            try {
+                val resp = vocabulary.GetListOfWordsFromRoom()
+                loadSentes.value = true
+                if (!resp.isNullOrEmpty()) {
+                    lstWords.value = resp
+                    loadSentes.value = false
+                }
+            }catch (e:Exception){
+
+            }
+
+        }
+    }
+
+    fun getListOfGramar() {
+        viewModelScope.launch {
+            try {
+                val result = vocabulary.GetListOfGramar()
+                loadGramar.value = true
+                if (!result.isNullOrEmpty()) {
+                    loadGramar.value = false
+                    lstGramar.value = result
+                }
+            }catch (e:Exception){
 
             }
         }
+
     }
 
-    fun getWorlds(){
+    fun getListOfWordsToPlayForLevel(){
+
         viewModelScope.launch {
-            //val result = words()
-            val result = woo()
-            isloding_2.value = true
+            try{
+                val result = level.GetListOfWordsToPlayForLevel()
+                isloding_level.value = true
 
-             if(!result.isNullOrEmpty()){
-                 lstwords.value = result
-                 isloding_2.value = false
-                // for (e in lstwords.value ) println("Este es el autor vm: ${e.World_1}")
-             }
-        }
-    }
+                if(!result.isNullOrEmpty()) {
+                    lstnivel.value = result
+                    isloding_level.value = false
+                }
 
-    fun getGramar(){
-        viewModelScope.launch {
-            val result = gramar()
-            isloding_4.value = true
+                lstnivel.value.forEach {
+                    println(it.World_1)
+                }
 
-            if(!result.isNullOrEmpty()){
-                isloding_4.value = false
-                lstgramar.value = result
+
+            }catch (E:Exception){
+                println("Este es el error: ${E.message}")
             }
 
         }
+
     }
 
+    /************************  Gramar  ******************************/
 
-    //obter toda la categoria por nivel
-    fun getlevel(){
-        viewModelScope.launch {
-            val result = level()
-            isloding_level.value = true
-            println("Obteniendo nivel")
 
-            if(!result.isNullOrEmpty()) {
-                lstnivel.value = result
-               isloding_level.value = false
-            }
-        }
+    /************************  Sentes  ******************************/
+
+    /************************  Game  ******************************/
+
+    fun getEasy(lst:List<DataWorld>):List<DataWorld> {
+       return game_provider.MakeEasyAndHard(lst)
     }
 
-    //filtrar la categoria
-    //Juegos nivel by categorias
-    fun GetEasy(lst:List<DataWorld>):List<DataWorld> {
-       return gameProvider.MakeEasyAndHard(lst)
+    fun getWrongWritten(lst:List<DataWorld>):List<DataWorld> {
+        return game_provider.MakeWrongWritten(lst)
     }
 
-    fun GetWrongWritten(lst:List<DataWorld>):List<DataWorld> {
-        return gameProvider.MakeWrongWritten(lst)
+    fun getSoundChoose(lst:List<DataWorld>): List<DataWorld> {
+        return game_provider.SoundChoose(lst)
     }
 
-    fun GetSoundChoose(lst:List<DataWorld>): List<DataWorld> {
-        return gameProvider.SoundChoose(lst)
-    }
-
-    fun GetOneWord(lst: List<DataWorld>): DataWorld {
-        return gameProvider.GetOneWord(lst)
+    fun getOneWord(lst: List<DataWorld>): DataWorld {
+        return game_provider.GetOneWord(lst)
     }
 
     /***************************************************************/
 
-    fun getCurrentIdGame(): Int {
-        currentID.value = gameProvider.currentID
-        return currentID.value
-        //return "${prefs.GetCategory()}/${currentID.value}"
-    }
 
     /***********************************************************/
 
-    fun getSentes(){
-        viewModelScope.launch {
-            val result = sentes()
-            isloding_4.value = true
-            if(!result.isNullOrEmpty()){
-                lstsentes.value = result
-                isloding_4.value = false
-                // for (e in lstwords.value ) println("Este es el autor vm: ${e.World_1}")
-            }
-        }
-    }
 
-    fun getSubMenu(){
+    fun getListOfAlllevel(){
         viewModelScope.launch {
-            val result = submenu()
-            isloding_3.value = true
-            if(!result.isNullOrEmpty()){
-                lstsubmenu.value = result
-                isloding_3.value = false
-            }
-        }
-    }
+            try{
+                val resp = level.GetListOfAlllevel()
+                isloding_5.value = true
 
-    fun getNiveles(){
-        viewModelScope.launch {
-            val resp = niveles()
-            isloding_5.value = true
+                if(!resp.isNullOrEmpty()){
+                    lstniveles.value = resp
+                    isloding_5.value = false
+                }
 
-            if(!resp.isNullOrEmpty()){
-                //lst = resp
-                lstniveles.value = resp
-                isloding_5.value = false
-                //for (e in rquote.value ) println("Este es el autor vm: ${e.author}")
+            }catch (e:Exception){
+
+                if(e.message == "Unable to resolve host \"duq14sjq9c7gs.cloudfront.net\": No address associated with hostname"){
+                   val resp_2 =  level.GetListOfAlllevelFromRoom()
+
+                    if(!resp_2.isNullOrEmpty()){
+                        isloding_5.value = false
+                        lstniveles.value = resp_2
+                    }
+                }
+
             }
+
         }
     }
 
@@ -228,116 +557,257 @@ class VocabularyViewModel @Inject constructor (
 
     }
 
-    fun Sonido(id: Int, category:String) {
-
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                Media(category, id)
-                // Exo(category, id, context)
-            }catch (e:Exception){
-                println("El error es: ${e.message}")
-            }
-        }
-
-    }
-
-    private fun Media(category: String, id: Int) {
-
-        val url = "https://d1i3grysbjja6f.cloudfront.net/Sonido/$category/1/$id.mp3"
-
-        val mediaPlayer = MediaPlayer().apply {
-            setAudioAttributes(
-                AudioAttributes.Builder()
-                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                    .setUsage(AudioAttributes.USAGE_MEDIA)
-                    .build()
-            )
-
-            setDataSource(url)
-            prepare() // might take long! (for buffering, etc)
-            // start()
-        }
-
-        mediaPlayer.start()
-    }
-    /*************************************/
-    fun getSound(beat:Int){
-        gameProvider.KeySound(beat)
-    }
-
     /***************  my favorite word *******************/
-    fun GetMyFavoriteWords(): Unit {
+    fun getMyFavoriteWords(): Unit {
         viewModelScope.launch {
-            val resp  = getfavoritewords()
-
+            val resp  = favorite.GetListOfAllMyFavoriteWord()
             if(!resp.isNullOrEmpty()){
                 lstfavoritewords.value = resp
             }
         }
     }
 
-    fun InsertMyFavoriteWord(favorite :DataMyFavoriteWord){
+    fun insertMyFavoriteWord(fav :DataMyFavoriteWord){
         viewModelScope.launch {
-            insertMyFavoriteWord(favorite)
+            favorite.InsertMyFavoriteWord(fav)
         }
     }
 
-    fun DeleteMyFavoriteWord(url:String){
+    fun deleteMyFavoriteWord(url:String){
         viewModelScope.launch {
-            deletemyFavoriteWord(url)
+            favorite.DeleteMyWordByImg(url)
+        }
+    }
+
+
+
+    /***************  my favorite sentes *******************/
+    fun getMyFavoriteSentes(): Unit {
+        viewModelScope.launch {
+            val resp = favorite.GetAllMyFavoriteSentes()
+            if(!resp.isNullOrEmpty()){
+                lstfavoritesentes.value = resp
+            }
+        }
+    }
+
+    fun insertMyFavoriteSentes(fav :DataMyFavoriteSentes){
+        viewModelScope.launch {
+            favorite.InsertMyFavoriteSentes(fav)
+        }
+    }
+
+    fun deleteMyFavoriteSentes(sentes_1:String){
+        viewModelScope.launch {
+            favorite.DeleteMySentesBySentes(sentes_1)
+        }
+    }
+
+    /***************  my favorite Gramar *******************/
+    fun getMyFavoriteGramar(): Unit {
+        viewModelScope.launch {
+            val resp = favorite.GetAllMyFavoriteGramar()
+            if(!resp.isNullOrEmpty()){
+                lstfavoritegramar.value = resp
+            }
+        }
+    }
+    fun insertMyFavoriteGramar(fav :DataMyFavoriteGramar){
+        viewModelScope.launch {
+            favorite.InsertMyFavoriteGramar(fav)
+
+        }
+    }
+
+    fun deleteMyFavoriteGramar(gramar_1:String){
+        viewModelScope.launch {
+            favorite.DeleteMyGramarByGramar(gramar_1)
+        }
+    }
+
+    /************************  Sound  ******************************/
+
+    fun SoundFromLocal(sound:Int){
+        var mediaPlayer = MediaPlayer.create(contexto,sound)
+        mediaPlayer.setOnPreparedListener(OnPreparedListener { mp ->
+            //works only from api 23
+            var myPlayBackParams: PlaybackParams? = null
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                myPlayBackParams = PlaybackParams()
+                myPlayBackParams!!.speed = 0.5f //you can set speed here
+                mp.playbackParams = myPlayBackParams!!
+            }})
+        mediaPlayer.start()
+
+
+
+    }
+
+    fun soundSlowerFromUrl(id: Int = 1,uri:String = ""){
+        CoroutineScope(Dispatchers.IO).launch {
+
+            var url = ""
+            try {
+                url = if(uri != ""){
+                    uri
+                }else{
+                    "https://duq14sjq9c7gs.cloudfront.net/Sounds/${GetLearnLenguage()}/${GetPath()}/${id}.mp3"
+                }
+
+                try {
+                    val mediaPlayer = MediaPlayer().apply {
+                        setAudioAttributes(
+                            AudioAttributes.Builder()
+                                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                .setUsage(AudioAttributes.USAGE_MEDIA)
+                                .build()
+                        )
+
+                        setDataSource(url)
+                        prepare()
+
+
+                    }
+
+                    mediaPlayer.setOnPreparedListener(OnPreparedListener { mp ->
+                        //works only from api 23
+                        var myPlayBackParams: PlaybackParams? = null
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            myPlayBackParams = PlaybackParams()
+                            myPlayBackParams!!.speed = 0.4f //you can set speed here
+                            mp.playbackParams = myPlayBackParams!!
+                        }})
+
+                    mediaPlayer.start()
+
+
+
+                }catch (e:Exception){
+                    println("El error es: ${e.message}")
+                }
+            }catch (e:Exception){
+
+            }
+        }
+    }
+
+    fun soundFromUrl(id: Int = 1,uri:String = ""){
+        CoroutineScope(Dispatchers.IO).launch {
+            println("el id es ${id}")
+            var url = ""
+
+            if(uri != ""){
+                url = uri
+            }else{
+                url = "https://duq14sjq9c7gs.cloudfront.net/Sounds/${GetLearnLenguage()}/${GetPath()}/${id}.mp3"
+            }
+
+            println(url)
+
+            try {
+                val mediaPlayer = MediaPlayer().apply {
+                    setAudioAttributes(
+                        AudioAttributes.Builder()
+                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                            .setUsage(AudioAttributes.USAGE_MEDIA)
+                            .build()
+                    )
+                    setDataSource(url)
+                    prepare()
+                }
+
+                mediaPlayer.start()
+            }catch (e:Exception){
+                println("El error es: ${e.message}")
+            }
         }
     }
 
     /**************  User data  *********************/
-    fun DeleteUserData(){
+    fun deleteUserData(){
         viewModelScope.launch {
-            deletedatauser()
+           user.DeleteUser()
         }
     }
 
-    fun GetDataUser(){
+    fun getDataUser(){
         viewModelScope.launch {
-            val result = getDataUser()
+            val result = user.GetDetaillsUser()
             lstdatauser.value = result
         }
     }
 
-    fun InsertDataUser(dataUser: DataUser){
+    fun insertDataUser(dataUser: DataUser){
         viewModelScope.launch {
-            insertuserdata(dataUser)
+            user.InsertUser(dataUser)
         }
     }
 
-    fun UpdateStarsUser(stars:Int){
-        viewModelScope.launch {
-            updateStarsUser(stars)
-        }
+    suspend fun updateExp(){
+        user.UpdateExpUser(1)
     }
 
-    fun UpdateLevelUser(level:Int){
-        viewModelScope.launch {
-            updateLevelUser(level)
-        }
+    suspend fun counAllUser()=user.countUser()
+
+    /***************  preferes  *******************/
+
+    fun saveLearnLenguage(language:String)=prefs.SaveLearnLanguage(language)
+    fun SaveLocalLanguage(language:String) = prefs.SaveLocalLanguage(language)
+
+    fun SavePreferences(it: DataVocabulary) {
+        prefs.SaveIndex(it)
     }
 
-    fun UpdateExpUser(exp:Int){
-        viewModelScope.launch {
-            updateExpUser(exp)
-        }
+    fun SavePath(path: String) {
+        prefs.SavePath(path)
     }
 
-    fun SaveLearnLenguage(language:String){
-        prefs.SaveLearnLanguage(language)
+    fun SaveNameCategory(name: String) {
+        prefs.SaveNameCategory(name)
     }
+
+    fun SaveAllSubNameCategory(doc: String) {
+        prefs.SaveCats(doc)
+    }
+
+    fun SaveSubNumberCategory(id: Int) {
+        prefs.SaveSubNumberCategory(id)
+    }
+
+    fun SaveWordCategoryName(name:String){
+        prefs.SaveWordNameCategory(name)
+    }
+
+    fun GetPath():String = prefs.GetPath()
 
     fun GetLearnLenguage(): String = prefs.GetLearnLanguage()
-
-
-    fun SaveLocalLanguage(language:String){
-        prefs.SaveLocalLanguage(language)
-    }
 
     fun GetLocalLenguage(): String = prefs.GetLocalLanguage()
 
     fun GetCategoryName():String = prefs.GetNameCategory()
+
+    fun GetWordCategoryName():String = prefs.GetWordNameCategory()
+
+    fun GetKindDocument() = prefs.GetDocument()
+
+    fun IsSub() = prefs.IsSubMenu()
+
+    /***** books ****/
+
+    fun getListOfAllBooks() {
+        viewModelScope.launch {
+            val resp = books.GetListOfBooks()
+            loadBooks.value = true
+            if (!resp.isNullOrEmpty()) {
+                lstBooks.value = resp
+                loadBooks.value = false
+            }
+        }
+    }
+
+    /**** Conexion ***/
+    val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
+
+    fun IsConnected(): Boolean = activeNetwork?.isConnectedOrConnecting == true
 }

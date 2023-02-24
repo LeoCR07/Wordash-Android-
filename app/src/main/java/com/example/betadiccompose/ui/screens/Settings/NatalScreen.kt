@@ -2,7 +2,6 @@ package com.example.betadiccompose.ui.screens.Settings
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -65,7 +64,7 @@ fun OpcionScreen(
                                 selected = item,
                                 onClick = {
                                     value = item
-                                    viewmodel.SaveLearnLenguage(item)
+                                    viewmodel.saveLearnLenguage(item)
                                 },
                                 value = value)
                         }

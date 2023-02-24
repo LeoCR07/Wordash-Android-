@@ -4,5 +4,6 @@ enum class MenuRoutes {
     play,
     learn,
     account,
+    library,
     store
 }
