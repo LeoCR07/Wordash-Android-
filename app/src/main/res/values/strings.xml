@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">BetaDicCompose</string>
+    <string name="app_name">Super Dicvocabulary</string>
+    <string name="facebook_app_id">1921820721342861</string>
+    <string name="fb_login_protocol_scheme">fb1234</string>
+    <string name="facebook_client_token">cb8906ee7d35f2a76831481ba1104f71</string>
+
+
 </resources>

@@ -26,6 +26,7 @@ import com.example.betadiccompose.data.network_database.model.DataUser
 import com.example.betadiccompose.ui.Navigation.routes.LoginRoutes
 import com.example.betadiccompose.ui.Navigation.routes.MenuRoutes
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
+import com.facebook.FacebookSdk
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -67,9 +68,10 @@ class MainActivity : ComponentActivity() {
         viewModel.getMyFavoriteSentes()
         viewModel.getMyFavoriteGramar()
 
-
+       // FacebookSdk.sdkInitialize(applicationContext)
 
         setContent {
+
             screenSplash.setKeepOnScreenCondition{false}
 
             if (viewModel?.hasUser){
