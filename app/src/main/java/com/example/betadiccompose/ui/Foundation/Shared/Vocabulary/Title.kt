@@ -22,6 +22,7 @@ const val TEXT_SCALE_REDUCTION_INTERVAL = 0.9f
 fun title(text: String, weight: FontWeight = FontWeight.Normal, modifier: Modifier,size:TextUnit = 15.sp) {
 
     var textSize = size
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
@@ -29,10 +30,10 @@ fun title(text: String, weight: FontWeight = FontWeight.Normal, modifier: Modifi
         Text(
             text = text,
         fontWeight = weight,
-            maxLines = 1,
             color = MaterialTheme.colors.secondaryVariant,
             fontSize = textSize,
             overflow = TextOverflow.Ellipsis,
+            maxLines = 1,
             onTextLayout = { textLayoutResult ->
                 val maxCurrentLineIndex: Int = textLayoutResult.lineCount - 1
                 if (textLayoutResult.isLineEllipsized(maxCurrentLineIndex)) {

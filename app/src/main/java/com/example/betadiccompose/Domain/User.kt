@@ -33,6 +33,20 @@ class User @Inject constructor(private val repository : UserRepository)  {
         repository.UpdateStarsUser(stars)
     }
 
+    suspend fun lessLives(){
+        repository.lessLives()
+    }
+
+    suspend fun plusLives(){
+        repository.plusLives()
+    }
+
+    suspend fun GetLivesUser() = repository.getUserLives()
+
+
     suspend fun countUser():Int=repository.count()
+
+    suspend fun getlives() = repository.getUserLives()
+
 
 }

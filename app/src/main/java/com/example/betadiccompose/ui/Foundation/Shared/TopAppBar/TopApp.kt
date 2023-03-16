@@ -2,6 +2,7 @@ package com.example.betadiccompose.ui.Foundation.Shared
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -33,6 +34,7 @@ fun TopApp(
     4 - store
     */
 
+    val interactionSource = remember { MutableInteractionSource() }
     var showAlertDialog by remember { mutableStateOf(false) }
 
     var datauser by remember {
@@ -53,6 +55,7 @@ fun TopApp(
 
 
     var opendialog = remember { mutableStateOf(false) }
+
     DialogLenguage(
         viewModel = viewModel,
         show = opendialog.value,
@@ -61,8 +64,8 @@ fun TopApp(
 
     TopAppBar(
         backgroundColor = MaterialTheme.colors.onPrimary,
-        title = {  if(title!=null) Text(text = title) },
-        navigationIcon = {
+        title = {  if(title!=null) Text(text = title,color= MaterialTheme.colors.secondaryVariant ) },
+        navigationIcon =  {
             Spacer(modifier = Modifier.width(10.dp))
 
             if(opcion == 3){
@@ -79,7 +82,7 @@ fun TopApp(
                         painter = painterResource (  R.drawable.flag_states),
                         contentDescription = "BTN",
                         modifier = Modifier
-                            .clickable { opendialog.value = true }
+                            .clickable(interactionSource = interactionSource,indication = null) { opendialog.value = true }
                             .size(35.dp)
                             .clip(CircleShape),
                         tint = Color.Unspecified)
@@ -88,7 +91,7 @@ fun TopApp(
                         painter = painterResource (  R.drawable.flag_spain),
                         contentDescription = "BTN",
                         modifier = Modifier
-                            .clickable { opendialog.value = true }
+                            .clickable(interactionSource = interactionSource,indication = null) { opendialog.value = true }
                             .size(35.dp)
                             .clip(CircleShape),
                         tint = Color.Unspecified)
@@ -108,18 +111,29 @@ fun TopApp(
                         horizontalArrangement = Arrangement.SpaceAround) {
 
                         topAppBarIcon(icon = R.drawable.exp, value = datauser.exp)
-                        topAppBarIcon(icon = R.drawable.vidas, value = datauser.level)
+                        topAppBarIcon(icon = R.drawable.vidas, value = datauser.lives)
                         topAppBarIcon(icon = R.drawable.star_on, value = datauser.stars)
 
                     }
                 }else if(opcion == 1){
 
+                    Icon(
+                        painter = painterResource (R.drawable.settings),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .clickable(interactionSource = interactionSource,indication = null) {
+                                navToSomeWhere() }
+                            .size(33.dp),
+                        tint = Color.Unspecified
+                    )
+
+                    Spacer(modifier = Modifier.width(30.dp))
 
                     Icon(
                         painter = painterResource (R.drawable.sign_out),
                         contentDescription = null,
                         modifier = Modifier
-                            .clickable { showAlertDialog = true }
+                            .clickable(interactionSource = interactionSource,indication = null) { showAlertDialog = true }
                             .size(28.dp),
                         tint = MaterialTheme.colors.secondaryVariant
                     )
@@ -131,7 +145,7 @@ fun TopApp(
                         painter = painterResource (R.drawable.settings),
                         contentDescription = null,
                         modifier = Modifier
-                            .clickable { navToSomeWhere() }
+                            .clickable(interactionSource = interactionSource,indication = null) { navToSomeWhere() }
                             .size(33.dp),
                         tint = Color.Unspecified
                     )

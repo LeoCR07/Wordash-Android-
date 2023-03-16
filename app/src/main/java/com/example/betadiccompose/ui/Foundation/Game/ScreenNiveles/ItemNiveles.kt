@@ -1,13 +1,23 @@
 package com.example.betadiccompose.ui.Foundation.Game.ScreenNiveles
 
+import android.util.Size
+import androidx.compose.foundation.Indication
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.indication
+import androidx.compose.foundation.interaction.Interaction
+import androidx.compose.foundation.interaction.InteractionSource
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -19,10 +29,12 @@ import com.example.betadiccompose.data.network_database.model.DataUser
 import com.example.betadiccompose.ui.Foundation.Shared.Url_Animation
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 
+
 @Composable
 fun ItemNiveles(
     viewModel: VocabularyViewModel,
-    onClick: () -> Unit, item: DataNiveles,
+    onClick: (DataNiveles) -> Unit,
+    item: DataNiveles,
     modifier: Modifier) {
 
     var datauser by remember {
@@ -33,33 +45,39 @@ fun ItemNiveles(
     datauser = viewModel.lstdatauser.value
     var icon:Int
 
+    val interactionSource = remember { MutableInteractionSource() }
+
 
     Box(
-        modifier = modifier.clickable{onClick()}
+        modifier = modifier
+            .clickable(interactionSource = interactionSource,indication = null)
+            {onClick(item)}
     ) {
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
-            if (item.id  <= datauser.level) {
 
+            if(item.id <= datauser.level){
                 Url_Animation(
                     url = item.animation,
                     isplaying = true
                 )
+            }else{
+                Url_Animation(
+                    url = item.animation,
+                    isplaying = false
+                )
+            }
 
+            if (item.id  < datauser.level) {
                 icon = R.drawable.star_on
 
             } else {
-                Url_Animation(
-                    url = item.animation,
-                    isplaying = true
-                )
                 icon = R.drawable.star_off
             }
 
 
             title(
-
                 item.name,
                 modifier = Modifier
                     .padding(1.dp),
@@ -90,7 +108,7 @@ fun ItemNiveles(
                     contentDescription = null,
                     modifier = Modifier
                         .size(20.dp),
-                    tint = Color.Unspecified
+                    tint = if(icon == R.drawable.star_on) Color.Unspecified else MaterialTheme.colors.secondaryVariant
                 )
 
 
@@ -99,3 +117,5 @@ fun ItemNiveles(
 
     }
 }
+
+

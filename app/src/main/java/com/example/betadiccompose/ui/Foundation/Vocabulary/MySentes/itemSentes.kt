@@ -32,18 +32,20 @@ fun itemSentes(item: DataMyFavoriteSentes, vocalview: VocabularyViewModel) {
 
     if(hide){
         Card(
-            modifier = Modifier
-                .clickable {
-                    println("Audio")
-                }
-                .width(170.dp)
-                .height(140.dp)
-                .padding(2.dp)
-          ,
             elevation = 4.dp,
             shape = RoundedCornerShape(12.dp),
             backgroundColor = MaterialTheme.colors.onPrimary,
-            border = BorderStroke(0.5.dp, MaterialTheme.colors.onSecondary)
+            border = BorderStroke(0.5.dp, MaterialTheme.colors.onSecondary),
+            modifier = Modifier
+                .width(170.dp)
+                .height(140.dp)
+                .padding(2.dp)
+                .clickable {
+                    vocalview.SoundFromLink(item.sonido)
+                    println("Audio")
+                }
+
+
 
         ) {
 
@@ -52,21 +54,6 @@ fun itemSentes(item: DataMyFavoriteSentes, vocalview: VocabularyViewModel) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(40.dp)
-                ){
-                    MiniCross(modifier = Modifier
-                        .clickable {
-                            hide = false
-                            // vocalview.DeleteMyFavoriteWord(item.Img)
-                        }
-                        .padding(0.dp, 3.dp, 3.dp, 0.dp)
-                        .align(alignment = Alignment.TopEnd)
-                    )
-                }
 
                 Text(
                     text = item.Sentes_1,

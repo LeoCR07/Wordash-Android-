@@ -1,50 +1,64 @@
 package com.example.betadiccompose.ui.screens
 
-import android.content.Context
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import android.app.Activity
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 
-import com.example.betadiccompose.R
 import com.example.betadiccompose.Runtime.MyApp
 import com.example.betadiccompose.data.network_database.model.DataWorld
-import com.example.betadiccompose.ui.Foundation.Shared.Local_Animation
+import com.example.betadiccompose.ui.Foundation.MyBanner
 import com.example.betadiccompose.ui.Foundation.Shared.TopApp
 import com.example.betadiccompose.ui.Foundation.Shared.Vocabulary.CircleProgress
 import com.example.betadiccompose.ui.Foundation.Vocabulary.ScreenWorld.GetListWorld
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 
 @Composable
 fun WordScreen(
     onMediaClick: (DataWorld) -> Unit,
     viewmodel: VocabularyViewModel,
+
 ) {
+    var context = LocalContext.current
 
     MyApp {
         Scaffold (
+            bottomBar = {
+                        MyBanner()
+            },
             topBar = {
                 TopApp(
                     title = viewmodel.GetWordCategoryName(),
                     viewModel = viewmodel)
         }){
-            viewmodel.getListOfWordsFromRoom()
+
+            LaunchedEffect(key1 =true ){
+                viewmodel.getListOfWordsFromRoom()
+                viewmodel.ShowInterstitalVoca(context)
+            }
 
             if(viewmodel.loadWords.value){
                 CircleProgress()
             }else{
+
                 GetListWorld(
                     viewmodel = viewmodel,
                     onMediaClick = onMediaClick,
                     modifier = Modifier.padding(it))
             }
+
         }
     }
+
+
 
 }
 

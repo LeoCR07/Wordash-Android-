@@ -1,11 +1,16 @@
 package com.example.betadiccompose.ui.Foundation.Shared
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -20,9 +25,12 @@ import com.example.betadiccompose.R
 @Composable
 fun ExitDialog(hideAlertDialog:()->Unit ,showAlertDialog:()->Unit,texto:String,onBack:()->Unit) {
 
+    val interactionSource = remember { MutableInteractionSource() }
+
     AlertDialog(
         modifier = Modifier
-            .clip(RoundedCornerShape(12.dp)),
+            .clip(RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colors.onPrimary),
         onDismissRequest = {
             showAlertDialog()
         },
@@ -31,7 +39,8 @@ fun ExitDialog(hideAlertDialog:()->Unit ,showAlertDialog:()->Unit,texto:String,o
                 modifier = Modifier.fillMaxWidth(),
                 text = texto,
                 fontSize = 18.sp,
-                textAlign = TextAlign.Center)
+                textAlign = TextAlign.Center,
+                color=MaterialTheme.colors.secondaryVariant)
         },
         confirmButton = {
             TextButton(
@@ -40,7 +49,7 @@ fun ExitDialog(hideAlertDialog:()->Unit ,showAlertDialog:()->Unit,texto:String,o
                     onBack()
                 }
             ) {
-                Text("Confirm")
+                Text("Confirm",color=MaterialTheme.colors.secondaryVariant)
             }
         },
         dismissButton = {
@@ -51,7 +60,7 @@ fun ExitDialog(hideAlertDialog:()->Unit ,showAlertDialog:()->Unit,texto:String,o
             ) {
                 Text(
                     text ="Cancel",
-                    color = Color.Black.copy(alpha = 0.7f))
+                    color = MaterialTheme.colors.secondaryVariant.copy(0.6f))
             }
         }
     )

@@ -1,4 +1,4 @@
-package com.example.betadiccompose.Domain.Game_Provider
+package com.example.betadiccompose.Domain
 
 import android.content.Context
 import com.example.betadiccompose.data.network_database.model.DataVocabulary
@@ -20,6 +20,10 @@ class Prefs @Inject constructor(@ApplicationContext context: Context) {
     private val KeyGameInit:String = "KeyIndexInitGame"
     private val KeyGameEnd:String = "KeyIndexEndGame"
     private val KeyCatName:String = "KeyIndexCat"
+    private val Keyfirsttime:String = "timeFirstTime"
+
+    private val KeyCountInterstitialAdGame:String = "KeyCountInterstitialAdGame"
+    private val  KeyCountInterstitialAdVoca:String = "KeyCountInterstitialAdVoca"
 
     val storage = context.getSharedPreferences(db,0)
 
@@ -137,5 +141,25 @@ class Prefs @Inject constructor(@ApplicationContext context: Context) {
         SaveDocument(dato.document) //Guarda el tipo de documento
         IsSaveSubMenu(dato.sub) //Determina si tiene un sub menu
     }
+
+    fun SaveFirstTime(time:String){
+        storage.edit().putString(Keyfirsttime,time).apply()
+    }
+    fun GetFirstTime() = storage.getString(Keyfirsttime,"")!!
+
+
+    fun setCountInterstitialAdVoca(c:Int){
+        storage.edit().putInt(KeyCountInterstitialAdVoca,c).apply()
+    }
+
+    fun getCountInterstitialAdVoca()= storage.getInt(KeyCountInterstitialAdVoca,0)!!
+
+
+
+    fun setCountInterstitialAdGame(c:Int){
+        storage.edit().putInt(KeyCountInterstitialAdGame,c).apply()
+    }
+
+    fun getCountInterstitialAdGame() = storage.getInt(KeyCountInterstitialAdGame,0)!!
 
 }

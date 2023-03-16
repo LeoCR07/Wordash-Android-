@@ -1,37 +1,42 @@
 package com.example.betadiccompose.data.repository
 
-import com.example.betadiccompose.Domain.Game_Provider.Prefs
 import com.example.betadiccompose.data.local_database.dao.GameDao
 import com.example.betadiccompose.data.local_database.entity.FavoriteGramarEntity
 import com.example.betadiccompose.data.local_database.entity.FavoriteSentesEntity
-import com.example.betadiccompose.data.local_database.entity.FavoriteWordEntity
+import com.example.betadiccompose.data.local_database.entity.FavoriteWordEntity_2
 import com.example.betadiccompose.data.local_database.model.DataMyFavoriteGramar
 import com.example.betadiccompose.data.local_database.model.DataMyFavoriteSentes
 import com.example.betadiccompose.data.local_database.model.DataMyFavoriteWord
 import com.example.betadiccompose.data.local_database.model.toDomain
-import com.example.betadiccompose.data.network_database.IApiClient
 import javax.inject.Inject
 
 class FavoriteRepository @Inject constructor(
-    private val pref: Prefs,
-    private val api: IApiClient,
+    private val api : ApiService,
     private val dao: GameDao
 ){
     /**  My favorite word **/
-    suspend fun GetListOfAllMyFavoriteWord():List<DataMyFavoriteWord>{
-        val response :List<FavoriteWordEntity> = dao.GetAllMyWordFavorite()
-        return response.map { it.toDomain() }
+
+
+
+    suspend fun InsertMyFavoriteWord(palabra : FavoriteWordEntity_2){
+        dao.insertmyfavoriteword(palabra)
     }
 
-    suspend fun InsertMyFavoriteWord(palabra : FavoriteWordEntity){
-        dao.insertmyfavoriteword(palabra)
+    suspend fun insertarmipalabra(palabra: FavoriteWordEntity_2){
+        dao.insertarmipalabra(palabra)
     }
 
     suspend fun DeleteMyWordByImg(img:String){
         dao.deleteMyFavorityWordByImg(img)
     }
 
+
     /**  My favorite sentes **/
+
+    suspend fun GetListOfAllMyFavoriteWord():List<DataMyFavoriteWord>{
+        val response :List<FavoriteWordEntity_2> = dao.GetAllMyWordFavorite()
+        return response.map { it.toDomain() }
+    }
 
     suspend fun GetListOfAllMyFavoriteSentes():List<DataMyFavoriteSentes>{
         val response :List<FavoriteSentesEntity> = dao.GetAllMySentesFavorite()

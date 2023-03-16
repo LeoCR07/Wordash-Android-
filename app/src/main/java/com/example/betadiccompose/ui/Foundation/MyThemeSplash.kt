@@ -11,13 +11,17 @@ import com.example.betadiccompose.ui.theme.Starting
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 
+
+
+
 @Composable
-public fun MyThemeSplash(content:@Composable () -> Unit) {
+public fun MyTheme(content:@Composable () -> Unit) {
 
-
-    Starting() {
+    BetaDicComposeTheme() {
         val systemUiController = rememberSystemUiController()
-        val col = MaterialTheme.colors.onPrimary
+        val col = MaterialTheme.colors.background
+
+        // requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
         SideEffect {
             systemUiController.setStatusBarColor(col)

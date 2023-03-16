@@ -1,6 +1,5 @@
 package com.example.betadiccompose.data.repository
 
-import com.example.betadiccompose.Domain.Game_Provider.Prefs
 import com.example.betadiccompose.data.local_database.dao.GameDao
 import com.example.betadiccompose.data.local_database.entity.UserEntity
 import com.example.betadiccompose.data.network_database.model.DataUser
@@ -8,8 +7,6 @@ import com.example.betadiccompose.data.network_database.model.toDomain
 import javax.inject.Inject
 
 class UserRepository  @Inject constructor(
-    private val prefs: Prefs,
-    private val api : ApiService,
     private val dao: GameDao
 ){
     /**  User data **/
@@ -46,4 +43,18 @@ class UserRepository  @Inject constructor(
     suspend fun count():Int{
         return dao.countUser()
     }
+
+    suspend fun lessLives(){
+        var value = dao.getLives() - 1
+        dao.updateLives(value)
+    }
+
+    suspend fun plusLives(){
+        dao.updateLives(3)
+    }
+
+
+    suspend fun getUserLives()= dao.getLives()
+
+
 }

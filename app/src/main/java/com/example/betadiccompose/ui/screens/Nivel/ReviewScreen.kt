@@ -1,15 +1,16 @@
 package com.example.betadiccompose.ui.Foundation.Vocabulary.GamesScreen
 
-import android.content.Context
+import android.app.Activity
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -18,6 +19,13 @@ import com.example.betadiccompose.R
 import com.example.betadiccompose.ui.Foundation.Shared.Local_Animation
 import com.example.betadiccompose.ui.Foundation.Shared.BtnSuper
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+
 
 @Composable
 fun ReviewScreen(
@@ -27,9 +35,7 @@ fun ReviewScreen(
     viewmodel:VocabularyViewModel
 ) {
 
-    LaunchedEffect(key1 = true ){
-        viewmodel.SoundFromLocal(R.raw.victory)
-    }
+
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -71,11 +77,11 @@ fun ReviewScreen(
         Spacer(modifier = Modifier.height(10.dp))
         BtnSuper(
             title = "Jugar de nuevo",
-            FontColor = Color.Black,
-            IsIcon = true,
-            icon = R.drawable.play_on,
+            FontColor = MaterialTheme.colors.secondaryVariant,
+            IsIcon = false,
+            color = MaterialTheme.colors.background,
             Outline = true,
-            outlineColor = Color.LightGray,
+            outlineColor = MaterialTheme.colors.secondaryVariant ,
             fontSize = 15.sp,
             onClick = {
                 NavToAgain()
@@ -91,11 +97,11 @@ fun ReviewScreen(
 
         BtnSuper(
             title = "Salir",
-            FontColor = Color.Black,
-            IsIcon = true,
-            icon = R.drawable.sign_out,
+            FontColor = MaterialTheme.colors.secondaryVariant,
+            color = MaterialTheme.colors.background,
+            IsIcon = false,
             Outline = true,
-            outlineColor = Color.LightGray,
+            outlineColor = MaterialTheme.colors.secondaryVariant,
             fontSize = 15.sp,
             onClick = {
                 NavToExit()

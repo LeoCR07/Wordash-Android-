@@ -20,8 +20,7 @@ import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 
 @Composable
 fun MyWords(
-    vocalview: VocabularyViewModel,
-    context:Context
+    vocalview: VocabularyViewModel
 ) {
 
     MyApp {
@@ -31,22 +30,19 @@ fun MyWords(
             }){
 
             vocalview.getMyFavoriteWords()
-            val myfavorite = vocalview.lstfavoritewords.value
+            val myfavorite = vocalview.mywords.value
 
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(150.dp ),
                 contentPadding = PaddingValues(6.dp),
                 modifier = Modifier
-                    .background(Color.Black.copy(alpha = 0.02f))
                     .padding(6.dp)
             ){
                 items(myfavorite) { item ->
                     GetItemMyWord(
-                        onClick = { /*TODO*/ },
                         item = item ,
                         modifier = Modifier.padding(6.dp),
-                        viewmodel =vocalview,
-                        context = context)
+                        viewmodel =vocalview)
                 }
             }
         }

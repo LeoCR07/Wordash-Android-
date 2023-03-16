@@ -1,6 +1,6 @@
 package com.example.betadiccompose.data.repository
 
-import com.example.betadiccompose.Domain.Game_Provider.Prefs
+import com.example.betadiccompose.Domain.Prefs
 import com.example.betadiccompose.data.network_database.IApiClient
 import com.example.betadiccompose.data.network_database.model.DataCategory
 import kotlinx.coroutines.Dispatchers
@@ -9,7 +9,7 @@ import retrofit2.Response
 import javax.inject.Inject
 
 class ApiService @Inject constructor(
-    private val pref:Prefs,
+    private val pref: Prefs,
     private val api: IApiClient
 ){
 
@@ -70,7 +70,7 @@ class ApiService @Inject constructor(
     //List of all levels
     suspend fun getdatanivel():List<DataCategory>{
         return withContext(Dispatchers.IO){
-            val response : Response<List<DataCategory>> = api.GetDataFromAws("level/levels.json")
+            val response : Response<List<DataCategory>> = api.GetDataFromAws("level/${pref.GetLearnLanguage()}/levels.json")
             response.body()?: emptyList()
         }
     }
@@ -82,5 +82,4 @@ class ApiService @Inject constructor(
             response.body()?: emptyList()
         }
     }
-
 }

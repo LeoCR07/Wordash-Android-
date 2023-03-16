@@ -1,8 +1,11 @@
 package com.example.betadiccompose.ui.Foundation.Shared.Nivel
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.*
@@ -11,10 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.betadiccompose.ui.Foundation.Shared.ExitDialog
 
+
+
 @Composable
 fun secondTopAppBarLevel(percentage: Float, onBack: () -> Unit) {
 
     var showAlertDialog by remember { mutableStateOf(false) }
+    val interactionSource = remember { MutableInteractionSource() }
 
     if(showAlertDialog){
         ExitDialog(
@@ -24,25 +30,27 @@ fun secondTopAppBarLevel(percentage: Float, onBack: () -> Unit) {
             onBack = {onBack()}
         )
     }
-    Spacer(modifier = Modifier.height(20.dp))
+    Spacer(modifier = Modifier.height(20.dp).background(MaterialTheme.colors.background))
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly) {
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        modifier = Modifier.background(MaterialTheme.colors.background)) {
 
         Icon(
             Icons.Default.Clear,contentDescription = null,
             modifier = Modifier
-                .clickable {
+                .clickable (interactionSource = interactionSource,indication = null){
                     showAlertDialog = true
                 }
-                .size(30.dp))
+                .size(30.dp)
+            , tint = MaterialTheme.colors.secondaryVariant)
 
-        Spacer(modifier = Modifier.width(20.dp))
+        Spacer(modifier = Modifier.width(20.dp).background(MaterialTheme.colors.background))
 
         customProgressBar(percentage)
 
-        Spacer(modifier = Modifier.width(20.dp))
+        Spacer(modifier = Modifier.width(20.dp).background(MaterialTheme.colors.background))
 
 
 

@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.betadiccompose.Domain.Vocabulary
 import com.example.betadiccompose.data.local_database.entity.*
 
 @Dao
@@ -47,14 +46,21 @@ interface GameDao {
 
 
     /**  My favorite word **/
+
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertmyfavoriteword(quetes:FavoriteWordEntity)
+    suspend fun insertmyfavoriteword(words:FavoriteWordEntity_2)
 
-    @Query("select * from word_favority_table ORDER BY World_1")
-    suspend fun GetAllMyWordFavorite():List<FavoriteWordEntity>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertarmipalabra(words:FavoriteWordEntity_2)
 
-    @Query("Delete from word_favority_table where Img = :img")
+    @Query("select * from word_favority_table_2 ORDER BY World_1")
+    suspend fun GetAllMyWordFavorite():List<FavoriteWordEntity_2>
+
+    @Query("Delete from word_favority_table_2 where World_1 =:img")
     suspend fun deleteMyFavorityWordByImg(img :String)
+
+
 
     /**  My favorite sentes **/
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -110,5 +116,13 @@ interface GameDao {
 
     @Query("update user_table set exp =:level")
     suspend fun updateLevel(level:Int)
+
+    /** lives **/
+    @Query("select lives  from user_table")
+    suspend fun getLives():Int
+
+    @Query("update user_table set lives =:lives")
+    suspend fun updateLives(lives:Int)
+
 
 }

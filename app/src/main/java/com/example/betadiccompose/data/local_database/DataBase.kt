@@ -7,14 +7,14 @@ import com.example.betadiccompose.data.local_database.entity.*
 
 @Database(
     entities = [
-        FavoriteWordEntity::class,
+        FavoriteWordEntity_2::class,
         UserEntity::class,
         WordEntity::class,
         FavoriteSentesEntity::class,
         FavoriteGramarEntity::class,
         LevelEntity::class,
         VocabularyEntity::class],
-    version = 10
+    version = 17
     )
 
 abstract class DataBase:RoomDatabase() {

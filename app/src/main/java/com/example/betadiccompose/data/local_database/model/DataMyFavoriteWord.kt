@@ -1,6 +1,6 @@
 package com.example.betadiccompose.data.local_database.model
 
-import com.example.betadiccompose.data.local_database.entity.FavoriteWordEntity
+import com.example.betadiccompose.data.local_database.entity.FavoriteWordEntity_2
 
 data class DataMyFavoriteWord(
     val World_1:String,
@@ -8,5 +8,5 @@ data class DataMyFavoriteWord(
     val Img:String,
     val sonido:String)
 
-fun FavoriteWordEntity.toDomain() = DataMyFavoriteWord(World_1, World_2, Img,sonido)
+fun FavoriteWordEntity_2.toDomain() = DataMyFavoriteWord(World_1, World_2, Img,sonido)
 

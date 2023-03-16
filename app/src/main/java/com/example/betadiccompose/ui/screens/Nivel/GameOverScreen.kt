@@ -1,8 +1,8 @@
 package com.example.betadiccompose.ui.Foundation.Game.GameOver
 
-import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,6 +20,8 @@ import com.example.betadiccompose.ui.Foundation.Shared.BtnSuper
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 
 
+
+
 @Composable
 fun GameOverScreen(
     NavToExit:()->Unit,
@@ -29,9 +31,6 @@ fun GameOverScreen(
 ) {
 
 
-    LaunchedEffect(key1 = true ){
-        viewmodel.SoundFromLocal(R.raw.loser)
-    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -70,11 +69,11 @@ fun GameOverScreen(
         Spacer(modifier = Modifier.height(10.dp))
         BtnSuper(
             title = "Jugar de nuevo",
-            FontColor = Color.Black,
-            IsIcon = true,
-            icon = R.drawable.play_on,
+            color = MaterialTheme.colors.background,
+            FontColor = MaterialTheme.colors.secondaryVariant,
+            IsIcon = false,
             Outline = true,
-            outlineColor = Color.LightGray,
+            outlineColor = MaterialTheme.colors.secondaryVariant,
             fontSize = 15.sp,
             onClick = {
                 NavToAgain()
@@ -90,11 +89,11 @@ fun GameOverScreen(
 
         BtnSuper(
             title = "Salir",
-            FontColor = Color.Black,
-            IsIcon = true,
-            icon = R.drawable.sign_out,
+            color = MaterialTheme.colors.background,
+            FontColor = MaterialTheme.colors.secondaryVariant,
+            IsIcon = false,
             Outline = true,
-            outlineColor = Color.LightGray,
+            outlineColor = MaterialTheme.colors.secondaryVariant,
             fontSize = 15.sp,
             onClick = {
                 NavToExit()

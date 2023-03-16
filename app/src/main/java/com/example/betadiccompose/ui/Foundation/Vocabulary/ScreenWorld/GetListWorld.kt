@@ -1,7 +1,6 @@
 package com.example.betadiccompose.ui.Foundation.Vocabulary.ScreenWorld
 
 
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -12,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.betadiccompose.Domain.Game_Provider.Prefs
 import com.example.betadiccompose.data.network_database.model.DataWorld
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 

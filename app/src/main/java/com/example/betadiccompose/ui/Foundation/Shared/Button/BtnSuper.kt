@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,10 +27,12 @@ fun BtnSuper(
     Outline: Boolean = false,
     FontColor: Color,
     onClick: () -> Unit,
-    IconLocal : Boolean = false,
+    IconLocal: Boolean = false,
     outlineColor: Color = Color.Black,
     modifier: Modifier = Modifier,
-    fontSize :TextUnit = 12.sp
+    fontSize:TextUnit = 12.sp,
+    icon_size: Dp = 20.dp,
+    icon_size_local: Dp = 40.dp
 ) {
     Button(
         onClick = { onClick() },
@@ -53,7 +56,7 @@ fun BtnSuper(
                         Icons.Rounded.Mic,
                         contentDescription = null,
                         modifier = Modifier
-                            .size(40.dp)
+                            .size(icon_size_local)
                         , tint = Color.White)
 
                     Spacer(modifier = Modifier.width(10.dp))
@@ -62,7 +65,7 @@ fun BtnSuper(
                         painterResource(id = icon),
                         contentDescription = null,
                         modifier = Modifier
-                            .size(20.dp))
+                            .size(icon_size))
                     Spacer(modifier = Modifier.width(10.dp))
                 }
 

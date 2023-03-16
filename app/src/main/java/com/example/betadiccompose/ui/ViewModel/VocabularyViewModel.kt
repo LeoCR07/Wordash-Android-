@@ -1,19 +1,21 @@
 package com.example.betadiccompose.ui.ViewModel
 
+import android.app.Activity
 import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.media.MediaPlayer.OnPreparedListener
 import android.media.PlaybackParams
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.os.Build
 import android.widget.Toast
 import androidx.compose.runtime.*
 import androidx.lifecycle.*
 import com.example.betadiccompose.Domain.*
+import com.example.betadiccompose.Domain.Ads.AdMobInterstital
+import com.example.betadiccompose.Domain.Ads.AdMobRewarded
 import com.example.betadiccompose.Domain.Game_Provider.GameProvider
-import com.example.betadiccompose.Domain.Game_Provider.Prefs
+import com.example.betadiccompose.Domain.Prefs
+import com.example.betadiccompose.R
 import com.example.betadiccompose.data.local_database.model.DataMyFavoriteGramar
 import com.example.betadiccompose.data.local_database.model.DataMyFavoriteSentes
 import com.example.betadiccompose.data.local_database.model.DataMyFavoriteWord
@@ -26,12 +28,17 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
+
 
 
 @HiltViewModel
 class VocabularyViewModel @Inject constructor (
     @ApplicationContext context: Context,
+    val rewarded: AdMobRewarded,
+    val interstital: AdMobInterstital,
     val game_provider :GameProvider,
     val prefs: Prefs,
     val favorite : Favorite,
@@ -40,6 +47,10 @@ class VocabularyViewModel @Inject constructor (
     val vocabulary: Vocabulary,
     val books: Books,
     val auth: Authrepository ): ViewModel() {
+
+
+    /*********** ads ************/
+    //var mInterstitialAd: InterstitialAd? = null
 
     /************  login **************/
 
@@ -314,6 +325,7 @@ class VocabularyViewModel @Inject constructor (
     val lstBooks: MutableState<List<DataBooks>> = mutableStateOf(listOf())
     val lstVocabulary: MutableState<List<DataVocabulary>> = mutableStateOf(listOf())
     val lstWords: MutableState<List<DataWorld>> = mutableStateOf(listOf())
+    //val lstWords: MutableState<List<DataWorld>> = mutableStateOf(listOf())
     val lstGramar: MutableState<List<DataGramar>> = mutableStateOf(listOf())
     val lstsubmenu: MutableState<List<DataSubMenu>> = mutableStateOf(listOf())
     val lstsentes: MutableState<List<DataSentes>> = mutableStateOf(listOf())
@@ -342,6 +354,8 @@ class VocabularyViewModel @Inject constructor (
 
     /** My favorite words */
     var lstfavoritewords: MutableState<List<DataMyFavoriteWord>> = mutableStateOf(listOf())
+
+    var mywords :MutableState<List<DataMyFavoriteWord>> = mutableStateOf(listOf())
 
     /** My favorite words */
     var lstfavoritesentes: MutableState<List<DataMyFavoriteSentes>> = mutableStateOf(listOf())
@@ -558,18 +572,18 @@ class VocabularyViewModel @Inject constructor (
     }
 
     /***************  my favorite word *******************/
-    fun getMyFavoriteWords(): Unit {
+
+
+    fun insertMyFavoriteWord(fav :DataMyFavoriteWord){
+
         viewModelScope.launch {
-            val resp  = favorite.GetListOfAllMyFavoriteWord()
-            if(!resp.isNullOrEmpty()){
-                lstfavoritewords.value = resp
-            }
+            favorite.InsertMyFavoriteWord(fav)
         }
     }
 
-    fun insertMyFavoriteWord(fav :DataMyFavoriteWord){
+    fun insertarmypalabra(palabra:DataMyFavoriteWord){
         viewModelScope.launch {
-            favorite.InsertMyFavoriteWord(fav)
+            favorite.insertarmyPalabra(palabra)
         }
     }
 
@@ -579,8 +593,6 @@ class VocabularyViewModel @Inject constructor (
         }
     }
 
-
-
     /***************  my favorite sentes *******************/
     fun getMyFavoriteSentes(): Unit {
         viewModelScope.launch {
@@ -589,6 +601,17 @@ class VocabularyViewModel @Inject constructor (
                 lstfavoritesentes.value = resp
             }
         }
+    }
+
+    fun getMyFavoriteWords(): Unit {
+        viewModelScope.launch {
+            val resp  = favorite.GetListOfAllMyFavoriteWord()
+            if(!resp.isNullOrEmpty()){
+                mywords.value = resp
+             //   lstfavoritewords.value = resp
+            }
+        }
+
     }
 
     fun insertMyFavoriteSentes(fav :DataMyFavoriteSentes){
@@ -612,6 +635,7 @@ class VocabularyViewModel @Inject constructor (
             }
         }
     }
+
     fun insertMyFavoriteGramar(fav :DataMyFavoriteGramar){
         viewModelScope.launch {
             favorite.InsertMyFavoriteGramar(fav)
@@ -637,22 +661,90 @@ class VocabularyViewModel @Inject constructor (
                 myPlayBackParams!!.speed = 0.5f //you can set speed here
                 mp.playbackParams = myPlayBackParams!!
             }})
+
+
+        mediaPlayer.setOnCompletionListener {
+            mediaPlayer.release()
+        }
+
+
         mediaPlayer.start()
 
 
 
     }
 
-    fun soundSlowerFromUrl(id: Int = 1,uri:String = ""){
+    fun soundSlowerFromLink(url:String){
         CoroutineScope(Dispatchers.IO).launch {
 
-            var url = ""
             try {
-                url = if(uri != ""){
-                    uri
-                }else{
-                    "https://duq14sjq9c7gs.cloudfront.net/Sounds/${GetLearnLenguage()}/${GetPath()}/${id}.mp3"
+
+                val mediaPlayer = MediaPlayer().apply {
+                    setAudioAttributes(
+                        AudioAttributes.Builder()
+                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                            .setUsage(AudioAttributes.USAGE_MEDIA)
+                            .build()
+                    )
+
+                    setDataSource(url)
+                    prepare()
+
+
                 }
+
+                mediaPlayer.setOnPreparedListener(OnPreparedListener { mp ->
+                    //works only from api 23
+                    var myPlayBackParams: PlaybackParams? = null
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        myPlayBackParams = PlaybackParams()
+                        myPlayBackParams!!.speed = 0.4f //you can set speed here
+                        mp.playbackParams = myPlayBackParams!!
+                    }})
+
+                mediaPlayer.setOnCompletionListener {
+                    mediaPlayer.release()
+                }
+
+
+                mediaPlayer.start()
+
+
+            }catch (e:Exception){
+
+            }
+        }
+    }
+
+    fun SoundFromLink(url:String){
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val mediaPlayer = MediaPlayer().apply {
+                    setAudioAttributes(
+                        AudioAttributes.Builder()
+                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                            .setUsage(AudioAttributes.USAGE_MEDIA)
+                            .build()
+                    )
+                    setDataSource(url)
+                    prepare()
+                }
+                mediaPlayer.setOnCompletionListener {
+                    mediaPlayer.release()
+                }
+
+                mediaPlayer.start()
+            }catch (e:Exception){
+                println("El error es: ${e.message}")
+            }
+        }
+    }
+
+    fun soundSlowerFromUrl(id: Int = 1){
+        CoroutineScope(Dispatchers.IO).launch {
+
+            var url = "https://duq14sjq9c7gs.cloudfront.net/Sounds/${GetLearnLenguage()}/${GetPath()}/${id}.mp3"
+            try {
 
                 try {
                     val mediaPlayer = MediaPlayer().apply {
@@ -678,6 +770,11 @@ class VocabularyViewModel @Inject constructor (
                             mp.playbackParams = myPlayBackParams!!
                         }})
 
+
+                    mediaPlayer.setOnCompletionListener {
+                        mediaPlayer.release()
+                    }
+
                     mediaPlayer.start()
 
 
@@ -691,36 +788,66 @@ class VocabularyViewModel @Inject constructor (
         }
     }
 
-    fun soundFromUrl(id: Int = 1,uri:String = ""){
+    //word and sentes
+    fun soundFromUrl(id: Int = 1){
         CoroutineScope(Dispatchers.IO).launch {
             println("el id es ${id}")
-            var url = ""
+            var urlAudio = "https://duq14sjq9c7gs.cloudfront.net/Sounds/${GetLearnLenguage()}/${GetPath()}/${id}.mp3"
 
-            if(uri != ""){
-                url = uri
-            }else{
-                url = "https://duq14sjq9c7gs.cloudfront.net/Sounds/${GetLearnLenguage()}/${GetPath()}/${id}.mp3"
-            }
-
-            println(url)
 
             try {
+
                 val mediaPlayer = MediaPlayer().apply {
+
                     setAudioAttributes(
+
                         AudioAttributes.Builder()
                             .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                             .setUsage(AudioAttributes.USAGE_MEDIA)
                             .build()
+
                     )
-                    setDataSource(url)
+
+                    setDataSource(urlAudio)
                     prepare()
                 }
 
+
+                mediaPlayer.setOnCompletionListener {
+                    mediaPlayer.release()
+                }
                 mediaPlayer.start()
+
             }catch (e:Exception){
                 println("El error es: ${e.message}")
             }
         }
+
+    }
+
+    fun media(id: Int = 1,media:MediaPlayer){
+        CoroutineScope(Dispatchers.IO).launch {
+            println("el id es ${id}")
+            var urlAudio = "https://duq14sjq9c7gs.cloudfront.net/Sounds/${GetLearnLenguage()}/${GetPath()}/${id}.mp3"
+
+
+            try {
+
+                media.setDataSource(urlAudio)
+                media.prepare()
+
+                media.setOnCompletionListener {
+                    media.reset()
+                    //media.setDataSource(urlAudio)
+                    //media.prepare()
+                }
+                media.start()
+
+            }catch (e:Exception){
+                println("El error es: ${e.message}")
+            }
+        }
+
     }
 
     /**************  User data  *********************/
@@ -743,9 +870,21 @@ class VocabularyViewModel @Inject constructor (
         }
     }
 
+
+
     suspend fun updateExp(){
         user.UpdateExpUser(1)
     }
+    suspend fun lessLives(){
+        user.lessLives()
+    }
+
+    suspend fun plusLives(){
+        user.plusLives()
+    }
+
+    suspend fun getLives() = user.getlives()
+
 
     suspend fun counAllUser()=user.countUser()
 
@@ -805,9 +944,105 @@ class VocabularyViewModel @Inject constructor (
         }
     }
 
-    /**** Conexion ***/
-    val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
+    /*********  Dates  *********/
+    fun SetFirstTime(time:String){
+        prefs.SaveFirstTime(time)
+    }
 
-    fun IsConnected(): Boolean = activeNetwork?.isConnectedOrConnecting == true
+    fun GetFisrtTime() = prefs.GetFirstTime()
+
+
+    fun CalculeteDates():Long{
+
+        val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        var diffInMillis = 0L
+
+        val calendar1 = Calendar.getInstance()
+        calendar1.time = Date()
+
+        val calendar2 = Calendar.getInstance().apply {
+            timeInMillis = format.parse(GetFisrtTime()).time
+        }
+
+        diffInMillis =  calendar1.timeInMillis - calendar2.timeInMillis
+       // val diffInMinutes = diffInMillis / 60000
+
+        return diffInMillis
+    }
+
+    /** Ads counter */
+
+    fun SetCounterGame(num:Int){
+        prefs.setCountInterstitialAdGame(num)
+    }
+
+    fun GetCounterGame() = prefs.getCountInterstitialAdGame()
+
+
+    fun GetCounterVoca() = prefs.getCountInterstitialAdVoca()
+
+
+
+    fun SetCounterVoca(num:Int){
+        prefs.setCountInterstitialAdVoca(num)
+    }
+
+    //ads
+    fun LoadInterstital() {
+        interstital.LoadAd()
+        println("holahola ${prefs.getCountInterstitialAdGame()}")
+    }
+
+    fun ShowInterstitalLevel(context: Context){
+        //
+        var cont = 0
+        cont = GetCounterGame()
+
+        cont++
+        prefs.setCountInterstitialAdGame(cont)
+
+        if(prefs.getCountInterstitialAdGame() >= 2){
+            interstital.showAd(context as Activity, onClick = {
+                prefs.setCountInterstitialAdGame(0)
+            })
+        }else{
+            SoundFromLocal(R.raw.victory)
+        }
+    }
+
+    fun ShowInterstitalVoca(context: Context){
+        var cont = 0
+        cont = GetCounterVoca()
+
+        if(prefs.getCountInterstitialAdVoca() >= 14 ){
+            interstital.showAd(context as Activity, onClick = {
+                prefs.setCountInterstitialAdVoca(0)
+            })
+        }else{
+            cont++
+            prefs.setCountInterstitialAdVoca(cont)
+        }
+
+        println("contador de palabras : ${prefs.getCountInterstitialAdVoca()}" )
+    }
+
+    fun LoadRewarded(){
+        getDataUser()
+        rewarded.LoadAd()
+    }
+
+   fun ShowRewarded(activity: Activity, onClick: () -> Unit){
+
+       rewarded.showAd(activity, OnClick = {
+           viewModelScope.launch {
+               prefs.setCountInterstitialAdGame(0)
+               plusLives()
+               onClick()
+           }
+
+       })
+   }
+
+
+
 }

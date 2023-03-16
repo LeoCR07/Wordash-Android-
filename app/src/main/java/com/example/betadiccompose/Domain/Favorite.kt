@@ -10,9 +10,7 @@ import javax.inject.Inject
 class Favorite @Inject constructor(private val repository : FavoriteRepository)  {
 
     /* My Words */
-    suspend fun GetListOfAllMyFavoriteWord(): List<DataMyFavoriteWord> {
-        return repository.GetListOfAllMyFavoriteWord()
-    }
+
 
     suspend fun DeleteMyWordByImg (img: String){
         repository.DeleteMyWordByImg(img)
@@ -22,6 +20,11 @@ class Favorite @Inject constructor(private val repository : FavoriteRepository) 
         repository.InsertMyFavoriteWord(resp.toDatabase())
     }
 
+    suspend fun insertarmyPalabra(resp:DataMyFavoriteWord){
+        repository.insertarmipalabra(resp.toDatabase())
+    }
+
+
     /* My Sentes */
     suspend fun DeleteMySentesBySentes (sentes: String){
         repository.DeleteMySentesBySentes(sentes)
@@ -29,6 +32,10 @@ class Favorite @Inject constructor(private val repository : FavoriteRepository) 
 
     suspend fun GetAllMyFavoriteSentes(): List<DataMyFavoriteSentes> {
         return repository.GetListOfAllMyFavoriteSentes()
+    }
+
+    suspend fun GetListOfAllMyFavoriteWord(): List<DataMyFavoriteWord> {
+        return repository.GetListOfAllMyFavoriteWord()
     }
 
     suspend fun InsertMyFavoriteSentes(resp : DataMyFavoriteSentes){

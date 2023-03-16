@@ -1,5 +1,7 @@
 package com.example.betadiccompose.ui.Foundation.GamesScreen
 
+import android.media.AudioAttributes
+import android.media.MediaPlayer
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,40 +20,57 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.betadiccompose.Domain.Game_Provider.Prefs
 import com.example.betadiccompose.data.network_database.model.DataWorld
 import com.example.betadiccompose.ui.Foundation.Shared.Button.OutlinedButtonSample
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 
 @Composable
 fun Easy (
     viewModel: VocabularyViewModel,
-    onMediaClick: (DataWorld,Int) -> Unit,
+    onMediaClick: (DataWorld,Int,MediaPlayer) -> Unit,
     lista: List<DataWorld>
 ) {
-    var idAux = 0
+
     var lstAux: List<DataWorld> = emptyList()
-
-
     lstAux =  viewModel.getEasy(lista)
 
 
     var lstOrder = remember {
         lstAux
-        // viewModel.GetEasy(lista)
     }
 
-    idAux = lstOrder[0].id
+
     val lstrandon = RandomText(lstOrder)
 
     var id = remember {
-        idAux
+        lstOrder[0].id
     }
 
+    val mediaPlayer = MediaPlayer().apply {
+        println("audio1000")
+
+      //  var urlAudio = "https://duq14sjq9c7gs.cloudfront.net/Sounds/${viewModel.GetLearnLenguage()}/${viewModel.GetPath()}/${id}.mp3"
+
+        setAudioAttributes(
+
+            AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .build()
+
+        )
+       // setDataSource(urlAudio)
+       // prepare()
+    }
 
     /*********  Sonido ***********/
     LaunchedEffect(key1 = id){
-        viewModel.soundFromUrl(id= id)
+      //  viewModel.soundFromUrl(id= id)
+        viewModel.media(id,mediaPlayer)
     }
 
 
@@ -65,7 +84,8 @@ fun Easy (
 
         Button(
             onClick = {
-                viewModel.soundFromUrl(id=id)
+                      viewModel.media(id,mediaPlayer)
+                      //viewModel.soundFromUrl(id=id)
             },
             modifier = Modifier
                 .size(140.dp)
@@ -94,7 +114,7 @@ fun Easy (
         LazyColumn() {
             items(lstrandon) { item ->
                 OutlinedButtonSample(
-                    onMediaClick = { onMediaClick(item,id) },
+                    onMediaClick = { onMediaClick(item,id,mediaPlayer) },
                     word = item.World_1,
                     modifier = Modifier
                         .width(300.dp)
@@ -105,12 +125,11 @@ fun Easy (
             }
         }
 
-    }
 
+    }
 }
 
-
-fun RandomText(lst:List<DataWorld>): MutableList<DataWorld> {
+public fun RandomText(lst:List<DataWorld>): MutableList<DataWorld> {
 
     var lista = lst.toMutableList()
 

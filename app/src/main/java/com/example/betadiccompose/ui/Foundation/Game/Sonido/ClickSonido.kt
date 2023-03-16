@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
+
 @Composable
 fun ClickSonido(click: () -> Unit, value: Int, select: Int) {
 
@@ -23,7 +24,7 @@ fun ClickSonido(click: () -> Unit, value: Int, select: Int) {
     {
 
         val tint by animateColorAsState(
-            if (value == select) Color(0xFFEC407A) else Color(0xFFB0BEC5)
+            if (value == select) Color(0xFF2196F3) else Color(0xFFB0BEC5)
         )
 
         Icon(
@@ -35,3 +36,4 @@ fun ClickSonido(click: () -> Unit, value: Int, select: Int) {
     }
 
 }
+

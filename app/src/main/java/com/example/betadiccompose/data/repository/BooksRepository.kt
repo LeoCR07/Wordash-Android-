@@ -1,9 +1,8 @@
 package com.example.betadiccompose.data.repository
 
-import com.example.betadiccompose.Domain.Game_Provider.Prefs
+import com.example.betadiccompose.Domain.Prefs
 import com.example.betadiccompose.data.local_database.dao.GameDao
 import com.example.betadiccompose.data.network_database.model.DataBooks
-import com.example.betadiccompose.data.network_database.model.DataVocabulary
 import javax.inject.Inject
 
 class BooksRepository  @Inject constructor(

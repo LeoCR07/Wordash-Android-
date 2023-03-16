@@ -14,8 +14,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.*
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.window.Popup
 import com.example.betadiccompose.R
@@ -28,6 +30,8 @@ fun DialogLenguage(
     dimisissDialog: () -> Unit,
     viewModel: VocabularyViewModel
 ) {
+
+    val interactionSource = remember { MutableInteractionSource() }
 
     if(show) {
 
@@ -62,12 +66,17 @@ fun DialogLenguage(
                             // imageVector =  it.iconSelect,
                             contentDescription = "BTN",
                             modifier = Modifier
-                                .clickable {
+                                .clickable(interactionSource = interactionSource,indication = null) {
                                     viewModel.saveLearnLenguage("English")
+                                    viewModel.getListOfAlllevel()
+                                    viewModel.getListOfAllCategories()
+                                    viewModel.getListOfSentesFromRoom()
+                                    viewModel.getListOfWordsFromRoom()
                                     dimisissDialog()
                                 }
                                 .size(100.dp)
-                                .clip(CircleShape),
+                                .clip(CircleShape)
+                            ,
                             tint = Color.Unspecified)
 
                         if (viewModel.GetLearnLenguage() == "English") {
@@ -78,7 +87,6 @@ fun DialogLenguage(
                                 // imageVector =  it.iconSelect,
                                 contentDescription = "BTN",
                                 modifier = Modifier
-                                    .clickable { }
                                     .size(25.dp)
                                     .clip(CircleShape),
                                 tint = Color.Unspecified)
@@ -95,9 +103,17 @@ fun DialogLenguage(
                             // imageVector =  it.iconSelect,
                             contentDescription = "BTN",
                             modifier = Modifier
-                                .clickable {
+                                .clickable(interactionSource = interactionSource,indication = null){
+
                                     viewModel.saveLearnLenguage("Spanish")
                                     dimisissDialog()
+
+                                    viewModel.getListOfAlllevel()
+                                    viewModel.getListOfAllCategories()
+                                    viewModel.getListOfSentesFromRoom()
+                                    viewModel.getListOfWordsFromRoom()
+
+
                                 }
                                 .size(100.dp)
                                 .clip(CircleShape),

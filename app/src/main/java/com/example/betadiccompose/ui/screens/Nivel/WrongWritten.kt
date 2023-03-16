@@ -12,13 +12,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.betadiccompose.Domain.Game_Provider.Prefs
 import com.example.betadiccompose.R
 import com.example.betadiccompose.data.network_database.model.DataWorld
 import com.example.betadiccompose.ui.Foundation.GamesScreen.RandomText
 import com.example.betadiccompose.ui.Foundation.Shared.Local_Animation
 import com.example.betadiccompose.ui.Foundation.Shared.Button.ElevatedButtonSample
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
+
+
+
 
 
 @Composable
@@ -43,6 +45,7 @@ fun WrongWritten(
     idAux = lstOrder[0].id
 
     val lstrandon = RandomText(lstOrder)
+
     var id = remember {
         idAux
     }
@@ -72,6 +75,7 @@ fun WrongWritten(
 
         LazyColumn() {
             items(lstrandon) { item ->
+
                 ElevatedButtonSample(
                     modifier = Modifier
                         .width(300.dp)
@@ -79,6 +83,7 @@ fun WrongWritten(
                     onMediaClick = { onMediaClick(item,id)  },
                     word = item.World_1
                 )
+
 
                 Spacer(modifier = Modifier.height(10.dp))
             }

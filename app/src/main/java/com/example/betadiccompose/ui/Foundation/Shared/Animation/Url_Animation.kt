@@ -1,6 +1,7 @@
 package com.example.betadiccompose.ui.Foundation.Shared
 
 
+import android.graphics.Color.toArgb
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,7 +21,7 @@ fun Url_Animation(url: String, modifier: Modifier = Modifier, isplaying:Boolean 
     Box(
         contentAlignment = Alignment.Center){
 
-        val color by derivedStateOf { Color.LightGray }
+       //val color by derivedStateOf { Color.LightGray }
 
 
         val disabled = "https://dicvocabulary.s3.us-east-2.amazonaws.com/Animaciones/disabled/0.json"
@@ -28,6 +29,7 @@ fun Url_Animation(url: String, modifier: Modifier = Modifier, isplaying:Boolean 
         val composition = rememberLottieComposition(LottieCompositionSpec.Url(url))
 
         val progress by animateLottieCompositionAsState(
+
             composition = composition.value,
             isPlaying = isplaying,
             iterations = LottieConstants.IterateForever,
@@ -35,23 +37,10 @@ fun Url_Animation(url: String, modifier: Modifier = Modifier, isplaying:Boolean 
         )
 
 
-        val dynamicProperties = rememberLottieDynamicProperties(
-            rememberLottieDynamicProperty(
-                property = LottieProperty.OPACITY,
-                keyPath = arrayOf("calendar"),
-                 value = 10),
-
-            rememberLottieDynamicProperty(
-                    property = LottieProperty.COLOR,
-                keyPath = arrayOf("calendar"),
-            value = color.toArgb())
-
-        )
 
         LottieAnimation(
             composition = composition.value,
             progress = progress,
-            dynamicProperties = dynamicProperties,
             modifier = modifier
                 .size(160.dp)
                 .padding(0.dp))

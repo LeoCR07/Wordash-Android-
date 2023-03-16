@@ -1,6 +1,5 @@
 package com.example.betadiccompose.ui.screens
 
-import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,7 +18,6 @@ import com.example.authentication.ui.Foundation.Account.SubTitles
 import com.example.betadiccompose.Runtime.MyApp
 import com.example.betadiccompose.ui.Foundation.Shared.TopApp
 import com.example.betadiccompose.ui.Foundation.Shared.navegationinferior
-import com.example.betadiccompose.ui.Foundation.Vocabulary.MyGramar.HListGramar
 import com.example.betadiccompose.ui.Foundation.Vocabulary.MySentes.HListSentes
 import com.example.betadiccompose.ui.Foundation.Vocabulary.ScreenAccount.LineColor
 import com.example.betadiccompose.ui.Navigation.ItemsMenu
@@ -31,26 +29,16 @@ fun AccountScreen(
     onclickNav: (ItemsMenu) -> Unit,
     vocalview: VocabularyViewModel,
     navToSeeMyWords: () -> Unit,
-    navToSeeMySentes: () -> Unit,
-    onBack: () -> Unit,
-    navToSeeMyGramar: () -> Unit
+    navToSeeMySentes: () -> Unit
 ) {
 
-
-
-    val lstmyfavoritewords  = vocalview.lstfavoritewords.value
+    val lstmyfavoritewords by remember {
+        mutableStateOf( vocalview.mywords.value)
+    }
 
     val lstmyfavoritesentes by remember {
         mutableStateOf(vocalview.lstfavoritesentes.value)
     }
-
-
-    val lstmyfavoritegramar by remember {
-        mutableStateOf(vocalview.lstfavoritegramar.value)
-    }
-
-
-
 
     MyApp {
         Scaffold(
@@ -62,7 +50,6 @@ fun AccountScreen(
 
             vocalview.getMyFavoriteWords()
             vocalview.getMyFavoriteSentes()
-            vocalview.getMyFavoriteGramar()
 
 
             Column() {
@@ -76,32 +63,23 @@ fun AccountScreen(
 
                     item{
 
-                        HeaderAccount(
-                            UserName = "Lionel Messi"/*loginViewModel.username*/ ,
-                            UserEmail = "elmessias@gmail.com"/*loginViewModel.username*/,
-                            UserPhoto =  Uri.parse("https://upload.wikimedia.org/wikipedia/commons/c/c1/Lionel_Messi_20180626.jpg")/*loginViewModel.username*/,
-                            Stars = 9/*loginViewModel.username*/)
+                        HeaderAccount(vocalview)
 
                         LineColor(height = 10f)
                         SubTitles("My favorites words",click = navToSeeMyWords )
                         HListWord(lstmyfavoritewords,vocalview = vocalview)
+
                         LineColor(height = 5f)
-                        SubTitles("My favorites Sentes", click = {navToSeeMySentes()})
+                        SubTitles("My favorites Sentes", click = navToSeeMySentes)
                         HListSentes(lstmyfavoritesentes, vocalview)
-                        LineColor(height = 5f)
-                        SubTitles("My favorites Gramar", click = {navToSeeMyGramar()})
-                        HListGramar(lstmyfavoritegramar, vocalview)
+
+                        //LineColor(height = 5f)
+                        //SubTitles("My favorites Gramar", click = {navToSeeMyGramar()})
+                       // HListGramar(lstmyfavoritegramar, vocalview)
 
 
                     }
 
-
-
-
-                    /*
-
-
-                     */
 
                 }
             }

@@ -31,10 +31,6 @@ fun GetItemMyGramar(modifier: Modifier, item: DataMyFavoriteGramar, viewmodel:Vo
     var textSize_1 by remember { mutableStateOf(25.sp) }
     var textSize_2 by remember { mutableStateOf(18.sp) }
 
-    var checked by remember{
-        mutableStateOf(true)
-    }
-
     Card(
         modifier = modifier.clickable { /*onClick()*/ },
         elevation = 4.dp,
@@ -186,21 +182,9 @@ fun GetItemMyGramar(modifier: Modifier, item: DataMyFavoriteGramar, viewmodel:Vo
                 IconToggleButtonSample(
                     Modifier
                         .size(60.dp),
-                    checked = checked,
+                    checked = true,
                     ClickCheck = {
-
-                        checked = it
-                        if(it){
-                            var myfavorite =  DataMyFavoriteGramar(
-                                Gramar_1 = item.Gramar_1,
-                                Gramar_2 = item.Gramar_2,
-                                Example_1 = item.Example_1,
-                                Example_2 = item.Example_2
-                            )
-                            viewmodel.insertMyFavoriteGramar(myfavorite)
-                        }else{
-                            viewmodel.deleteMyFavoriteGramar(item.Gramar_1)
-                        }
+                        viewmodel.deleteMyFavoriteGramar(item.Gramar_1)
 
                     }
                 )
