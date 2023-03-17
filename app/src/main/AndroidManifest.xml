@@ -14,9 +14,9 @@
         android:name=".core.app"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/book_icon_round"
+        android:icon="@mipmap/dicvocabulary_round"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/book_icon_round"
+        android:roundIcon="@mipmap/dicvocabulary_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BetaDicCompose"
         tools:targetApi="31">
