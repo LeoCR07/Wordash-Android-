@@ -1,0 +1,106 @@
+{
+  "project_info": {
+    "project_number": "90652262057",
+    "project_id": "dicvocabulary",
+    "storage_bucket": "dicvocabulary.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:90652262057:android:cd9a1cfda4852c62bcb3b8",
+        "android_client_info": {
+          "package_name": "com.DefaultCompany.CloudContentDelivery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "90652262057-2n418683lqpv9pe8js6c40r1i1cpomrh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClcDjtcoktgtcevbJj4aDJZ5jscxY0rgo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "90652262057-2n418683lqpv9pe8js6c40r1i1cpomrh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:90652262057:android:2919a0d0b91dfff6bcb3b8",
+        "android_client_info": {
+          "package_name": "com.DefaultCompany.DicVocabulary"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "90652262057-4jiqcvka857h45piv4upuhdfpfdjd3k8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.DefaultCompany.DicVocabulary",
+            "certificate_hash": "0dc9469ce09b01ae1f88ec6d2104032fd26bd0ab"
+          }
+        },
+        {
+          "client_id": "90652262057-2n418683lqpv9pe8js6c40r1i1cpomrh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClcDjtcoktgtcevbJj4aDJZ5jscxY0rgo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "90652262057-2n418683lqpv9pe8js6c40r1i1cpomrh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      },
+      "admob_app_id": "ca-app-pub-7052510061101888~4010657304"
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:90652262057:android:9060372a19fa8b5bbcb3b8",
+        "android_client_info": {
+          "package_name": "com.example.betadiccompose"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "90652262057-2n418683lqpv9pe8js6c40r1i1cpomrh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClcDjtcoktgtcevbJj4aDJZ5jscxY0rgo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "90652262057-2n418683lqpv9pe8js6c40r1i1cpomrh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
