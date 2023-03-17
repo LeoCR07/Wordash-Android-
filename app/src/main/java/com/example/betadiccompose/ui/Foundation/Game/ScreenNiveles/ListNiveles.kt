@@ -63,12 +63,9 @@ fun ListNiveles(
                             onMediaClick(e)
                         }
 
-                        /*
-                        if(it.id == viewmodel.lstdatauser.value.level){
-                        }
 
 
-                         */},
+                         },
                     item = e,Modifier.padding(6.dp))
             }
         }

@@ -169,7 +169,7 @@ fun GetItemMyGramar(modifier: Modifier, item: DataMyFavoriteGramar, viewmodel:Vo
                 Spacer(modifier = Modifier.width(25.dp))
 
                 Icon(
-                    painter = painterResource ( R.drawable.snail__2_),
+                    painter = painterResource ( R.drawable.snail),
                     contentDescription = null,
                     modifier = Modifier
                         .size(40.dp)

@@ -137,7 +137,7 @@ fun PopUpNoLives(
 
                     Box( contentAlignment = Alignment.Center){
                         Icon(
-                            painter = painterResource(R.drawable.vidas),
+                            painter = painterResource(R.drawable.heart),
                             contentDescription = "BTN",
                             modifier = Modifier
                                 .size(200.dp),

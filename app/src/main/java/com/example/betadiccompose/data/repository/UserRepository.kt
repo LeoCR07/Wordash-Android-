@@ -20,7 +20,6 @@ class UserRepository  @Inject constructor(
 
     suspend fun GetDetaillsUser(): DataUser {
         val result = dao.getDetaillsUser().toDomain()
-        val obj = DataUser()
         return  result
     }
 

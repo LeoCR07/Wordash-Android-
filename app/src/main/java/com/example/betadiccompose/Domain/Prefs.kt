@@ -145,7 +145,7 @@ class Prefs @Inject constructor(@ApplicationContext context: Context) {
     fun SaveFirstTime(time:String){
         storage.edit().putString(Keyfirsttime,time).apply()
     }
-    fun GetFirstTime() = storage.getString(Keyfirsttime,"")!!
+    fun GetFirstTime() = storage.getString(Keyfirsttime,"null")!!
 
 
     fun setCountInterstitialAdVoca(c:Int){

@@ -148,7 +148,7 @@ fun GetItemMySentes(
                     Spacer(modifier = Modifier.width(20.dp))
 
                     Icon(
-                        painter = painterResource ( R.drawable.snail__2_),
+                        painter = painterResource ( R.drawable.snail),
                         contentDescription = null,
                         modifier = Modifier
                             .clickable (interactionSource = interactionSource,indication = null){

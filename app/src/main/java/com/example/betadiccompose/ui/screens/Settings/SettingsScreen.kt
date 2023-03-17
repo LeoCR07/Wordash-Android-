@@ -49,6 +49,7 @@ fun SettingsScreen(
                     horizontalAlignment = Alignment.Start
                 ) {
                     item {
+                        /*
                         Spacer(modifier = Modifier.height(6.dp))
                         ItemSettings( R.drawable.languages,"Idioma natal", NavTo = NavToNatal,)
                         Spacer(modifier = Modifier.height(6.dp))
@@ -61,6 +62,7 @@ fun SettingsScreen(
 
                         ItemSettings( R.drawable.people,"Creditos",NavTo = NavToNatal,)
 
+                         */
                     }
                 }
             }

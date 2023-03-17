@@ -14,7 +14,7 @@ import com.example.betadiccompose.data.local_database.entity.*
         FavoriteGramarEntity::class,
         LevelEntity::class,
         VocabularyEntity::class],
-    version = 17
+    version = 18
     )
 
 abstract class DataBase:RoomDatabase() {

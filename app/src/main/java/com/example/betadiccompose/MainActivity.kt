@@ -29,8 +29,6 @@ class MainActivity : ComponentActivity() {
 
         MobileAds.initialize(this)
 
-        viewModel.LoadInterstital()
-        viewModel.LoadRewarded()
 
 
         var startDestination = MenuRoutes.play.name
@@ -38,12 +36,20 @@ class MainActivity : ComponentActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             //Niveles
             //La primera vez que instalo el app
-            if(viewModel.counAllUser()==0){
-                viewModel.insertDataUser(dataUser = DataUser())
+           if(viewModel.counAllUser()==0){
+
+                println("user no")
+
+                var user  = DataUser(id = 1)
+                viewModel.insertDataUser(user)
+            }else{
+                println("user si")
             }
         }
 
-        println("la suma es: ${viewModel.GetCounterGame()}")
+        viewModel.LoadInterstital()
+        viewModel.LoadRewarded()
+       // println("la suma es: ${viewModel.GetCounterGame()}")
 
         setContent {
 

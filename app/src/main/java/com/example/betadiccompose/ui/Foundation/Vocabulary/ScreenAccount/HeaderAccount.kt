@@ -79,13 +79,13 @@ fun HeaderAccount(vocalview: VocabularyViewModel) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                ColumDetail(number = vocalview.lstdatauser.value.stars, icon = R.drawable.star_on )
+                ColumDetail(number = vocalview.lstdatauser.value.stars, icon = R.drawable.crown )
                 Vline()
                 ColumDetail(number = vocalview.lstdatauser.value.level, icon = R.drawable.level )
                 Vline()
                 ColumDetail(number = vocalview.lstdatauser.value.exp, icon = R.drawable.exp)
                 Vline()
-                ColumDetail(number = vocalview.lstdatauser.value.lives, icon = R.drawable.vidas)
+                ColumDetail(number = vocalview.lstdatauser.value.lives, icon = R.drawable.heart)
 
             }
 

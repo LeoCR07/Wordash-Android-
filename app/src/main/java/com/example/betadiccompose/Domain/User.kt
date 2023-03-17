@@ -16,7 +16,8 @@ class User @Inject constructor(private val repository : UserRepository)  {
     }
 
     suspend fun InsertUser(resp : DataUser){
-        repository.InsertUser(resp.toDatabase())
+        val rest = resp.toDatabase()
+        repository.InsertUser(rest)
     }
 
     suspend fun UpdateExpUser(exp : Int){

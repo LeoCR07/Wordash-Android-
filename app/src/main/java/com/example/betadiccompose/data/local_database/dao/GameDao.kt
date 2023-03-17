@@ -86,7 +86,7 @@ interface GameDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertUser(user:UserEntity)
 
-    @Query("select * from user_table where id=0")
+    @Query("select * from user_table")
     suspend fun getDetaillsUser():UserEntity
 
     @Query("Delete from user_table")

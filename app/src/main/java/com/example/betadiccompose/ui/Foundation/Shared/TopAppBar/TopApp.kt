@@ -37,14 +37,17 @@ fun TopApp(
     val interactionSource = remember { MutableInteractionSource() }
     var showAlertDialog by remember { mutableStateOf(false) }
 
-    var datauser by remember {
-        mutableStateOf(DataUser())
-    }
+
+
+
+
+    var user = viewModel.lstdatauser.value
+
+    var datauser = user
 
     viewModel.getDataUser()
-    datauser = viewModel.lstdatauser.value
 
-    if(showAlertDialog){
+        if(showAlertDialog){
         ExitDialog(
             hideAlertDialog = { showAlertDialog = false },
             showAlertDialog = {showAlertDialog = true },
@@ -111,8 +114,8 @@ fun TopApp(
                         horizontalArrangement = Arrangement.SpaceAround) {
 
                         topAppBarIcon(icon = R.drawable.exp, value = datauser.exp)
-                        topAppBarIcon(icon = R.drawable.vidas, value = datauser.lives)
-                        topAppBarIcon(icon = R.drawable.star_on, value = datauser.stars)
+                        topAppBarIcon(icon = R.drawable.heart, value = datauser.lives)
+                        topAppBarIcon(icon = R.drawable.crown, value = datauser.stars)
 
                     }
                 }else if(opcion == 1){
@@ -153,7 +156,7 @@ fun TopApp(
                     Spacer(modifier = Modifier.width(10.dp))
                 }
                 else if(opcion == 4){
-                    topAppBarIcon(icon = R.drawable.star_on, value = datauser.stars)
+                    topAppBarIcon(icon = R.drawable.crown, value = datauser.stars)
                     Spacer(modifier = Modifier.width(10.dp))
                 }
             }

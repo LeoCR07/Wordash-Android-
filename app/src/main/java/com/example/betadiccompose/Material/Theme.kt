@@ -67,7 +67,7 @@ fun BetaDicComposeTheme(
     val colors = if (hora>=18) {
         DarkColorPalette
     } else {
-        //DarkColorPalette
+       // DarkColorPalette
         LightColorPalette
     }
 

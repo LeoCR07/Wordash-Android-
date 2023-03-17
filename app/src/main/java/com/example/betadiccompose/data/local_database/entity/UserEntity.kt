@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import com.example.betadiccompose.data.network_database.model.DataUser
 
 @Entity(tableName ="user_table")
-class UserEntity (
+data class UserEntity (
 
     @PrimaryKey
     @ColumnInfo(name = "id") val id:Int,
@@ -18,4 +18,11 @@ class UserEntity (
     @ColumnInfo(name = "lives") val lives:Int,
 )
 
-fun DataUser.toDatabase() = UserEntity(id,name,email,exp,level,stars,lives)
+fun DataUser.toDatabase() = UserEntity(
+    id=id,
+    name = name,
+    email = email,
+    exp = exp,
+    level = level,
+    stars = stars,
+    lives = lives)

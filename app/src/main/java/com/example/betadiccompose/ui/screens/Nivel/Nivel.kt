@@ -118,6 +118,7 @@ fun Nivel(
 
                                 GameOverScreen(
                                     NavToAgain = {
+
                                         CoroutineScope(Dispatchers.IO).launch {
 
                                             if(viewModel.getLives() > 0){
@@ -144,7 +145,7 @@ fun Nivel(
 
                                     if (id == item.id) {
                                         media.release()
-                                        viewModel.SoundFromLocal(R.raw.rigth)
+                                       viewModel.SoundFromLocal(R.raw.rigth)
                                         viewModel.step++
                                     } else {
                                         viewModel.step = 0

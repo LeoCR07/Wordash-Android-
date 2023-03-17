@@ -31,6 +31,9 @@ fun GameOverScreen(
 ) {
 
 
+    LaunchedEffect(key1 = true){
+        viewmodel.SoundFromLocal(R.raw.ulost)
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),

@@ -119,7 +119,7 @@ fun GetItemMyWord(
                         tint = MaterialTheme.colors.secondaryVariant.copy(alpha = 0.6f) )
 
                     Icon(
-                        painter = painterResource (R.drawable.snail__2_),
+                        painter = painterResource (R.drawable.snail),
                         contentDescription = "BTN",
                         modifier = Modifier
                             .clickable(interactionSource = interactionSource,indication = null) {

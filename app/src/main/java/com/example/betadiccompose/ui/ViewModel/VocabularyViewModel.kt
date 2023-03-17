@@ -16,6 +16,7 @@ import com.example.betadiccompose.Domain.Ads.AdMobRewarded
 import com.example.betadiccompose.Domain.Game_Provider.GameProvider
 import com.example.betadiccompose.Domain.Prefs
 import com.example.betadiccompose.R
+import com.example.betadiccompose.data.local_database.entity.toDatabase
 import com.example.betadiccompose.data.local_database.model.DataMyFavoriteGramar
 import com.example.betadiccompose.data.local_database.model.DataMyFavoriteSentes
 import com.example.betadiccompose.data.local_database.model.DataMyFavoriteWord
@@ -365,7 +366,7 @@ class VocabularyViewModel @Inject constructor (
 
 
     /** data user **/
-    var lstdatauser: MutableState<DataUser> = mutableStateOf(DataUser())
+    var lstdatauser: MutableState<DataUser> = mutableStateOf(DataUser(0,"","",0,0,0,0))
 
 
     /************************  Categories  ******************************/
@@ -579,6 +580,7 @@ class VocabularyViewModel @Inject constructor (
         viewModelScope.launch {
             favorite.InsertMyFavoriteWord(fav)
         }
+
     }
 
     fun insertarmypalabra(palabra:DataMyFavoriteWord){
@@ -658,7 +660,7 @@ class VocabularyViewModel @Inject constructor (
             var myPlayBackParams: PlaybackParams? = null
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 myPlayBackParams = PlaybackParams()
-                myPlayBackParams!!.speed = 0.5f //you can set speed here
+                myPlayBackParams!!.speed = 1f //you can set speed here
                 mp.playbackParams = myPlayBackParams!!
             }})
 
@@ -857,6 +859,7 @@ class VocabularyViewModel @Inject constructor (
         }
     }
 
+
     fun getDataUser(){
         viewModelScope.launch {
             val result = user.GetDetaillsUser()
@@ -864,13 +867,13 @@ class VocabularyViewModel @Inject constructor (
         }
     }
 
+
+
     fun insertDataUser(dataUser: DataUser){
         viewModelScope.launch {
             user.InsertUser(dataUser)
         }
     }
-
-
 
     suspend fun updateExp(){
         user.UpdateExpUser(1)
@@ -1006,7 +1009,7 @@ class VocabularyViewModel @Inject constructor (
                 prefs.setCountInterstitialAdGame(0)
             })
         }else{
-            SoundFromLocal(R.raw.victory)
+            SoundFromLocal(R.raw.uwin)
         }
     }
 
@@ -1027,7 +1030,8 @@ class VocabularyViewModel @Inject constructor (
     }
 
     fun LoadRewarded(){
-        getDataUser()
+
+       // getDataUser()
         rewarded.LoadAd()
     }
 

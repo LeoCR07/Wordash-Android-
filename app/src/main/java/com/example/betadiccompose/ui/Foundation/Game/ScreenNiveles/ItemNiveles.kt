@@ -26,6 +26,7 @@ import com.example.betadiccompose.R
 import com.example.betadiccompose.data.network_database.model.DataNiveles
 import com.example.betadiccompose.Foundation.ScreenVocabulary.title
 import com.example.betadiccompose.data.network_database.model.DataUser
+import com.example.betadiccompose.ui.Foundation.Shared.Local_Animation
 import com.example.betadiccompose.ui.Foundation.Shared.Url_Animation
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 
@@ -38,21 +39,17 @@ fun ItemNiveles(
     modifier: Modifier) {
 
     var datauser by remember {
-        mutableStateOf(DataUser())
+        mutableStateOf( viewModel.lstdatauser.value)
     }
 
     viewModel.getDataUser()
-    datauser = viewModel.lstdatauser.value
+
     var icon:Int
 
     val interactionSource = remember { MutableInteractionSource() }
 
 
-    Box(
-        modifier = modifier
-            .clickable(interactionSource = interactionSource,indication = null)
-            {onClick(item)}
-    ) {
+    Box() {
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
@@ -60,20 +57,30 @@ fun ItemNiveles(
             if(item.id <= datauser.level){
                 Url_Animation(
                     url = item.animation,
-                    isplaying = true
+                    isplaying = true,
+                    modifier =  modifier
+                        .clickable(interactionSource = interactionSource,indication = null) {
+                            onClick(item)
+                        }
                 )
             }else{
-                Url_Animation(
-                    url = item.animation,
-                    isplaying = false
-                )
+
+                Local_Animation(
+                    animacion = R.raw.king,
+                    isPlaying = true,
+                    modifier =  modifier
+                        .size(160.dp)
+                        .clickable(interactionSource = interactionSource,indication = null) {
+                            viewModel.SoundFromLocal(R.raw.goldenking)
+                        })
+
             }
 
             if (item.id  < datauser.level) {
-                icon = R.drawable.star_on
+                icon = R.drawable.crown
 
             } else {
-                icon = R.drawable.star_off
+                icon = R.drawable.nocrown
             }
 
 
@@ -108,7 +115,7 @@ fun ItemNiveles(
                     contentDescription = null,
                     modifier = Modifier
                         .size(20.dp),
-                    tint = if(icon == R.drawable.star_on) Color.Unspecified else MaterialTheme.colors.secondaryVariant
+                    tint = if(icon == R.drawable.crown) Color.Unspecified else MaterialTheme.colors.secondaryVariant
                 )
 
 

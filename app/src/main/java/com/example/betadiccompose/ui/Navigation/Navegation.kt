@@ -12,7 +12,6 @@ import com.example.authentication.ui.Presentation.SingUpScreen
 import com.example.betadiccompose.Domain.Ads.AdMobInterstital
 import com.example.betadiccompose.MainActivity
 import com.example.betadiccompose.ui.Foundation.ScreenNiveles.Nivel
-import com.example.betadiccompose.ui.Foundation.Shared.Books.PlayerListener
 import com.example.betadiccompose.ui.Foundation.Shared.currentRoute
 import com.example.betadiccompose.ui.Navigation.routes.LoginRoutes
 import com.example.betadiccompose.ui.Navigation.routes.MenuRoutes
@@ -20,7 +19,6 @@ import com.example.betadiccompose.ui.Navigation.routes.SettingRoute
 import com.example.betadiccompose.ui.Navigation.routes.SubRoutes
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 import com.example.betadiccompose.ui.screens.*
-import com.example.betadiccompose.ui.screens.Menu.LibraryScreen
 import com.example.betadiccompose.ui.screens.Settings.OpcionScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -37,6 +35,7 @@ fun Navegation(
     val context = LocalContext.current
 
     val activity = (LocalContext.current as? Activity)
+
 
     VocaVM.getListOfAlllevel()
     VocaVM.getListOfAllCategories()
@@ -168,25 +167,6 @@ fun Navegation(
         }
 
 
-        composable(MenuRoutes.library.name) {
-            val current = currentRoute(navController = navController)
-            LibraryScreen(
-                current = current,
-                vocalview = VocaVM,
-                onMediaClick = {
-                    navController.navigate("MusicPlayer")
-                },
-                onclickNav = {
-                    navController.navigate(it.route){
-                        launchSingleTop = true
-                        popUpTo(MenuRoutes.learn.name){
-                            inclusive = true
-                        }
-                    }
-                })
-
-
-        }
 
         composable(MenuRoutes.account.name) {
             val current = currentRoute(navController = navController)
@@ -213,21 +193,6 @@ fun Navegation(
         composable(MenuRoutes.store.name) {
             val current = currentRoute(navController = navController)
 
-            StoreScreen(
-                context = context,
-                viewmodel = VocaVM,
-                current = current,
-                onclickNav = {
-                    navController.navigate(it.route){
-                        launchSingleTop = true
-                        popUpTo(MenuRoutes.store.name){
-                            inclusive = true
-                        }
-                    }
-                },
-                navToSettings = {
-                    navController.navigate("SettingsScreen")
-                })
         }
 
         composable("SubMenuScreen") {
@@ -334,10 +299,7 @@ fun Navegation(
             )
         }
 
-        composable("MusicPlayer"){
-            //MusicPlayer()
-            PlayerListener()
-        }
+
 
         composable(SettingRoute.SettingsScreen.name){
             SettingsScreen(
