@@ -18,7 +18,7 @@ class GameProvider @Inject constructor(@ApplicationContext context: Context) {
 
     //Talk and Sort
     fun GetOneWord(lista:List<DataWorld>):DataWorld{
-        var word:DataWorld = DataWorld(0,0,"","ll","")
+        var word:DataWorld
 
         val lstSubCats = prefs.GetSubCategory().split(",")
         val lstComplete:ArrayList<DataWorld> = ArrayList()
@@ -236,7 +236,7 @@ class GameProvider @Inject constructor(@ApplicationContext context: Context) {
         var lstconsonantfilter:ArrayList<String> = arrayListOf()
         var lstconsonantIndex:ArrayList<Int> = arrayListOf()
 
-        var indice = 0
+        var indice :Int
 
         //To know if it has a consonante
         for (i in 0..palabra.length-1) {
@@ -321,7 +321,7 @@ class GameProvider @Inject constructor(@ApplicationContext context: Context) {
         var lstvowefilter:ArrayList<String> = arrayListOf()
         var lstvowelsIndex:ArrayList<Int> = arrayListOf()
 
-        var indice = 0
+        var indice :Int
 
         //To know if it has a vowel
         for (i in 0..palabra.length-1) {
@@ -371,8 +371,7 @@ class GameProvider @Inject constructor(@ApplicationContext context: Context) {
         var lista = lst.toMutableList()
         //var lista = emptyList<DataWorld>()
 
-        var randomvalue = 0
-        var temp = ""
+        var randomvalue :Int
         var aux:DataWorld
 
         for (i in (0 until lst.size)){

@@ -47,8 +47,6 @@ class VocabularyRepository @Inject constructor(
         var lst :ArrayList<DataWorld> = ArrayList()
 
         for (i in 0 until response.size){
-            val id = response[i].id
-
             //Cuando no tiene Sub
             if(!prefs.IsSubMenu()){
                 lst.add(

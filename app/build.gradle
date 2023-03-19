@@ -14,6 +14,7 @@ android {
         correctErrorTypes true
     }
 
+
     defaultConfig {
         applicationId "com.example.betadiccompose"
         minSdk 21

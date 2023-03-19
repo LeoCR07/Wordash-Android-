@@ -1,20 +1,16 @@
-package com.example.betadiccompose.data.repository
+package com.example.betadiccompose.Domain
 
 import android.net.Uri
-import androidx.compose.runtime.MutableState
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -129,7 +125,6 @@ class Authrepository @Inject constructor(){
 
     fun GetDataUserFromFirebase(): Task<DocumentSnapshot> {
 
-       var valor = 0
        val docRef = db.collection("users").document( Firebase.auth.currentUser?.uid.orEmpty())
        return docRef.get()
        /*

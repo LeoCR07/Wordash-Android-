@@ -15,6 +15,7 @@ fun Local_Animation(animacion:Int, modifier: Modifier = Modifier, speed :Float =
         modifier = modifier,
         composition = composition,
         isPlaying = isPlaying,
+        speed = speed,
         iterations = LottieConstants.IterateForever)
 
 }

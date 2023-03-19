@@ -1,8 +1,6 @@
 package com.example.betadiccompose.Domain
 
 import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import com.example.betadiccompose.data.local_database.entity.toDatabase
 import com.example.betadiccompose.data.network_database.model.*
 import com.example.betadiccompose.data.repository.VocabularyRepository
@@ -10,13 +8,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class Vocabulary @Inject constructor(
-    @ApplicationContext context:Context,
-    private val resposity: VocabularyRepository){
-    suspend fun GetListOfWords ():List<DataWorld>? = resposity.GetListOfWords()
 
-    suspend fun ClearWords (){
-        resposity.ClearWords()
-    }
+    private val resposity: VocabularyRepository){
 
     suspend  fun GetListOfAllVocabularyFromRoom () =   resposity.GetListOfVocabularyFromRoom()
 

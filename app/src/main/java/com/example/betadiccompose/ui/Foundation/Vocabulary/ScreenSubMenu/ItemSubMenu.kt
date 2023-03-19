@@ -20,7 +20,7 @@ import com.example.betadiccompose.Foundation.ScreenVocabulary.title
 fun ItemSubMenu(
     item: DataSubMenu,
     onclick: () -> Unit) {
-    val interactionSource = remember { MutableInteractionSource() }
+
     Card(
         modifier = Modifier
             .padding(6.dp)

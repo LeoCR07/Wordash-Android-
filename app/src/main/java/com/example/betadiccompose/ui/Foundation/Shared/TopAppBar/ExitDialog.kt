@@ -25,8 +25,6 @@ import com.example.betadiccompose.R
 @Composable
 fun ExitDialog(hideAlertDialog:()->Unit ,showAlertDialog:()->Unit,texto:String,onBack:()->Unit) {
 
-    val interactionSource = remember { MutableInteractionSource() }
-
     AlertDialog(
         modifier = Modifier
             .clip(RoundedCornerShape(12.dp))

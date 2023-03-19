@@ -7,10 +7,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.authentication.Presentation.LoginScreen
 import com.example.authentication.ui.Presentation.SingUpScreen
-import com.example.betadiccompose.Domain.Ads.AdMobInterstital
-import com.example.betadiccompose.MainActivity
 import com.example.betadiccompose.ui.Foundation.ScreenNiveles.Nivel
 import com.example.betadiccompose.ui.Foundation.Shared.currentRoute
 import com.example.betadiccompose.ui.Navigation.routes.LoginRoutes
@@ -19,6 +16,8 @@ import com.example.betadiccompose.ui.Navigation.routes.SettingRoute
 import com.example.betadiccompose.ui.Navigation.routes.SubRoutes
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 import com.example.betadiccompose.ui.screens.*
+import com.example.betadiccompose.ui.screens.Menu.LoginScreen
+import com.example.betadiccompose.ui.screens.Menu.SelectLanguage
 import com.example.betadiccompose.ui.screens.Settings.OpcionScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -45,18 +44,16 @@ fun Navegation(
 
     NavHost(
         navController = navController,
-        // startDestination = startDestination
+         startDestination = startDestination
         //  startDestination = "SORT"
-        startDestination = MenuRoutes.play.name
+        //startDestination = MenuRoutes.play.name
     ) {
 
-        composable(LoginRoutes.Login.name){
 
+        composable(LoginRoutes.Login.name){
             LoginScreen(
-                loginViewModel = VocaVM,
-                ClickSingUpFacebook = {},
-                ClickSingUpMicrosoft = {},
-                NavToAccountScreen = {
+                viewmodel = VocaVM,
+                NavToMainScreen = {
                     navController.navigate(MenuRoutes.play.name) {
                         launchSingleTop = true
 
@@ -65,7 +62,6 @@ fun Navegation(
                         }
                     }
                 },
-                ClickForgotPassword = {},
                 NavToSingUpScreen = {
                     navController.navigate(LoginRoutes.SingUp.name) {
                         launchSingleTop = true
@@ -73,9 +69,14 @@ fun Navegation(
                 })
         }
 
+        composable("SelectLanguage"){
+            SelectLanguage(VocaVM)
+        }
+
+
         composable(LoginRoutes.SingUp.name){
             SingUpScreen(
-                loginViewModel = VocaVM,
+                viewmodel = VocaVM,
                 onNavToAccount = {
                     navController.navigate(MenuRoutes.play.name) {
                         launchSingleTop = true
@@ -84,8 +85,7 @@ fun Navegation(
                             inclusive = true
                         }
                     }
-                },
-                ClickSingUp = {})
+                })
         }
 
         composable(MenuRoutes.learn.name) { navback ->

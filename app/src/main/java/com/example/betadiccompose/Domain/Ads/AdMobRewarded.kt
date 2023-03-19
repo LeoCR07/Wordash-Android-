@@ -47,7 +47,7 @@ class AdMobRewarded  @Inject constructor(private val context: android.content.Co
 
         if (rewardedAd != null) {
             rewardedAd?.let { ad ->
-                ad.show(activity, OnUserEarnedRewardListener { rewardItem ->
+                ad.show(activity, OnUserEarnedRewardListener {
                     CoroutineScope(Dispatchers.IO).launch {
                         OnClick()
                     }

@@ -41,16 +41,6 @@ class Prefs @Inject constructor(@ApplicationContext context: Context) {
         storage.edit().putInt(KeyGameEnd,end).apply()
     }
 
-    fun GetIndexIGameInit() :Int{
-        return storage.getInt(KeyGameInit,0)!!
-    }
-
-    fun GetIndexIGameEnd():Int{
-        return storage.getInt(KeyGameEnd,0)!!
-    }
-
-
-
     fun GetPath():String{
         return storage.getString(KeyCategory,"")!!
     }

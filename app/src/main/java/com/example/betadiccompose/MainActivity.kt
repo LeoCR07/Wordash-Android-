@@ -9,6 +9,7 @@ import com.example.betadiccompose.Domain.Ads.AdMobInterstital
 
 import com.example.betadiccompose.Foundation.Category.Navegation.Navegation
 import com.example.betadiccompose.data.network_database.model.DataUser
+import com.example.betadiccompose.ui.Navigation.routes.LoginRoutes
 import com.example.betadiccompose.ui.Navigation.routes.MenuRoutes
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 import com.google.android.gms.ads.MobileAds
@@ -31,7 +32,9 @@ class MainActivity : ComponentActivity() {
 
 
 
-        var startDestination = MenuRoutes.play.name
+        var startDestination = LoginRoutes.Login.name
+       // var startDestination = MenuRoutes.play.name
+        //"SelectLanguage"
 
         CoroutineScope(Dispatchers.IO).launch {
             //Niveles
@@ -52,7 +55,6 @@ class MainActivity : ComponentActivity() {
        // println("la suma es: ${viewModel.GetCounterGame()}")
 
         setContent {
-
 
             if (viewModel?.hasUser){
                 //Si el usuario ya esta reguistrado

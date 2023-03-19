@@ -16,8 +16,6 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun ButtonSample(item: String, modifier: Modifier, onClick: () -> Unit) {
-    val BtnColor = 0xFFAB47BC
-
     Button(
         modifier =  modifier
             .clip(RoundedCornerShape(6.dp)),

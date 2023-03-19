@@ -21,7 +21,6 @@ class PlayRepository @Inject constructor(
         var lst :ArrayList<DataWorld> = ArrayList()
 
         for (i in 0 until response.size){
-            val id = response[i].id
             lst.add(
                 DataWorld(
                     id = response[i].id,

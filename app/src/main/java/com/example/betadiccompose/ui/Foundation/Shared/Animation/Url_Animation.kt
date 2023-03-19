@@ -21,13 +21,7 @@ fun Url_Animation(url: String, modifier: Modifier = Modifier, isplaying:Boolean 
     Box(
         contentAlignment = Alignment.Center){
 
-       //val color by derivedStateOf { Color.LightGray }
-
-
-        val disabled = "https://dicvocabulary.s3.us-east-2.amazonaws.com/Animaciones/disabled/0.json"
-
         val composition = rememberLottieComposition(LottieCompositionSpec.Url(url))
-
         val progress by animateLottieCompositionAsState(
 
             composition = composition.value,

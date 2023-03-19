@@ -16,12 +16,11 @@ import com.example.betadiccompose.Domain.Ads.AdMobRewarded
 import com.example.betadiccompose.Domain.Game_Provider.GameProvider
 import com.example.betadiccompose.Domain.Prefs
 import com.example.betadiccompose.R
-import com.example.betadiccompose.data.local_database.entity.toDatabase
 import com.example.betadiccompose.data.local_database.model.DataMyFavoriteGramar
 import com.example.betadiccompose.data.local_database.model.DataMyFavoriteSentes
 import com.example.betadiccompose.data.local_database.model.DataMyFavoriteWord
 import com.example.betadiccompose.data.network_database.model.*
-import com.example.betadiccompose.data.repository.Authrepository
+import com.example.betadiccompose.Domain.Authrepository
 import com.example.betadiccompose.ui.Navigation.MainScreenState
 import com.google.firebase.auth.AuthCredential
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,7 +36,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VocabularyViewModel @Inject constructor (
-    @ApplicationContext context: Context,
+    @ApplicationContext contexto: Context,
     val rewarded: AdMobRewarded,
     val interstital: AdMobInterstital,
     val game_provider :GameProvider,
@@ -47,7 +46,8 @@ class VocabularyViewModel @Inject constructor (
     val user : User,
     val vocabulary: Vocabulary,
     val books: Books,
-    val auth: Authrepository ): ViewModel() {
+    val auth: Authrepository
+): ViewModel() {
 
 
     /*********** ads ************/
@@ -55,6 +55,7 @@ class VocabularyViewModel @Inject constructor (
 
     /************  login **************/
 
+    val  context = contexto.applicationContext
     val currentUser = auth.currentUser
     val userId = auth.getUserId()
     val username = auth.getUserName()
@@ -236,8 +237,9 @@ class VocabularyViewModel @Inject constructor (
 
     fun SingInGoogleFirebase(
         credential: AuthCredential,
-        context: Context,
         OnNavToHome:()->Unit) = viewModelScope.launch{
+
+
         try {
             loginUiState = loginUiState.copy(isLoading = true)
             auth.SingGoogle(credential){
@@ -249,6 +251,7 @@ class VocabularyViewModel @Inject constructor (
                     ).show()
 
                     loginUiState = loginUiState.copy(isLoading = false)
+
                     OnNavToHome.invoke()
 
                 }else{
@@ -260,12 +263,9 @@ class VocabularyViewModel @Inject constructor (
                     ).show()
                 }
             }
+
         }catch (E:Exception){
-            Toast.makeText(
-                context,
-                "${E.message}",
-                Toast.LENGTH_SHORT
-            ).show()
+            Toast.makeText(context, "${E.message}", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -314,7 +314,6 @@ class VocabularyViewModel @Inject constructor (
 
     /************* login ***************/
 
-    val contexto:Context = context
 
     /** Nivel **/
     var state by mutableStateOf(MainScreenState())
@@ -654,7 +653,7 @@ class VocabularyViewModel @Inject constructor (
     /************************  Sound  ******************************/
 
     fun SoundFromLocal(sound:Int){
-        var mediaPlayer = MediaPlayer.create(contexto,sound)
+        var mediaPlayer = MediaPlayer.create(context,sound)
         mediaPlayer.setOnPreparedListener(OnPreparedListener { mp ->
             //works only from api 23
             var myPlayBackParams: PlaybackParams? = null
@@ -1047,6 +1046,8 @@ class VocabularyViewModel @Inject constructor (
        })
    }
 
+    fun LoginGoogle(){
 
+    }
 
 }
