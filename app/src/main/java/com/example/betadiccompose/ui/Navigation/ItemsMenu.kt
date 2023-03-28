@@ -8,8 +8,8 @@ sealed class ItemsMenu(
     val iconSelected: Int,
     val route: String){
 
-    object Pantalla_2 : ItemsMenu(R.drawable.bookon,R.drawable.libro_out, MenuRoutes.learn.name)
-    object Pantalla_1: ItemsMenu(R.drawable.play_on,R.drawable.play_off, MenuRoutes.play.name)
+    object Pantalla_1 : ItemsMenu(R.drawable.bookon,R.drawable.libro_out, MenuRoutes.learn.name)
+    object Pantalla_2: ItemsMenu(R.drawable.play_on,R.drawable.play_off, MenuRoutes.play.name)
     object Pantalla_3 : ItemsMenu(R.drawable.account_on,R.drawable.account_off, MenuRoutes.account.name)
 
     /*

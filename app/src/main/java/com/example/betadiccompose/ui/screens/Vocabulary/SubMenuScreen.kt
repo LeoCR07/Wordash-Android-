@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import com.example.betadiccompose.data.network_database.model.DataSubMenu
 
 import com.example.betadiccompose.Runtime.MyApp
+
 import com.example.betadiccompose.ui.Foundation.MyBanner
 import com.example.betadiccompose.ui.Foundation.Shared.TopApp
 import com.example.betadiccompose.ui.Foundation.Shared.Vocabulary.CircleProgress
@@ -18,7 +19,7 @@ fun SubMenuScreen(
     onMediaClick: (DataSubMenu) -> Unit,
     viewmodel: VocabularyViewModel) {
 
-    MyApp {
+    MyApp (viewModel = viewmodel, content = {
         Scaffold (
             bottomBar = {
             },
@@ -39,5 +40,5 @@ fun SubMenuScreen(
             }
 
         }
-    }
+    })
 }

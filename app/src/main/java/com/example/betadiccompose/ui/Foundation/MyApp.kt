@@ -7,16 +7,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 import com.example.betadiccompose.ui.theme.BetaDicComposeTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
-public fun MyApp(content:@Composable () -> Unit) {
+fun MyApp(content:@Composable () -> Unit,viewModel: VocabularyViewModel) {
 
+    BetaDicComposeTheme(viewModel = viewModel, content = {
 
-    BetaDicComposeTheme() {
         val systemUiController = rememberSystemUiController()
         val col = MaterialTheme.colors.onPrimary
+
+
 
         SideEffect {
             systemUiController.setStatusBarColor(col)
@@ -25,10 +28,12 @@ public fun MyApp(content:@Composable () -> Unit) {
 
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colors.background
+            color = MaterialTheme.colors.background,
+
         ) {
             content()
-
         }
-    }
+
+
+    })
 }

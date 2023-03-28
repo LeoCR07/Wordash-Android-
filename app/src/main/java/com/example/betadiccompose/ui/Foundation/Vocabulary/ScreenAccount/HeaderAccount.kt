@@ -6,7 +6,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,10 +23,15 @@ import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 fun HeaderAccount(vocalview: VocabularyViewModel) {
 
 
-    vocalview.getDataUser()
+    LaunchedEffect(key1 = true){
+        vocalview.getDataUser()
+    }
+
+
+
 
     Box(modifier = Modifier
-        .background(MaterialTheme.colors.onSecondary)
+        .background(MaterialTheme.colors.onSecondary.copy(0.4f))
         .clip(RoundedCornerShape(0.dp, 0.dp, 20.dp, 20.dp))){
 
         Column(
@@ -58,6 +63,7 @@ fun HeaderAccount(vocalview: VocabularyViewModel) {
             Spacer(modifier = Modifier
                 .height(5.dp))
 
+
             Text(
                 text = "Hello, ${vocalview.lstdatauser.value.name}",
                 textAlign = TextAlign.Center,
@@ -79,7 +85,7 @@ fun HeaderAccount(vocalview: VocabularyViewModel) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                ColumDetail(number = vocalview.lstdatauser.value.stars, icon = R.drawable.crown )
+                ColumDetail(number = vocalview.lstdatauser.value.crowns, icon = R.drawable.crown )
                 Vline()
                 ColumDetail(number = vocalview.lstdatauser.value.level, icon = R.drawable.level )
                 Vline()

@@ -21,9 +21,13 @@ class Prefs @Inject constructor(@ApplicationContext context: Context) {
     private val KeyGameEnd:String = "KeyIndexEndGame"
     private val KeyCatName:String = "KeyIndexCat"
     private val Keyfirsttime:String = "timeFirstTime"
+    private val KeyIndexCurrentLevel:String = "IndexCurrentLevel"
+
 
     private val KeyCountInterstitialAdGame:String = "KeyCountInterstitialAdGame"
     private val  KeyCountInterstitialAdVoca:String = "KeyCountInterstitialAdVoca"
+
+    private val  KeyTheme:String = "KeyTheme"
 
     val storage = context.getSharedPreferences(db,0)
 
@@ -135,6 +139,14 @@ class Prefs @Inject constructor(@ApplicationContext context: Context) {
     fun SaveFirstTime(time:String){
         storage.edit().putString(Keyfirsttime,time).apply()
     }
+
+    fun SetIndexCurrentLevel(index:Int){
+        storage.edit().putInt(KeyIndexCurrentLevel,index).apply()
+    }
+
+    fun GetIndexCurrentLevel() = storage.getInt(KeyIndexCurrentLevel,1)!!
+
+
     fun GetFirstTime() = storage.getString(Keyfirsttime,"null")!!
 
 
@@ -144,12 +156,17 @@ class Prefs @Inject constructor(@ApplicationContext context: Context) {
 
     fun getCountInterstitialAdVoca()= storage.getInt(KeyCountInterstitialAdVoca,0)!!
 
-
-
     fun setCountInterstitialAdGame(c:Int){
         storage.edit().putInt(KeyCountInterstitialAdGame,c).apply()
     }
 
     fun getCountInterstitialAdGame() = storage.getInt(KeyCountInterstitialAdGame,0)!!
 
+
+    // Theme
+    fun setTheme(num:Int){
+        storage.edit().putInt(KeyTheme,num).apply()
+    }
+
+    fun getTheme()= storage.getInt(KeyTheme,0)!!
 }

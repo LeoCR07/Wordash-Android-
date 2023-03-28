@@ -6,35 +6,31 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
-import com.example.betadiccompose.ui.theme.BetaDicComposeTheme
-import com.example.betadiccompose.ui.theme.Starting
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.betadiccompose.ui.theme.splash
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 
-
-
-
 @Composable
-public fun MyTheme(content:@Composable () -> Unit) {
-
-    BetaDicComposeTheme() {
+fun MySplash(content:@Composable () -> Unit) {
+    splash(){
         val systemUiController = rememberSystemUiController()
-        val col = MaterialTheme.colors.background
-
-        // requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        val col = MaterialTheme.colors.onPrimary
 
         SideEffect {
             systemUiController.setStatusBarColor(col)
             systemUiController.setSystemBarsColor(col)
-
         }
+
 
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colors.background
+            color = Color.Red
         ) {
             content()
-
         }
+
+
     }
 }

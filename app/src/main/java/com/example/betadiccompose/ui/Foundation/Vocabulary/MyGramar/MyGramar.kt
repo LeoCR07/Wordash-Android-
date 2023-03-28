@@ -23,30 +23,31 @@ import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 fun MyGramar(
     vocalview: VocabularyViewModel,
 ) {
-    MyApp {
+    MyApp(viewModel = vocalview, content = {
+
         Scaffold(
-            topBar = {
-                TopApp(title = "Mi gramaticas", viewModel = vocalview)
-            }){
+        topBar = {
+            TopApp(title = "Mi gramaticas", viewModel = vocalview)
+        }){
 
-            vocalview.getMyFavoriteGramar()
+        vocalview.getMyFavoriteGramar()
 
-            val lstmyfavoritegramar by remember {
-                mutableStateOf(vocalview.lstfavoritegramar.value)
-            }
-
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(300.dp),
-                contentPadding = PaddingValues(6.dp),
-                modifier = Modifier
-                    .padding(6.dp)
-                    .background(Color.Black.copy(alpha = 0.02f))
-            ){
-                items(lstmyfavoritegramar) { item ->
-                    GetItemMyGramar(modifier = Modifier.padding(6.dp),
-                        item = item , viewmodel = vocalview )
-                }
-            }
+        val lstmyfavoritegramar by remember {
+            mutableStateOf(vocalview.lstfavoritegramar.value)
         }
-    }
+
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(300.dp),
+            contentPadding = PaddingValues(6.dp),
+            modifier = Modifier
+                .padding(6.dp)
+                .background(Color.Black.copy(alpha = 0.02f))
+        ){
+            items(lstmyfavoritegramar) { item ->
+                GetItemMyGramar(modifier = Modifier.padding(6.dp),
+                    item = item , viewmodel = vocalview )
+            }
+        }  }} )
+
+
 }

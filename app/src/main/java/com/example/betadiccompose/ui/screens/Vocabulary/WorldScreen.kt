@@ -29,7 +29,7 @@ fun WordScreen(
 ) {
     var context = LocalContext.current
 
-    MyApp {
+    MyApp(viewModel = viewmodel, content = {
         Scaffold (
             bottomBar = {
                         MyBanner()
@@ -56,7 +56,7 @@ fun WordScreen(
             }
 
         }
-    }
+    })
 
 
 

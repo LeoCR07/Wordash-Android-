@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.Color
 
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
+import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 import java.util.*
 
 private val DarkColorPalette = darkColors(
@@ -19,7 +20,7 @@ private val DarkColorPalette = darkColors(
     onSecondary = Color(0xFF3A3A3A), //Lineas
     onSurface =  Color(0xFF2196F3), //
     background =  Color(0xFF141414), //fondo
-    onPrimary =  Color(0xFF272727), //Cuadro pequeño y nav,topAppBar
+    onPrimary =  Color(0xFF1B1B1B), //Cuadro pequeño y nav,topAppBar
     secondaryVariant =  Color(0xFFB9B9B9)  //Textos, iconos
 
 )
@@ -29,7 +30,7 @@ private val LightColorPalette = lightColors(
     primaryVariant = Purple700,
     secondary = Color(0xFFEBEBEB),
     onSecondary = Color(0xFFF3F3F3),
-    onSurface =  Color(0xFF313131),
+    onSurface =  Color(0xFF2196F3),
     background =  Color(0xFFFFFFFF),
     onPrimary =  Color(0xFFFFFFFF),
     secondaryVariant =  Color(0xFF000000)
@@ -48,26 +49,24 @@ private val LightColorPalette = lightColors(
 
 @Composable
 fun BetaDicComposeTheme(
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
+    viewModel :VocabularyViewModel
 ) {
 
     val calendar = Calendar.getInstance()
     val hora = calendar.get(Calendar.HOUR_OF_DAY)
 
-
-    /*
-    val colors = if (darkTheme) {
+    var colors = if (hora>=18) {
         DarkColorPalette
     } else {
         LightColorPalette
     }
-*/
 
-    val colors = if (hora>=18) {
-        DarkColorPalette
-    } else {
-       // DarkColorPalette
-        LightColorPalette
+
+    if(viewModel.GetTheme() == 1){
+        colors = DarkColorPalette
+    }else if(viewModel.GetTheme() == 2){
+        colors = LightColorPalette
     }
 
 
@@ -75,27 +74,22 @@ fun BetaDicComposeTheme(
         colors = colors,
         typography = Typography,
         shapes = Shapes,
-        content = content
+        content = content,
+
     )
 }
 
-
 @Composable
-fun Starting(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
+fun splash(
+    content: @Composable () -> Unit,
 ) {
-    val colors = if (darkTheme) {
-        DarkColorPalette
-    } else {
-        LightColorPalette
-    }
+
+
+    var colors =  DarkColorPalette
 
     MaterialTheme(
         colors = colors,
-        //colorScheme = colors,
         typography = Typography,
         shapes = Shapes,
-        content = content
-    )
+        content = content,)
 }

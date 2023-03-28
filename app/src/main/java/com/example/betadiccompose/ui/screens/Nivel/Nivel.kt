@@ -1,8 +1,5 @@
 package com.example.betadiccompose.ui.Foundation.ScreenNiveles
 
-import android.app.Activity
-import android.media.AudioAttributes
-import android.media.MediaPlayer
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 
@@ -14,12 +11,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.betadiccompose.R
+import com.example.betadiccompose.Runtime.MyApp
+import com.example.betadiccompose.Runtime.MyGame
 import com.example.betadiccompose.data.network_database.model.DataWorld
 import com.example.betadiccompose.ui.Foundation.GamesScreen.*
 import com.example.betadiccompose.ui.Foundation.Game.GameOver.GameOverScreen
 import com.example.betadiccompose.ui.Foundation.MyBanner
-import com.example.betadiccompose.ui.Foundation.MyTheme
-import com.example.betadiccompose.ui.Foundation.Shared.Local_Animation
+
 import com.example.betadiccompose.ui.Foundation.Shared.NavToBackDialog
 import com.example.betadiccompose.ui.Foundation.Shared.Nivel.PopUpNoLives
 import com.example.betadiccompose.ui.Foundation.Shared.Nivel.secondTopAppBarLevel
@@ -29,9 +27,6 @@ import com.example.betadiccompose.ui.Foundation.Vocabulary.GamesScreen.ReviewScr
 import com.example.betadiccompose.ui.Foundation.Vocabulary.GamesScreen.SpeakToTalk
 import com.example.betadiccompose.ui.Foundation.Vocabulary.GamesScreen.WrongWritten
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
-import com.google.android.gms.ads.*
-import com.google.android.gms.ads.interstitial.InterstitialAd
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,13 +40,19 @@ fun Nivel(
     onBack:()->Unit,
     NavToStudy:()->Unit
 ) {
+    MakeNivel(viewModel,onBack,NavToStudy)
+}
+
+@Composable
+fun MakeNivel(viewModel: VocabularyViewModel, onBack: () -> Unit, NavToStudy: () -> Unit) {
     val context = LocalContext.current
+    val lst: MutableState<List<DataWorld>> = remember { mutableStateOf(listOf()) }
+    lst.value = viewModel.lstnivel.value
 
-    MyTheme {
-        val lst: MutableState<List<DataWorld>> = remember { mutableStateOf(listOf()) }
-        lst.value = viewModel.lstnivel.value
+    var opendialog = remember { mutableStateOf(false) }
 
-        var opendialog = remember { mutableStateOf(false) }
+
+    MyGame(viewModel = viewModel,content = {
 
         Scaffold(
             modifier = Modifier.background(MaterialTheme.colors.onPrimary),
@@ -93,7 +94,6 @@ fun Nivel(
                     if (lst.value.isNotEmpty()) {
                         when (viewModel.step) {
                             0 -> {
-
 
                                 LaunchedEffect(key1 =true){
                                     CoroutineScope(Dispatchers.IO).launch {
@@ -145,7 +145,7 @@ fun Nivel(
 
                                     if (id == item.id) {
                                         media.release()
-                                       viewModel.SoundFromLocal(R.raw.rigth)
+                                        viewModel.SoundFromLocal(R.raw.rigth)
                                         viewModel.step++
                                     } else {
                                         viewModel.step = 0
@@ -191,7 +191,7 @@ fun Nivel(
                                     }
                                 },
 
-                            )
+                                )
                             2, 14, 18 -> WrongWritten(
                                 lista = lst.value,
                                 viewModel = viewModel,
@@ -221,13 +221,41 @@ fun Nivel(
                                 ReviewScreen(
 
                                     NavToNext = {
+                                        CoroutineScope(Dispatchers.IO).launch {
+                                            //para las vidas
+                                            if(viewModel.getLives() > 0){
 
+                                                //Como el nivel es uno mayor al indice no se suma
+                                                if((viewModel.GetIndexLevelCurrent())<viewModel.lstniveles.value.size){
+
+                                                    var aux = viewModel.GetIndexLevelCurrent() + 1
+                                                    viewModel.SetIndexLevelCurrent(aux)
+
+                                                    var indice = viewModel.GetIndexLevelCurrent() -1
+                                                    var level = viewModel.lstniveles.value
+
+                                                    viewModel.SaveAllSubNameCategory(level[indice].doc)
+                                                    viewModel.SavePath(level[indice].dir.split("_")[0])
+                                                    viewModel.cleanAllWords()
+                                                    viewModel.getListOfWordsToPlayForLevel()
+                                                    viewModel.step = 1
+                                                }
+
+
+
+                                            }else{
+
+                                                opendialog.value = true
+
+                                            }
+                                        }
                                     },
                                     NavToExit = {
                                         onBack()
                                     },
                                     NavToAgain = {
                                         CoroutineScope(Dispatchers.IO).launch {
+                                            //para las vidas
                                             if(viewModel.getLives() > 0){
                                                 viewModel.step = 1
                                             }else{
@@ -241,6 +269,7 @@ fun Nivel(
                                     viewmodel = viewModel
                                 )
                             }
+
                             else ->{
 
                             }
@@ -264,8 +293,6 @@ fun Nivel(
             time = false
         )
 
-    }
-
-
+    })
 }
 

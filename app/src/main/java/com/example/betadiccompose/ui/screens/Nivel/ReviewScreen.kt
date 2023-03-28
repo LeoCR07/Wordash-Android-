@@ -36,7 +36,11 @@ fun ReviewScreen(
 ) {
 
 
+    LaunchedEffect(key1 = true ){
+        println("nivel superado")
+        viewmodel.updatelevelLocal()
 
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -67,6 +71,9 @@ fun ReviewScreen(
             fontSize = 18.sp,
             color = Color(0xFF68A226),
             onClick = {
+                viewmodel.GetIndexLevelCurrent()
+
+
                 NavToNext()
             },
             modifier = Modifier
@@ -76,6 +83,7 @@ fun ReviewScreen(
                 .padding(15.dp, 0.dp, 15.dp, 0.dp)
         )
         Spacer(modifier = Modifier.height(10.dp))
+
         BtnSuper(
             title = "Jugar de nuevo",
             FontColor = MaterialTheme.colors.secondaryVariant,

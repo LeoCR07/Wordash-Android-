@@ -6,10 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.authentication.ui.Foundation.Account.HListWord
@@ -29,21 +26,21 @@ fun AccountScreen(
     onclickNav: (ItemsMenu) -> Unit,
     vocalview: VocabularyViewModel,
     navToSeeMyWords: () -> Unit,
-    navToSeeMySentes: () -> Unit
+    navToSeeMySentes: () -> Unit,
+    navToSettings:() ->Unit
 ) {
 
-    val lstmyfavoritewords by remember {
-        mutableStateOf( vocalview.mywords.value)
-    }
+    val lstmyfavoritewords =  vocalview.mywords.value
+    val lstmyfavoritesentes = vocalview.lstfavoritesentes.value
 
-    val lstmyfavoritesentes by remember {
-        mutableStateOf(vocalview.lstfavoritesentes.value)
-    }
 
-    MyApp {
+    MyApp(viewModel = vocalview, content = {
         Scaffold(
             topBar = {
-                TopApp(opcion = 1, viewModel = vocalview)
+                TopApp(
+                    opcion = 1,
+                    viewModel = vocalview,
+                navToSettings = navToSettings)
             },
 
         content = {
@@ -53,7 +50,6 @@ fun AccountScreen(
 
 
             Column() {
-
 
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
@@ -73,11 +69,6 @@ fun AccountScreen(
                         SubTitles("My favorites Sentes", click = navToSeeMySentes)
                         HListSentes(lstmyfavoritesentes, vocalview)
 
-                        //LineColor(height = 5f)
-                        //SubTitles("My favorites Gramar", click = {navToSeeMyGramar()})
-                       // HListGramar(lstmyfavoritegramar, vocalview)
-
-
                     }
 
 
@@ -87,5 +78,5 @@ fun AccountScreen(
             bottomBar = { navegationinferior(menu, current, onclickNav) }
         )
 
-    }
+    })
 }

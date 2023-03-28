@@ -15,5 +15,5 @@ fun LineColor(height:Float) {
     Box(modifier = Modifier
         .fillMaxWidth()
         .height(height.dp)
-        .background(MaterialTheme.colors.onSecondary ))
+        .background(MaterialTheme.colors.onSecondary.copy(0.4f) ))
 }

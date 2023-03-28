@@ -17,7 +17,7 @@ fun GramarScreen(
     onMediaClick: (DataGramar) -> Unit,
     viewmodel: VocabularyViewModel) {
 
-    MyApp {
+    MyApp (viewModel = viewmodel, content = {
         Scaffold (topBar = { TopApp(title = viewmodel.GetCategoryName(), viewModel = viewmodel) }){
 
             viewmodel.getListOfGramar()
@@ -28,6 +28,6 @@ fun GramarScreen(
                 ListVerb(viewmodel = viewmodel,onMediaClick=onMediaClick)
             }
         }
-    }
+    })
 
 }

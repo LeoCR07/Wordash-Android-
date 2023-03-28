@@ -56,15 +56,11 @@ fun ListNiveles(
                 ItemNiveles(
                     viewModel = viewmodel,
                     onClick =  {
-
                         if(viewmodel.lstdatauser.value.lives == 0){
                             opendialog.value = true
                         }else{
                             onMediaClick(e)
                         }
-
-
-
                          },
                     item = e,Modifier.padding(6.dp))
             }

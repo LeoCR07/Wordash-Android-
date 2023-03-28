@@ -1,5 +1,6 @@
 package com.example.betadiccompose.ui.screens.Menu
 
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -11,15 +12,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.example.betadiccompose.Domain.AuthResultContract
 import com.example.betadiccompose.R
+import com.example.betadiccompose.Runtime.MyApp
 import com.example.betadiccompose.ui.Foundation.Shared.Button.BtnLogin
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.launch
 
@@ -30,125 +34,114 @@ fun LoginScreen(
     NavToMainScreen: () -> Unit,
     viewmodel: VocabularyViewModel) {
 
-    /** Google **/
-    val coroutineScope = rememberCoroutineScope()
-    val signInRequestCode = 1
-    val authResultLauncher = rememberLauncherForActivityResult(contract = AuthResultContract()){
-            task ->
-        try {
-            val account = task?.getResult(ApiException::class.java)
+    MyApp(viewModel = viewmodel, content = {
 
-            if (account != null) {
-                println("cuenta 1: ${account.account?.name}")
-            }
+        val context = LocalContext.current
 
-            if (account==null){
-                println("ERROR comes null")
-                //   text = "Google sign in failed _2"
-            }else{
+        /** Google **/
+        val coroutineScope = rememberCoroutineScope()
+        val signInRequestCode = 1
+        val authResultLauncher = rememberLauncherForActivityResult(contract = AuthResultContract()){
+                task ->
+            try {
+                val account = task?.getResult(ApiException::class.java)
 
-                println("WORKS")
+                if (account != null) {
+                    println("cuenta 1: ${account.account?.name}")
+                }
 
-                coroutineScope.launch {
-                    val credential = GoogleAuthProvider.getCredential(account.idToken,null)
+                if (account==null){
+                    println("ERROR comes null")
+                    //   text = "Google sign in failed _2"
+                }else{
 
+                    println("WORKS")
 
-                    viewmodel?.SingInGoogleFirebase(
-                        credential = credential,
-                        OnNavToHome ={
-                            NavToMainScreen.invoke()
-                        }
-                      )
+                    coroutineScope.launch {
+                        val credential = GoogleAuthProvider.getCredential(account.idToken,null)
 
 
+                        viewmodel?.SingInGoogleFirebase(
+                            credential = credential,
+                            OnNavToHome ={
+                                NavToMainScreen.invoke()
+                            }
+                        )
 
-                    println("${account.email} Correo **************************************************")
-
-                    //Segundo paso
-                    /*
-                  FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener {
-
-                        if(it.isSuccessful){
-                            println("Completo")
-                        }else{
-                            println("incompleto")
-                        }
+                        Toast.makeText(context,account.email,Toast.LENGTH_SHORT).show()
+                        println("${account.email} Correo **************************************************")
 
                     }
 
-                    */
-                    //  account.email?.let {account.displayName?.let { it1 -> authViewModel.signIn(email = it,displayName = it1) } }
+
                 }
 
+            }catch (e: ApiException){
+                //  text="Google sign in failed _1"
+            }
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally) {
+
+            // Icono
+            androidx.compose.material.Icon(
+                painter = painterResource(R.drawable.flag_states),
+                contentDescription = "BTN",
+                modifier = Modifier
+                    .size(50.dp)
+                    .clip(CircleShape),
+                tint = Color.Unspecified)
+
+
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+
+            BtnLogin(icono = R.drawable.facebo, text = "Registrate con facebook"){
 
             }
 
-        }catch (e: ApiException){
-            //  text="Google sign in failed _1"
-        }
-    }
+            Spacer(modifier = Modifier.height(15.dp))
+
+            BtnLogin(icono = R.drawable.google_2,text = "Registrate con google"){
+                authResultLauncher.launch(signInRequestCode)
+            }
+
+            Spacer(modifier = Modifier.height(15.dp))
 
 
+            BtnLogin(icono = R.drawable.email,text ="Registrate con tu correo"){
+                NavToSingUpScreen()
+            }
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(),
-        verticalArrangement = Arrangement.Center,
-    horizontalAlignment = Alignment.CenterHorizontally) {
+            Spacer(modifier = Modifier.height(15.dp))
 
-        // Icono
-        androidx.compose.material.Icon(
-            painter = painterResource(R.drawable.flag_states),
-            contentDescription = "BTN",
-            modifier = Modifier
-                .size(50.dp)
-                .clip(CircleShape),
-            tint = Color.Unspecified)
+            Text(text = "O",
+                fontWeight = FontWeight.Bold
+            )
 
+            Spacer(modifier = Modifier.height(15.dp))
 
+            Text(text = "Omitir",
+                textDecoration = TextDecoration.Underline
+            )
 
-        Spacer(modifier = Modifier.height(40.dp))
-
-
-        BtnLogin(icono = R.drawable.facebo, text = "Registrate con facebook"){
 
         }
 
-        Spacer(modifier = Modifier.height(15.dp))
 
-        BtnLogin(icono = R.drawable.google_2,text = "Registrate con google"){
-            authResultLauncher.launch(signInRequestCode)
+        LaunchedEffect(key1 = viewmodel?.hasUser){
+            if (viewmodel?.hasUser ){
+                NavToMainScreen.invoke()
+            }
         }
-
-        Spacer(modifier = Modifier.height(15.dp))
-
-
-        BtnLogin(icono = R.drawable.email,text ="Registrate con tu correo"){
-            NavToSingUpScreen()
-        }
-
-        Spacer(modifier = Modifier.height(15.dp))
-        
-        Text(text = "O",
-        fontWeight = FontWeight.Bold
-        )
-
-        Spacer(modifier = Modifier.height(15.dp))
-
-        Text(text = "Omitir",
-            textDecoration = TextDecoration.Underline
-        )
+    })
 
 
-    }
-
-
-    LaunchedEffect(key1 = viewmodel?.hasUser){
-        if (viewmodel?.hasUser ){
-            NavToMainScreen.invoke()
-        }
-    }
 
 
 }

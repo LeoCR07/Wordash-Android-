@@ -27,15 +27,41 @@ class UserRepository  @Inject constructor(
         dao.updateExp(exp)
     }
 
+    suspend fun UpdateUserData(user: DataUser){
+        dao.UpdateuserData(
+            id = user.id,
+            name = user.name,
+            email = user.email,
+            exp = user.exp,
+            spanish = user.Spanish,
+            english = user.English,
+            crowns = user.crowns,
+
+            )
+    }
+
     suspend fun UpdateStarsUser(stars:Int){
         var value = dao.getStars() + stars
         dao.updateStars(value)
     }
 
-    suspend fun UpdateLevelUser(level:Int){
-        var value = dao.getLevel()+ level
-        dao.updateLevel(value)
+    suspend fun UpdateLevelEnglish(level:Int){
+          dao.updateenglish(level)
     }
+
+    suspend fun UpdateLevelSpanish(level:Int){
+          dao.updatespanish(level)
+    }
+
+    suspend fun UpdateLevelUser(level:Int){
+        dao.updatelevel(level)
+    }
+
+    suspend fun SetLevelUser(level:Int){
+        dao.updatelevel(level)
+    }
+
+    suspend fun getUserLevel() = dao.getExp()
 
     suspend fun getUserExp() = dao.getExp()
 

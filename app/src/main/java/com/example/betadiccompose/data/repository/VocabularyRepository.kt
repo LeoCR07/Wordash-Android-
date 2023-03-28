@@ -152,7 +152,7 @@ class VocabularyRepository @Inject constructor(
     }
 
 
-    /**************  Vocabulary ****************/
+    /************** local Vocabulary ****************/
 
     suspend fun GetListOfVocabularyFromRoom():List<DataVocabulary>{
         val response :List<VocabularyEntity> = dao.getallVocabulary()
@@ -169,7 +169,7 @@ class VocabularyRepository @Inject constructor(
 
 
 
-    /**************  Words ****************/
+    /************** local Words ****************/
 
     suspend fun GetListOfWordsFromRoom():List<DataWorld>{
         val response :List<WordEntity> = dao.getallQuotes()
@@ -184,11 +184,10 @@ class VocabularyRepository @Inject constructor(
         dao.deleteAllWords()
     }
 
-
-
     suspend fun GetListOfWordsFromRoomById():List<DataWorld>{
         val response :List<WordEntity> = dao.getallQuotesByID()
         return response.map { it.toDomain() }
     }
+
 
 }

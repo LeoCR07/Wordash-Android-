@@ -1,6 +1,7 @@
 package com.example.betadiccompose.Foundation.Category.Navegation
 import android.app.Activity
 import android.content.pm.ActivityInfo
+import android.view.Window
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
@@ -8,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.authentication.ui.Presentation.SingUpScreen
+import com.example.betadiccompose.R
 import com.example.betadiccompose.ui.Foundation.ScreenNiveles.Nivel
 import com.example.betadiccompose.ui.Foundation.Shared.currentRoute
 import com.example.betadiccompose.ui.Navigation.routes.LoginRoutes
@@ -18,16 +20,25 @@ import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 import com.example.betadiccompose.ui.screens.*
 import com.example.betadiccompose.ui.screens.Menu.LoginScreen
 import com.example.betadiccompose.ui.screens.Menu.SelectLanguage
-import com.example.betadiccompose.ui.screens.Settings.OpcionScreen
+import com.example.betadiccompose.ui.screens.Menu.SplashScreen
+import com.example.betadiccompose.ui.screens.Settings.CreditScreen
+import com.example.betadiccompose.ui.screens.Settings.LanguageScreen
+
+import com.example.betadiccompose.ui.screens.Settings.NewScreen
+import com.example.betadiccompose.ui.screens.Settings.ThemeScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.*
 
 
 @Composable
 fun Navegation(
     VocaVM: VocabularyViewModel,
-    startDestination: String
+    startDestination: String,
+    window: Window
+
 ) {
 
     val navController = rememberNavController()
@@ -36,17 +47,41 @@ fun Navegation(
     val activity = (LocalContext.current as? Activity)
 
 
+    VocaVM.getDataUser()
     VocaVM.getListOfAlllevel()
     VocaVM.getListOfAllCategories()
     VocaVM.getMyFavoriteSentes()
     VocaVM.getMyFavoriteWords()
 
 
+    context.setTheme(R.style.Theme_BetaDicCompose)
+    LaunchedEffect(key1 = true ){
+        delay(500)
+
+        val calendar = Calendar.getInstance()
+        val hora = calendar.get(Calendar.HOUR_OF_DAY)
+
+        if(VocaVM.GetTheme() == 2){
+            window.setBackgroundDrawableResource(R.color.light)
+        }else if (VocaVM.GetTheme() == 1){
+            window.setBackgroundDrawableResource(R.color.dark)
+        }else if(VocaVM.GetTheme() == 0){
+            if (hora>=18) {
+                window.setBackgroundDrawableResource(R.color.dark)
+            }else{
+                window.setBackgroundDrawableResource(R.color.light)
+            }
+        }
+
+    }
+
+
+
     NavHost(
         navController = navController,
-         startDestination = startDestination
+        startDestination = startDestination
         //  startDestination = "SORT"
-        //startDestination = MenuRoutes.play.name
+       // startDestination = MenuRoutes.play.name
     ) {
 
 
@@ -54,12 +89,13 @@ fun Navegation(
             LoginScreen(
                 viewmodel = VocaVM,
                 NavToMainScreen = {
-                    navController.navigate(MenuRoutes.play.name) {
+                    navController.navigate(MenuRoutes.learn.name) {
                         launchSingleTop = true
 
                         popUpTo(route = LoginRoutes.Login.name) {
                             inclusive = true
                         }
+
                     }
                 },
                 NavToSingUpScreen = {
@@ -73,12 +109,11 @@ fun Navegation(
             SelectLanguage(VocaVM)
         }
 
-
         composable(LoginRoutes.SingUp.name){
             SingUpScreen(
                 viewmodel = VocaVM,
                 onNavToAccount = {
-                    navController.navigate(MenuRoutes.play.name) {
+                    navController.navigate(MenuRoutes.learn.name) {
                         launchSingleTop = true
 
                         popUpTo(route = LoginRoutes.SingUp.name) {
@@ -93,7 +128,6 @@ fun Navegation(
             VocaVM.loadSubMenu.value = true
 
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-
 
             VocabularyScreen(
 
@@ -123,10 +157,15 @@ fun Navegation(
                 onclickNav = {
                     navController.navigate(it.route){
                         launchSingleTop = true
+                        /*
                         popUpTo(MenuRoutes.learn.name){
                             inclusive = true
-                        }
+                        }*/
                     }
+                },
+                onBack =  {
+                    activity?.finish()
+                    //navController.popBackStack()
                 })
         }
 
@@ -147,26 +186,23 @@ fun Navegation(
 
                     VocaVM.SaveAllSubNameCategory(it.doc)
                     VocaVM.SavePath(it.dir.split("_")[0])
-
-                    println("dirrecion "+it)
                     VocaVM.cleanAllWords()
+                    VocaVM.SetIndexLevelCurrent(it.id)
+
                     VocaVM.getListOfWordsToPlayForLevel()
                     navController.navigate(SubRoutes.nivel.name)
                 },
                 onclickNav = {
                     navController.navigate(it.route){
                         launchSingleTop = true
-                    }
-                },
 
-                onBack = {
-                    activity?.finish()
-                    //navController.popBackStack()
+                        popUpTo(MenuRoutes.play.name){
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }
-
-
 
         composable(MenuRoutes.account.name) {
             val current = currentRoute(navController = navController)
@@ -187,6 +223,9 @@ fun Navegation(
                 },
                 navToSeeMySentes = {
                     navController.navigate("MySentes")
+                },
+                navToSettings = {
+                    navController.navigate(SettingRoute.SettingsScreen.name)
                 })
         }
 
@@ -293,49 +332,59 @@ fun Navegation(
             )
         }
 
-        composable("MyGramar"){
-            MyGramar(
-                vocalview = VocaVM
-            )
-        }
-
 
 
         composable(SettingRoute.SettingsScreen.name){
             SettingsScreen(
                 viewmodel = VocaVM,
-                NavToNatal = {
-                    navController.navigate(SettingRoute.SettingNatal.name)
+                NavToLanguage = {
+                    navController.navigate(SettingRoute.SettingLanguage.name)
                 },
-                NavToNuevo = {
-                    navController.navigate(SettingRoute.SettingNuevo.name)
+                NavToNew = {
+                    navController.navigate(SettingRoute.SettingNew.name)
                 },
-                NavToTema = {
-                    navController.navigate(SettingRoute.SettingTema.name)
+                NavToTheme = {
+                    navController.navigate(SettingRoute.SettingTheme.name)
+                },
+                SignOut = {
+                    VocaVM.SingOut()
+                    activity?.finish()
+                },
+                NavToCredits = {
+                    navController.navigate(SettingRoute.SettingCretits.name)
                 })
         }
 
-        composable(SettingRoute.SettingNatal.name){
-            OpcionScreen(
-                viewmodel = VocaVM,
-                type = 1
-            )
+        composable(SettingRoute.SettingLanguage.name){
+            LanguageScreen(VocaVM)
         }
 
-        composable(SettingRoute.SettingNuevo.name){
-            OpcionScreen(
-                viewmodel = VocaVM,
-                type = 2
-            )
+        composable(SettingRoute.SettingNew.name){
+            NewScreen(viewmodel = VocaVM)
         }
 
-        composable(SettingRoute.SettingTema.name){
-            OpcionScreen(
-                viewmodel = VocaVM,
-                type = 3
-            )
+        composable(SettingRoute.SettingTheme.name){
+            ThemeScreen(viewmodel = VocaVM, click = {
+                val calendar = Calendar.getInstance()
+                val hora = calendar.get(Calendar.HOUR_OF_DAY)
+
+                if(VocaVM.GetTheme() == 2){
+                    window.setBackgroundDrawableResource(R.color.light)
+                }else if (VocaVM.GetTheme() == 1){
+                    window.setBackgroundDrawableResource(R.color.dark)
+                }else if(VocaVM.GetTheme() == 0){
+                    if (hora>=18) {
+                        window.setBackgroundDrawableResource(R.color.dark)
+                    }else{
+                        window.setBackgroundDrawableResource(R.color.light)
+                    }
+                }
+            })
         }
 
+        composable(SettingRoute.SettingCretits.name){
+            CreditScreen(viewmodel = VocaVM)
+        }
 
 
 

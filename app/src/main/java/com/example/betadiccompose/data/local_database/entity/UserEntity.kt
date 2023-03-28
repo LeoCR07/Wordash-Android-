@@ -9,13 +9,16 @@ import com.example.betadiccompose.data.network_database.model.DataUser
 data class UserEntity (
 
     @PrimaryKey
-    @ColumnInfo(name = "id") val id:Int,
+    @ColumnInfo(name = "id") val id:String,
     @ColumnInfo(name = "name") val name:String,
     @ColumnInfo(name = "email") val email:String,
     @ColumnInfo(name = "exp") val exp:Int,
-    @ColumnInfo(name = "level") val level:Int,
-    @ColumnInfo(name = "stars") val stars:Int,
-    @ColumnInfo(name = "lives") val lives:Int,
+    @ColumnInfo(name = "stars") val crowns:Int,
+    @ColumnInfo(name = "lives") val lives:Int ,
+    @ColumnInfo(name = "spanish") val Spanish:Int = 1,
+    @ColumnInfo(name = "english") val English:Int = 1,
+    @ColumnInfo(name = "level") val level:Int = 1,
+
 )
 
 fun DataUser.toDatabase() = UserEntity(
@@ -23,6 +26,8 @@ fun DataUser.toDatabase() = UserEntity(
     name = name,
     email = email,
     exp = exp,
-    level = level,
-    stars = stars,
-    lives = lives)
+    crowns = crowns,
+    lives = lives,
+    Spanish = Spanish,
+    English = English,
+    level = level)

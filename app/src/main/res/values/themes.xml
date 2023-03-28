@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-
     <style name="Theme.BetaDicCompose" parent="android:Theme.Material.Light.NoActionBar">
 
     </style>
 
+    <style name="Theme.splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#00c5fd</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/name</item>
+        <item name="windowSplashScreenAnimationDuration">300</item>
+    </style>
 
 </resources>

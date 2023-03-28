@@ -7,6 +7,11 @@ import javax.inject.Inject
 
 class User @Inject constructor(private val repository : UserRepository)  {
 
+
+    suspend fun UpdateUserDataToFirebase(){
+
+    }
+
     suspend fun DeleteUser(){
         repository.DeleteUser()
     }
@@ -26,13 +31,30 @@ class User @Inject constructor(private val repository : UserRepository)  {
 
     }
 
+    suspend fun UpdateUserData(user: DataUser){
+        repository.UpdateUserData(user)
+    }
+
+    suspend fun UpdateLevelSpanish(level : Int) {
+        repository.UpdateLevelSpanish(level)
+    }
+
+    suspend fun UpdateLevelEnglish(level : Int) {
+        repository.UpdateLevelEnglish(level)
+    }
+
     suspend fun UpdateLevelUser(level : Int) {
         repository.UpdateLevelUser(level)
     }
 
-    suspend fun UpdateStarsUser(stars : Int){
-        repository.UpdateStarsUser(stars)
+    suspend fun SetLevelUser(level : Int) {
+        repository.SetLevelUser(level)
     }
+
+    suspend fun UpdateCrownsUser(crowns : Int){
+        repository.UpdateStarsUser(crowns)
+    }
+
 
     suspend fun lessLives(){
         repository.lessLives()

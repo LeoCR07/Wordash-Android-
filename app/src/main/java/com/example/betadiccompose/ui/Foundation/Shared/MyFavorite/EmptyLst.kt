@@ -11,7 +11,7 @@ import com.example.betadiccompose.ui.Foundation.Shared.Local_Animation
 
 @Preview
 @Composable
-fun EmptyLst() {
+fun EmptyLst(){
     Box(modifier = Modifier
         .width(340.dp)
         .height(140.dp)

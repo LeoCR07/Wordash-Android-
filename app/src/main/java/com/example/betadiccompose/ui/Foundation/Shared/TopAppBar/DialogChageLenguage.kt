@@ -67,12 +67,9 @@ fun DialogLenguage(
                             contentDescription = "BTN",
                             modifier = Modifier
                                 .clickable(interactionSource = interactionSource,indication = null) {
-                                    viewModel.saveLearnLenguage("English")
-                                    viewModel.getListOfAlllevel()
-                                    viewModel.getListOfAllCategories()
-                                    viewModel.getListOfSentesFromRoom()
-                                    viewModel.getListOfWordsFromRoom()
+                                    viewModel.ChangeLanguage("English")
                                     dimisissDialog()
+
                                 }
                                 .size(100.dp)
                                 .clip(CircleShape)
@@ -105,13 +102,8 @@ fun DialogLenguage(
                             modifier = Modifier
                                 .clickable(interactionSource = interactionSource,indication = null){
 
-                                    viewModel.saveLearnLenguage("Spanish")
+                                    viewModel.ChangeLanguage("Spanish")
                                     dimisissDialog()
-
-                                    viewModel.getListOfAlllevel()
-                                    viewModel.getListOfAllCategories()
-                                    viewModel.getListOfSentesFromRoom()
-                                    viewModel.getListOfWordsFromRoom()
 
 
                                 }

@@ -8,7 +8,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 
 
 val signInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-    .requestIdToken("48761715141-rjoe4i5pf5t3n0glij8t0btth27p05g3.apps.googleusercontent.com")
+    .requestIdToken("90652262057-2n418683lqpv9pe8js6c40r1i1cpomrh.apps.googleusercontent.com")
     .requestEmail()
     .build()
 

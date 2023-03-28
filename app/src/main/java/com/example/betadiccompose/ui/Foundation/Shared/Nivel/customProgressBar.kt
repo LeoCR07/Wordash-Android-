@@ -24,7 +24,7 @@ fun customProgressBar(porcentaje: Float) {
             modifier = Modifier
                 .clip(RoundedCornerShape(15.dp))
                 .height(20.dp)
-                .background(MaterialTheme.colors.secondary)
+                .background(MaterialTheme.colors.secondary.copy(0.3f))
                 .width(300.dp)
         ) {
             Box(

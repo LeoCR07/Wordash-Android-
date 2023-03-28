@@ -9,6 +9,7 @@ import com.example.betadiccompose.R
 import com.example.betadiccompose.Runtime.MyApp
 import com.example.betadiccompose.data.network_database.model.DataVocabulary
 import com.example.betadiccompose.ui.Foundation.Shared.Local_Animation
+import com.example.betadiccompose.ui.Foundation.Shared.NavToBackDialog
 import com.example.betadiccompose.ui.Foundation.Shared.TopApp
 import com.example.betadiccompose.ui.Foundation.Shared.Vocabulary.CircleProgress
 import com.example.betadiccompose.ui.Foundation.Shared.navegationinferior
@@ -24,9 +25,13 @@ fun VocabularyScreen(
     onMediaClick: (DataVocabulary) -> Unit,
     vocalview: VocabularyViewModel,
     onclickNav: (ItemsMenu) -> Unit,
-    current: String?
+    current: String?,
+    onBack:()->Unit
 ) {
-    MyApp {
+    MyApp(viewModel = vocalview, content = {
+
+        NavToBackDialog(onBack)
+
         Scaffold(
             topBar = {
                      TopApp(viewModel =vocalview)
@@ -46,8 +51,7 @@ fun VocabularyScreen(
                  }
 
         }
-    }
-
+    })
 }
 
 

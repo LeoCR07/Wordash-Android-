@@ -25,7 +25,7 @@ fun MySentes(
     vocalview: VocabularyViewModel,
 ) {
 
-    MyApp {
+    MyApp(viewModel = vocalview, content = {
         Scaffold(
             topBar = {
                 TopApp(title = "Mis frases", viewModel = vocalview)
@@ -51,5 +51,5 @@ fun MySentes(
                 }
             }
         }
-    }
+    })
 }

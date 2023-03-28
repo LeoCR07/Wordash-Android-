@@ -39,18 +39,10 @@ class Level @Inject constructor(private val repository : PlayRepository,val repo
         }else {
             //In just in case but i don't thing so
             resp = repository.GetListOfLevelFromRoom()
+            println("lista de juegos no hay intenet")
         }
 
         return resp
-
-        /*var resp = repository.GetListOfAllWordsToPlay()
-
-        if(resp.isNullOrEmpty()){
-            repository.ClearLevel()
-            repository.InsertLevelToRoom(resp.map{it.toDatabase()})
-        }
-
-        return resp*/
 
     }
 

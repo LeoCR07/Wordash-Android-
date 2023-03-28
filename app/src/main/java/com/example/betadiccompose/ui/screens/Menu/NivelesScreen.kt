@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.example.betadiccompose.data.network_database.model.DataNiveles
@@ -25,20 +26,16 @@ fun PlayScreen(
     vocalview: VocabularyViewModel,
     onMediaClick: (DataNiveles) -> Unit,
     current: String?,
-    onclickNav: (ItemsMenu) -> Unit,
-    onBack: () -> Unit
+    onclickNav: (ItemsMenu) -> Unit
 ) {
 
-
-    MyApp{
+    MyApp(viewModel = vocalview, content = {
         val activity = LocalContext.current as? AppCompatActivity
         // activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
 
-        NavToBackDialog(onBack,)
-
         Scaffold (
             topBar = {
-                TopApp(vocalview) },
+                TopApp(viewModel = vocalview) },
             bottomBar = {
                 navegationinferior(menu,current,onclickNav) }){
 
@@ -53,5 +50,5 @@ fun PlayScreen(
                 )
             }
         }
-    }
+    })
 }

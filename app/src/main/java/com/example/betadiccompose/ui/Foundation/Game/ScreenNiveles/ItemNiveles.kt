@@ -38,13 +38,15 @@ fun ItemNiveles(
     item: DataNiveles,
     modifier: Modifier) {
 
-    var datauser by remember {
-        mutableStateOf( viewModel.lstdatauser.value)
+    var datauser = viewModel.lstdatauser.value
+
+    LaunchedEffect(key1 =true){
+        viewModel.getDataUser()
     }
 
-    viewModel.getDataUser()
 
     var icon:Int
+    var level = datauser.level
 
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -54,7 +56,7 @@ fun ItemNiveles(
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
 
-            if(item.id <= datauser.level){
+            if(item.id <= level){
                 Url_Animation(
                     url = item.animation,
                     isplaying = true,
@@ -68,15 +70,15 @@ fun ItemNiveles(
                 Local_Animation(
                     animacion = R.raw.king,
                     isPlaying = true,
-                    modifier =  modifier
+                    modifier = modifier
                         .size(160.dp)
-                        .clickable(interactionSource = interactionSource,indication = null) {
+                        .clickable(interactionSource = interactionSource, indication = null) {
                             viewModel.SoundFromLocal(R.raw.goldenking)
                         })
 
             }
 
-            if (item.id  < datauser.level) {
+            if (item.id  < level) {
                 icon = R.drawable.crown
 
             } else {

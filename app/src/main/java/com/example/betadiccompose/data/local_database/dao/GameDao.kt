@@ -95,6 +95,14 @@ interface GameDao {
     @Query("select count(*) from user_table")
     suspend fun countUser():Int
 
+    @Query("update user_table " +
+            "set id =:id, name =:name,email=:email,exp=:exp,spanish=:spanish,stars=:crowns,english=:english " +
+            "where id = '0'")
+
+    suspend fun UpdateuserData(id:String,name:String,email:String,exp:Int,spanish:Int,english:Int,crowns:Int)
+
+
+
     /** Exp **/
     @Query("update user_table set exp =:Exp")
     suspend fun updateExp(Exp:Int)
@@ -104,18 +112,32 @@ interface GameDao {
 
     /** Stars **/
 
-    @Query("update user_table set exp =:Stars")
+    @Query("update user_table set stars =:Stars")
     suspend fun updateStars(Stars:Int)
 
     @Query("select stars from USER_TABLE")
     suspend fun getStars():Int
 
     /** level **/
-    @Query("select level  from user_table")
-    suspend fun getLevel():Int
+    @Query("select spanish from user_table")
+    suspend fun getLevelspanish():Int
 
-    @Query("update user_table set exp =:level")
-    suspend fun updateLevel(level:Int)
+    @Query("select english from user_table")
+    suspend fun getLevelengish():Int
+
+    @Query("select level from user_table")
+    suspend fun getLeveluser():Int
+
+
+
+    @Query("update user_table set spanish =:spanish")
+    suspend fun updatespanish(spanish:Int)
+
+    @Query("update user_table set english =:english")
+    suspend fun updateenglish(english:Int)
+
+    @Query("update user_table set level =:local")
+    suspend fun updatelevel(local:Int)
 
     /** lives **/
     @Query("select lives  from user_table")

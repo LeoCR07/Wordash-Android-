@@ -23,7 +23,7 @@ fun MyWords(
     vocalview: VocabularyViewModel
 ) {
 
-    MyApp {
+    MyApp(viewModel = vocalview, content = {
         Scaffold(
             topBar = {
                 TopApp(title = "Mis palabras", viewModel = vocalview)
@@ -46,5 +46,5 @@ fun MyWords(
                 }
             }
         }
-    }
+    })
 }

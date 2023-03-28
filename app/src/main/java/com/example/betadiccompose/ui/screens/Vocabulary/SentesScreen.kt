@@ -7,6 +7,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 
 import com.example.betadiccompose.Runtime.MyApp
+
 import com.example.betadiccompose.data.network_database.model.DataWorld
 import com.example.betadiccompose.ui.Foundation.MyBanner
 import com.example.betadiccompose.ui.Foundation.Shared.TopApp
@@ -28,7 +29,7 @@ fun SentesScreen(
 
     var context = LocalContext.current
 
-    MyApp {
+    MyApp(viewModel = viewmodel, content = {
         Scaffold (
             bottomBar = {
                 MyBanner()
@@ -53,6 +54,6 @@ fun SentesScreen(
             }
 
         }
-    }
+    })
 
 }
