@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -40,7 +41,9 @@ fun SpeakToTalk(
 ) {
     /********************   view model  ************************/
     //var wordAux: DataWorld
-
+    var code by remember {
+        mutableStateOf(viewModel.GetCode())
+    }
     //wordAux = DataWorld(1,"","DayS","")
    // wordAux =  viewModel.getOneWord(lista)
     //println(wordAux)
@@ -85,21 +88,33 @@ fun SpeakToTalk(
 
         if(index == 5){
             Text(
-                text="Es hora de escucharte, pronuncia",
+                text= viewModel.GetSettings().ItsTimeToListenToYouPronounce[code]!!.replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(
+                        Locale.getDefault()
+                    ) else it.toString()
+                },
                 fontWeight = FontWeight.ExtraBold,
                 fontSize = 28.sp,
                 textAlign = TextAlign.Center
             )
         }else if(index == 9) {
             Text(
-                text = "Vamos una ves mas, pronuncia",
+                text = viewModel.GetSettings().LetGoOneMoreTimePronounce[code]!!.replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(
+                        Locale.getDefault()
+                    ) else it.toString()
+                },
                 fontWeight = FontWeight.ExtraBold,
                 fontSize = 28.sp,
                 textAlign = TextAlign.Center
             )
         }else if(index == 16){
             Text(
-                text = "Esto no sera nada facil, dí",
+                text = viewModel.GetSettings().ThisWillNotBeEasySay[code]!!.replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(
+                        Locale.getDefault()
+                    ) else it.toString()
+                },
                 fontWeight = FontWeight.ExtraBold,
                 fontSize = 28.sp,
                 textAlign = TextAlign.Center
@@ -122,7 +137,11 @@ fun SpeakToTalk(
 
 
     Text(
-        text = " ${WordRemember.World_1}",
+        text = " ${WordRemember.World_1}".replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(
+                Locale.getDefault()
+            ) else it.toString()
+        },
         fontWeight = FontWeight.Normal,
         fontSize = textSize,
         textAlign = TextAlign.Center,
@@ -152,7 +171,7 @@ fun SpeakToTalk(
 
 
     BtnSuper(
-        title = "Presiona para hablar",
+        title = viewModel.GetSettings().PressToTalk[code]!!,
         color = Color(0xFF23A4DF),
         FontColor = Color.White,
         IconLocal = true,
@@ -174,7 +193,7 @@ fun SpeakToTalk(
     Spacer(modifier = Modifier.height(10.dp))
 
     BtnSuper(
-        title = "Saltar ejercicio",
+        title = viewModel.GetSettings().JumpExercise[code]!!,
         FontColor = MaterialTheme.colors.secondaryVariant,
         IsIcon = false,
         Outline = false,

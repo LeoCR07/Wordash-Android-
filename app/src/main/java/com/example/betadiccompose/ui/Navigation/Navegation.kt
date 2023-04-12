@@ -19,8 +19,9 @@ import com.example.betadiccompose.ui.Navigation.routes.SubRoutes
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 import com.example.betadiccompose.ui.screens.*
 import com.example.betadiccompose.ui.screens.Menu.LoginScreen
+import com.example.betadiccompose.ui.screens.Menu.OldLoginScreen
+import com.example.betadiccompose.ui.screens.Menu.RegisterScreen
 import com.example.betadiccompose.ui.screens.Menu.SelectLanguage
-import com.example.betadiccompose.ui.screens.Menu.SplashScreen
 import com.example.betadiccompose.ui.screens.Settings.CreditScreen
 import com.example.betadiccompose.ui.screens.Settings.LanguageScreen
 
@@ -47,7 +48,7 @@ fun Navegation(
     val activity = (LocalContext.current as? Activity)
 
 
-    VocaVM.getDataUser()
+   // VocaVM.getDataUser()
     VocaVM.getListOfAlllevel()
     VocaVM.getListOfAllCategories()
     VocaVM.getMyFavoriteSentes()
@@ -85,14 +86,14 @@ fun Navegation(
     ) {
 
 
-        composable(LoginRoutes.Login.name){
+        composable(LoginRoutes.home.name){
             LoginScreen(
                 viewmodel = VocaVM,
                 NavToMainScreen = {
                     navController.navigate(MenuRoutes.learn.name) {
                         launchSingleTop = true
 
-                        popUpTo(route = LoginRoutes.Login.name) {
+                        popUpTo(route = LoginRoutes.home.name) {
                             inclusive = true
                         }
 
@@ -102,16 +103,57 @@ fun Navegation(
                     navController.navigate(LoginRoutes.SingUp.name) {
                         launchSingleTop = true
                     }
-                })
+                },
+            RegisterScreen = {
+                navController.navigate(LoginRoutes.login.name) {
+                    launchSingleTop = true
+                }
+            })
         }
 
         composable("SelectLanguage"){
             SelectLanguage(VocaVM)
         }
 
+        composable(LoginRoutes.login.name){
+
+        RegisterScreen(
+            viewmodel = VocaVM,
+            NavToMainScreen = {
+                navController.navigate(MenuRoutes.learn.name) {
+                    launchSingleTop = true
+
+                    popUpTo(route = LoginRoutes.home.name) {
+                        inclusive = true
+                    }
+
+                }
+            },
+            onNavToAccount = {
+                navController.navigate(MenuRoutes.learn.name) {
+                    launchSingleTop = true
+
+                    popUpTo(route = LoginRoutes.SingUp.name) {
+                        inclusive = true
+                    }
+                }
+            })
+        }
+
         composable(LoginRoutes.SingUp.name){
             SingUpScreen(
                 viewmodel = VocaVM,
+                NavToMainScreen = {
+                    navController.navigate(MenuRoutes.learn.name) {
+                        launchSingleTop = true
+
+                        popUpTo(route = LoginRoutes.home.name) {
+                            inclusive = true
+                        }
+
+
+                    }
+                },
                 onNavToAccount = {
                     navController.navigate(MenuRoutes.learn.name) {
                         launchSingleTop = true
@@ -226,6 +268,37 @@ fun Navegation(
                 },
                 navToSettings = {
                     navController.navigate(SettingRoute.SettingsScreen.name)
+                },
+                navToLogin = {
+                    navController.navigate(LoginRoutes.oldlogin.name)
+
+                })
+        }
+
+
+        composable(LoginRoutes.oldlogin.name){
+
+            OldLoginScreen(
+                viewmodel = VocaVM,
+                NavToMainScreen = {
+                    navController.navigate(MenuRoutes.learn.name) {
+                        launchSingleTop = true
+
+                        popUpTo(route = LoginRoutes.home.name) {
+                            inclusive = true
+                        }
+
+                    }
+                },
+                NavToSingUpScreen = {
+                    navController.navigate(LoginRoutes.SingUp.name) {
+                        launchSingleTop = true
+                    }
+                },
+                RegisterScreen = {
+                    navController.navigate(LoginRoutes.login.name) {
+                        launchSingleTop = true
+                    }
                 })
         }
 
@@ -337,6 +410,11 @@ fun Navegation(
         composable(SettingRoute.SettingsScreen.name){
             SettingsScreen(
                 viewmodel = VocaVM,
+                onBack = {
+                    activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                    navController.popBackStack()
+                    //    VocaVM.step = 0
+                },
                 NavToLanguage = {
                     navController.navigate(SettingRoute.SettingLanguage.name)
                 },
@@ -356,15 +434,34 @@ fun Navegation(
         }
 
         composable(SettingRoute.SettingLanguage.name){
-            LanguageScreen(VocaVM)
+            LanguageScreen(
+                viewmodel =  VocaVM,
+                onBack = {
+                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                navController.popBackStack()
+                //    VocaVM.step = 0
+            })
         }
 
         composable(SettingRoute.SettingNew.name){
-            NewScreen(viewmodel = VocaVM)
+            NewScreen(
+                viewmodel = VocaVM,
+                onBack = {
+                    activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                    navController.popBackStack()
+                    //    VocaVM.step = 0
+                })
         }
 
         composable(SettingRoute.SettingTheme.name){
-            ThemeScreen(viewmodel = VocaVM, click = {
+            ThemeScreen(
+                onBack = {
+                    activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                    navController.popBackStack()
+                    //    VocaVM.step = 0
+                },
+                viewmodel = VocaVM,
+                click = {
                 val calendar = Calendar.getInstance()
                 val hora = calendar.get(Calendar.HOUR_OF_DAY)
 
@@ -383,7 +480,13 @@ fun Navegation(
         }
 
         composable(SettingRoute.SettingCretits.name){
-            CreditScreen(viewmodel = VocaVM)
+            CreditScreen(
+                viewmodel = VocaVM,
+                onBack = {
+                    activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                    navController.popBackStack()
+                    //    VocaVM.step = 0
+                })
         }
 
 

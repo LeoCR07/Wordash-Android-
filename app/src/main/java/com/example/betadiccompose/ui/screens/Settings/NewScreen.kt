@@ -17,17 +17,29 @@ import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 
 
 @Composable
-fun NewScreen(viewmodel:VocabularyViewModel) {
+fun NewScreen(
+    onBack:()->Unit,
+    viewmodel:VocabularyViewModel) {
+
+    var code by remember{
+        mutableStateOf(viewmodel.GetCode())
+    }
     MyApp(viewModel = viewmodel, content =  {
-        val lst = listOf("Spanish","English")
+        val lst = listOf(
+            viewmodel.GetSettings().Spanish[code]!!,
+            viewmodel.GetSettings().English[code]!!)
+
+        val lstValue = listOf("Spanish","English")
 
         var value by remember {
             mutableStateOf(viewmodel.GetLearnLenguage())
         }
 
+        println("Lenguaje nuevo ${value}")
+
         Scaffold(
             topBar = {
-                TopApp(viewModel = viewmodel , opcion = 3, title = "Ajustes")
+                TopApp(viewModel = viewmodel , opcion = 3, title = viewmodel.GetSettings().YourNextLanguage[code], navToSettings = onBack)
             },
             content = {
                 LazyColumn(
@@ -37,13 +49,17 @@ fun NewScreen(viewmodel:VocabularyViewModel) {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center){
 
-                    items(lst) { item ->
-                        ItemOpcion(label = item , value = value  , selected = item ,click = {                    value = item
-                            value = item
-                            viewmodel.saveLearnLenguage(item)
-                        })
-                        Spacer(modifier = Modifier.height(5.dp))
+                    lst.forEachIndexed { i, item ->
+                        item {
+                            ItemOpcion(label = item , value = value  , selected = lstValue[i] ,click = {
+                                value = lstValue[i]
+                                viewmodel.saveLearnLenguage(lstValue[i])
+                            })
+                            Spacer(modifier = Modifier.height(5.dp))
+                        }
+
                     }
+
                 }
             }
         )

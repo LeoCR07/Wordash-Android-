@@ -27,11 +27,11 @@ fun BtnLogin(
         modifier = Modifier
             .width(300.dp)
             .clip(RoundedCornerShape(20.dp))
-            .border(BorderStroke(0.5.dp, Color.LightGray), RoundedCornerShape(20.dp)),
+            .border(BorderStroke(0.5.dp, MaterialTheme.colors.secondaryVariant), RoundedCornerShape(20.dp)),
         onClick = { OnClick() },
         colors = ButtonDefaults.buttonColors(
             backgroundColor = MaterialTheme.colors.background,
-            contentColor = Color.Unspecified
+            contentColor = MaterialTheme.colors.secondaryVariant
         )
     ){
 

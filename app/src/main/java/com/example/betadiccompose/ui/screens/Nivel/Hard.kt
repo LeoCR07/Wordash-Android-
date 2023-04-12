@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -21,7 +22,7 @@ import com.example.betadiccompose.data.network_database.model.DataWorld
 import com.example.betadiccompose.ui.Foundation.GamesScreen.RandomText
 import com.example.betadiccompose.ui.Foundation.Shared.Button.OutlinedButtonSample
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
-
+import java.util.*
 
 
 @Composable
@@ -30,6 +31,11 @@ fun Hard (
     onMediaClick: (DataWorld, Int,MediaPlayer) -> Unit,
     lista: List<DataWorld>,
 ) {
+
+    var code by remember {
+        mutableStateOf(viewModel.GetCode())
+    }
+
     var idAux = 0
     var lstAux: List<DataWorld> = emptyList()
 
@@ -109,7 +115,11 @@ fun Hard (
 
 
         Text(
-            text="Como se dice ???",
+            text= viewModel.GetSettings().HowDoYouSay[code]!!.replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase(
+                    Locale.getDefault()
+                ) else it.toString()
+            },
             fontWeight = FontWeight.ExtraBold,
             fontSize = 25.sp
         )

@@ -2,6 +2,7 @@ package com.example.betadiccompose.ui.Foundation.Game.ScreenNiveles
 
 import android.util.Size
 import androidx.compose.foundation.Indication
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.Interaction
@@ -29,6 +30,7 @@ import com.example.betadiccompose.data.network_database.model.DataUser
 import com.example.betadiccompose.ui.Foundation.Shared.Local_Animation
 import com.example.betadiccompose.ui.Foundation.Shared.Url_Animation
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
+import java.util.*
 
 
 @Composable
@@ -50,61 +52,102 @@ fun ItemNiveles(
 
     val interactionSource = remember { MutableInteractionSource() }
 
+    val calendar = Calendar.getInstance()
+    val hora = calendar.get(Calendar.HOUR_OF_DAY)
 
-    Box() {
+    var animation :Int = R.raw.whitecoin
+    var color = MaterialTheme.colors.secondaryVariant.copy(0.7f)
 
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+     if(viewModel.GetTheme() == 2) {
+         animation = R.raw.whitecoin
+     }else if(viewModel.GetTheme() == 1){
+         animation =R.raw.all
+     }else if(viewModel.GetTheme() == 0){
+         if (hora>=18) {
+             animation =R.raw.all
+         }else{
+             animation = R.raw.whitecoin
+         }
+     }
 
 
-            if(item.id <= level){
-                Url_Animation(
-                    url = item.animation,
-                    isplaying = true,
-                    modifier =  modifier
-                        .clickable(interactionSource = interactionSource,indication = null) {
-                            onClick(item)
-                        }
-                )
-            }else{
 
-                Local_Animation(
-                    animacion = R.raw.king,
-                    isPlaying = true,
-                    modifier = modifier
-                        .size(160.dp)
-                        .clickable(interactionSource = interactionSource, indication = null) {
-                            viewModel.SoundFromLocal(R.raw.goldenking)
-                        })
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.Center) {
 
-            }
 
-            if (item.id  < level) {
-                icon = R.drawable.crown
+        if(item.id <= level){
 
-            } else {
-                icon = R.drawable.nocrown
-            }
+            Local_Animation(
+                animacion = R.raw.king,
+                isPlaying = true,
+                modifier = modifier
+                    .size(120.dp)
+                    .clickable(interactionSource = interactionSource, indication = null) {
+                        onClick(item)
+                    })
 
+
+            /*
+            Url_Animation(
+                url = item.animation,
+                isplaying = true,
+                modifier =  modifier
+                    .clickable(interactionSource = interactionSource,indication = null) {
+                        onClick(item)
+                    }
+            )
+            */
+
+        }else{
+
+            Local_Animation(
+                animacion = animation,
+                isPlaying = true,
+                modifier = modifier
+                    .size(120.dp)
+                    .clickable(interactionSource = interactionSource, indication = null) {
+                        viewModel.SoundFromLocal(R.raw.goldenking)
+                    })
+
+        }
+
+        if (item.id  < level) {
+            icon = R.drawable.crown
+            color = MaterialTheme.colors.secondaryVariant
+        } else {
+            color = MaterialTheme.colors.secondaryVariant.copy(0.7f)
+            icon = R.drawable.nocrown
+        }
+
+
+
+
+
+        Column(
+            modifier = modifier,
+            //    .padding(start = 60.dp),
+           // .offset( y =(if (item.id  < level )-28.dp else 0.dp)),
+        horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top){
 
             title(
                 item.name,
-                modifier = Modifier
-                    .padding(1.dp),
+                modifier = Modifier,
+                color = color,
                 weight = FontWeight.ExtraBold
             )
 
-
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 0.dp),
-                //  .background(Color.Red),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
 
 
                 Text(
+                    modifier = Modifier,
                     text = item.stars.toString(),
                     fontWeight = FontWeight.Light,
                     fontFamily = FontFamily.SansSerif
@@ -122,9 +165,14 @@ fun ItemNiveles(
 
 
             }
+
         }
 
-    }
-}
 
+
+
+    }
+
+
+}
 

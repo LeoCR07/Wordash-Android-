@@ -19,8 +19,6 @@ fun MyApp(content:@Composable () -> Unit,viewModel: VocabularyViewModel) {
         val systemUiController = rememberSystemUiController()
         val col = MaterialTheme.colors.onPrimary
 
-
-
         SideEffect {
             systemUiController.setStatusBarColor(col)
             systemUiController.setSystemBarsColor(col)

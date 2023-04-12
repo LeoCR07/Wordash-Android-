@@ -10,13 +10,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.VolumeUp
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,6 +25,7 @@ import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 
 
 @Composable
@@ -35,6 +35,9 @@ fun Easy (
     lista: List<DataWorld>
 ) {
 
+    var code by remember {
+        mutableStateOf(viewModel.GetCode())
+    }
     var lstAux: List<DataWorld> = emptyList()
     lstAux =  viewModel.getEasy(lista)
 
@@ -105,7 +108,11 @@ fun Easy (
 
 
         Text(
-            text="Escucha con atención",
+            text= viewModel.GetSettings().ListenCarefully[code]!!.replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase(
+                    Locale.getDefault()
+                ) else it.toString()
+            },
             fontWeight = FontWeight.ExtraBold,
             fontSize = 20.sp
         )

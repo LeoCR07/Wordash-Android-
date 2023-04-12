@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -22,6 +23,7 @@ import com.example.betadiccompose.ui.Foundation.Shared.Local_Animation
 import com.example.betadiccompose.ui.Foundation.Shared.Button.ButtonWithIconSample
 import com.example.betadiccompose.ui.Foundation.Game.Sonido.ClickSonido
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
+import java.util.*
 
 
 @Composable
@@ -29,6 +31,9 @@ fun Sonido(
     viewModel: VocabularyViewModel,
     onMediaClick: (Int,Int,MediaPlayer,MediaPlayer,MediaPlayer,MediaPlayer,MediaPlayer,MediaPlayer) -> Unit,
     lista: List<DataWorld>) {
+    var code by remember {
+        mutableStateOf(viewModel.GetCode())
+    }
 
     var idAux = 0
     var lstAux: List<DataWorld> = emptyList()
@@ -59,7 +64,11 @@ fun Sonido(
        //BackgroundImg("https://d1i3grysbjja6f.cloudfront.net/IMG/${prefs.GetCategory()}/${id}.jpg")
 
         Text(
-            text="Selecciona el audio correcto",
+            text= viewModel.GetSettings().SelectTheCorrectAudio[code]!!.replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase(
+                    Locale.getDefault()
+                ) else it.toString()
+            },
             fontWeight = FontWeight.ExtraBold,
             fontSize = 30.sp,
             textAlign = TextAlign.Center
@@ -77,7 +86,11 @@ fun Sonido(
             modifier = Modifier
                 .padding(6.dp),
             textAlign = TextAlign.Center,
-            text="${lstOrder [0].World_2}",
+            text= "${lstOrder [0].World_2}".replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase(
+                    Locale.getDefault()
+                ) else it.toString()
+            },
             fontWeight = FontWeight.Normal,
             fontSize = textSize,
             overflow = TextOverflow.Ellipsis,

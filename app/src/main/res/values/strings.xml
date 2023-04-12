@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">Super Dicvocabulary</string>
+    <string name="app_name">Words</string>
 
 
-    <string name="facebook_app_id">948631102808417</string>
-    <string name="fb_login_protocol_scheme">fb948631102808417</string>
-    <string name="facebook_client_token">dc5f17eac195babb5a01e6055ef9cb99</string>
+    <string name="facebook_app_id">1921820721342861</string>
+    <string name="fb_login_protocol_scheme">fb1921820721342861</string>
+    <string name="facebook_client_token">cb8906ee7d35f2a76831481ba1104f71</string>
 
 </resources>

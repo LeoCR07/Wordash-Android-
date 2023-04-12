@@ -5,7 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.betadiccompose.Runtime.MyApp
@@ -19,7 +19,10 @@ import com.example.betadiccompose.ui.Foundation.Shared.TopApp
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 
 @Composable
-fun CreditScreen(viewmodel: VocabularyViewModel) {
+fun CreditScreen(viewmodel: VocabularyViewModel,  onBack:()->Unit,) {
+var code by remember{
+    mutableStateOf(viewmodel.GetCode())
+}
 
     MyApp(viewModel = viewmodel, content =  {
 
@@ -37,7 +40,7 @@ fun CreditScreen(viewmodel: VocabularyViewModel) {
 
         Scaffold(
             topBar = {
-                TopApp(viewModel = viewmodel , opcion = 3, title = "Creditos")
+                TopApp(viewModel = viewmodel , opcion = 3, title = viewmodel.GetSettings().credits[code], navToSettings = onBack)
             },
             content = {
 

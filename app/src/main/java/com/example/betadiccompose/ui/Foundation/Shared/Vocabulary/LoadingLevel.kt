@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.betadiccompose.R
 import com.example.betadiccompose.ui.Foundation.Shared.Local_Animation
-import com.facebook.bolts.Task.Companion.delay
+
 
 
 @Composable

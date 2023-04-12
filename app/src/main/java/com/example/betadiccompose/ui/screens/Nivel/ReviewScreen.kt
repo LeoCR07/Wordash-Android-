@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -25,6 +26,7 @@ import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import java.util.*
 
 
 @Composable
@@ -35,9 +37,11 @@ fun ReviewScreen(
     viewmodel:VocabularyViewModel
 ) {
 
+    var code by remember {
+        mutableStateOf(viewmodel.GetCode())
+    }
 
     LaunchedEffect(key1 = true ){
-        println("nivel superado")
         viewmodel.updatelevelLocal()
 
     }
@@ -51,7 +55,11 @@ fun ReviewScreen(
         Spacer(modifier = Modifier.height(30.dp))
 
         Text(
-            text = "Felicitaciones has superado el reto",
+            text = viewmodel.GetSettings().CongratulationsYouHavePassedTheChallenge[code]!!.replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase(
+                    Locale.getDefault()
+                ) else it.toString()
+            },
             fontSize = 35.sp,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center
@@ -65,7 +73,7 @@ fun ReviewScreen(
         Spacer(modifier = Modifier.height(40.dp))
 
         BtnSuper(
-            title = "Siguiente nivel",
+            title = viewmodel.GetSettings().NextLevel[code]!!,
             FontColor = Color.White,
             IsIcon = false,
             fontSize = 18.sp,
@@ -85,7 +93,7 @@ fun ReviewScreen(
         Spacer(modifier = Modifier.height(10.dp))
 
         BtnSuper(
-            title = "Jugar de nuevo",
+            title = viewmodel.GetSettings().PlayAgain[code]!!,
             FontColor = MaterialTheme.colors.secondaryVariant,
             IsIcon = false,
             color = MaterialTheme.colors.background,
@@ -105,7 +113,7 @@ fun ReviewScreen(
         Spacer(modifier = Modifier.height(10.dp))
 
         BtnSuper(
-            title = "Salir",
+            title = viewmodel.GetSettings().GoOut[code]!!,
             FontColor = MaterialTheme.colors.secondaryVariant,
             color = MaterialTheme.colors.background,
             IsIcon = false,

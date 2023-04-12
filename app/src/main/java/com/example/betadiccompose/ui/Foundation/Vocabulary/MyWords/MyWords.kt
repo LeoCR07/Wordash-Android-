@@ -8,7 +8,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.Scaffold
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -23,10 +23,15 @@ fun MyWords(
     vocalview: VocabularyViewModel
 ) {
 
+    var code by remember {
+        mutableStateOf(vocalview.GetCode())
+    }
+
+
     MyApp(viewModel = vocalview, content = {
         Scaffold(
             topBar = {
-                TopApp(title = "Mis palabras", viewModel = vocalview)
+                TopApp(title = vocalview.GetSettings().MyFavoriteWords[code]!!, viewModel = vocalview)
             }){
 
             vocalview.getMyFavoriteWords()

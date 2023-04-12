@@ -9,8 +9,7 @@ import androidx.compose.material.AlertDialog
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -20,10 +19,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.betadiccompose.R
+import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 
 
 @Composable
-fun ExitDialog(hideAlertDialog:()->Unit ,showAlertDialog:()->Unit,texto:String,onBack:()->Unit) {
+fun ExitDialog(
+    hideAlertDialog:()->Unit ,
+    showAlertDialog:()->Unit,
+    texto:String,onBack:()->Unit,
+    viewmodel:VocabularyViewModel) {
+
+    var code by remember{
+        mutableStateOf(viewmodel.GetCode())
+    }
 
     AlertDialog(
         modifier = Modifier
@@ -47,7 +55,9 @@ fun ExitDialog(hideAlertDialog:()->Unit ,showAlertDialog:()->Unit,texto:String,o
                     onBack()
                 }
             ) {
-                Text("Confirm",color=MaterialTheme.colors.secondaryVariant)
+                Text(
+                    viewmodel.GetSettings().confirm[code]!!,
+                    color=MaterialTheme.colors.secondaryVariant)
             }
         },
         dismissButton = {
@@ -57,7 +67,7 @@ fun ExitDialog(hideAlertDialog:()->Unit ,showAlertDialog:()->Unit,texto:String,o
                 }
             ) {
                 Text(
-                    text ="Cancel",
+                    text = viewmodel.GetSettings().Cancel[code]!!,
                     color = MaterialTheme.colors.secondaryVariant.copy(0.6f))
             }
         }

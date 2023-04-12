@@ -15,10 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.unit.dp
 import com.example.betadiccompose.R
 import com.example.betadiccompose.ui.Foundation.Shared.TopAppBar.topAppBarIcon
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
+import java.util.*
 
 
 @Composable
@@ -40,8 +42,7 @@ fun TopApp(
 
     viewModel.getDataUser()
 
-    var user = viewModel.lstdatauser.value
-    var datauser = user
+    var datauser =  viewModel.lstdatauser.value
     var opendialog = remember { mutableStateOf(false) }
 
     DialogLenguage(
@@ -49,10 +50,11 @@ fun TopApp(
         show = opendialog.value,
         dimisissDialog =  {opendialog.value = false})
 
-
     TopAppBar(
         backgroundColor = MaterialTheme.colors.onPrimary,
-        title = {  if(title!=null) Text(text = title,color= MaterialTheme.colors.secondaryVariant ) },
+        title = {  if(title!=null) Text(
+            text = title.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+            ,color= MaterialTheme.colors.secondaryVariant ) },
         navigationIcon =  {
 
 
@@ -61,7 +63,8 @@ fun TopApp(
                     Icons.Rounded.ChevronLeft,
                     contentDescription = "BTN",
                     modifier = Modifier
-                        .clickable { }
+                        .clickable(interactionSource = interactionSource,indication = null)
+                        {navToSettings() }
                         .size(35.dp))
             }else{
                 Spacer(modifier = Modifier.width(10.dp))
@@ -113,7 +116,7 @@ fun TopApp(
                 }else if(opcion == 1){
 
                     Icon(
-                        painter = painterResource (R.drawable.settings),
+                        painter = painterResource (R.drawable.setting),
                         contentDescription = null,
                         modifier = Modifier
                             .clickable(interactionSource = interactionSource,indication = null) {
@@ -165,6 +168,7 @@ fun TopApp(
 
         },
         modifier = Modifier
+            .statusBarsPadding()
             .fillMaxWidth()
             .background(MaterialTheme.colors.onSecondary)
             .padding(0.dp, 0.dp, 0.dp, 1.dp)

@@ -9,12 +9,14 @@ import javax.inject.Inject
 import kotlin.collections.ArrayList
 import kotlin.random.Random
 
-class GameProvider @Inject constructor(@ApplicationContext context: Context) {
+class GameProvider @Inject constructor(
+    prefses: Prefs,
+    @ApplicationContext context: Context) {
 
     val cont = context
     var currentID = 0
 
-    val prefs  = Prefs(cont)
+    val prefs  = prefses
 
     //Talk and Sort
     fun GetOneWord(lista:List<DataWorld>):DataWorld{

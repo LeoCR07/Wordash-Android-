@@ -13,9 +13,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 
 @Composable
-fun NavToBackDialog(onBack: () -> Unit, texto: String = "Estas seguro que quieres salir?") {
+fun NavToBackDialog(onBack: () -> Unit, texto: String ,viewmodel:VocabularyViewModel) {
 
     var showAlertDialog by remember { mutableStateOf(false) }
 
@@ -29,7 +31,8 @@ fun NavToBackDialog(onBack: () -> Unit, texto: String = "Estas seguro que quiere
             hideAlertDialog = { showAlertDialog = false },
             showAlertDialog = {showAlertDialog = true },
             texto = texto,
-            onBack = {onBack()}
+            onBack = {onBack()},
+            viewmodel = viewmodel
         )
     }
 

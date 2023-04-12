@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -29,6 +30,8 @@ import com.example.betadiccompose.R
 import com.example.betadiccompose.data.network_database.model.DataWorld
 import com.example.betadiccompose.ui.Foundation.Shared.Local_Animation
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 @Composable
@@ -36,6 +39,9 @@ fun Sort(
     viewModel: VocabularyViewModel,
     lista: List<DataWorld>
 ){
+    var code by remember {
+        mutableStateOf(viewModel.GetCode())
+    }
 
     /********************   dato  ************************/
 
@@ -124,7 +130,11 @@ fun Sort(
         if(viewModel.step == 19){
 
             androidx.compose.material.Text(
-                text = "Traduce y escribe",
+                text = viewModel.GetSettings().TranslateAndWrite[code]!!.replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(
+                        Locale.getDefault()
+                    ) else it.toString()
+                },
                 fontWeight = FontWeight.ExtraBold,
                 fontSize = 20.sp
             )
@@ -135,7 +145,7 @@ fun Sort(
                 speed = 0.2f)
 
             androidx.compose.material.Text(
-                text = word.World_2,
+                text = word.World_2.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
                 fontWeight = FontWeight.SemiBold,
                 fontSize = textSize_2,
                 textAlign = TextAlign.Center,
@@ -153,7 +163,11 @@ fun Sort(
 
         if(viewModel.step !=19){
             androidx.compose.material.Text(
-                text = "Escribe lo que escuches",
+                text = viewModel.GetSettings().WriteWhatYouHear[code]!!.replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(
+                        Locale.getDefault()
+                    ) else it.toString()
+                },
                 fontWeight = FontWeight.ExtraBold,
                 fontSize = 20.sp,
                 modifier = Modifier
@@ -174,7 +188,7 @@ fun Sort(
             Text(
                 modifier = Modifier
                     .fillMaxSize(),
-                text = result,
+                text = result.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
                 textAlign = TextAlign.Center,
                 maxLines = 1,
                 fontWeight = FontWeight.Normal,

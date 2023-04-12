@@ -3,6 +3,8 @@ package com.example.authentication.ui.Foundation.Account
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -20,19 +22,16 @@ import com.example.betadiccompose.R
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 
 @Composable
-fun HeaderAccount(vocalview: VocabularyViewModel) {
-
+fun HeaderAccount(vocalview: VocabularyViewModel, navToLogin: () -> Unit) {
 
     LaunchedEffect(key1 = true){
         vocalview.getDataUser()
     }
 
 
-
-
     Box(modifier = Modifier
         .background(MaterialTheme.colors.onSecondary.copy(0.4f))
-        .clip(RoundedCornerShape(0.dp, 0.dp, 20.dp, 20.dp))){
+        .clip(RoundedCornerShape(0.dp, 0.dp, 0.dp, 0.dp))){
 
         Column(
             modifier = Modifier
@@ -62,21 +61,41 @@ fun HeaderAccount(vocalview: VocabularyViewModel) {
 
             Spacer(modifier = Modifier
                 .height(5.dp))
+            
+
+            if(vocalview.hasUser){
+                Text(
+                    text =  if(vocalview.GetLearnLenguage()=="English") "Hello, ${vocalview.lstdatauser.value.name}" else  "Hola  , ${vocalview.lstdatauser.value.name}",
+                    textAlign = TextAlign.Center,
+                    fontSize = 22.sp,
+                    color = MaterialTheme.colors.secondaryVariant,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+
+                Text(
+                    color = MaterialTheme.colors.secondaryVariant,
+                    text = vocalview.lstdatauser.value.email)
+            }else{
+                Button(
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = MaterialTheme.colors.onSurface
+                    ),
+                    onClick = {
+                        navToLogin()
+                    }) {
+                    Text(
+                        color = MaterialTheme.colors.background,
+                        text = "Login")
+                }
+
+            }
 
 
-            Text(
-                text = "Hello, ${vocalview.lstdatauser.value.name}",
-                textAlign = TextAlign.Center,
-                fontSize = 22.sp,
-                color = MaterialTheme.colors.secondaryVariant,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
 
-            Text(
-                color = MaterialTheme.colors.secondaryVariant,
-                text = vocalview.lstdatauser.value.email)
+
+
 
             Spacer(modifier = Modifier
                 .height(5.dp))
@@ -95,8 +114,7 @@ fun HeaderAccount(vocalview: VocabularyViewModel) {
 
             }
 
-            Spacer(modifier = Modifier
-                .height(15.dp))
+
 
             /*Button(onClick = { /*TODO*/ }) {
                 Icon( Icons.Rounded.Save, contentDescription =  null)

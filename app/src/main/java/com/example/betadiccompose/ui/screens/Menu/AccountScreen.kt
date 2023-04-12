@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.unit.dp
 import com.example.authentication.ui.Foundation.Account.HListWord
 import com.example.authentication.ui.Foundation.Account.HeaderAccount
@@ -19,6 +20,7 @@ import com.example.betadiccompose.ui.Foundation.Vocabulary.MySentes.HListSentes
 import com.example.betadiccompose.ui.Foundation.Vocabulary.ScreenAccount.LineColor
 import com.example.betadiccompose.ui.Navigation.ItemsMenu
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
+import java.util.*
 
 @Composable
 fun AccountScreen(
@@ -27,12 +29,16 @@ fun AccountScreen(
     vocalview: VocabularyViewModel,
     navToSeeMyWords: () -> Unit,
     navToSeeMySentes: () -> Unit,
-    navToSettings:() ->Unit
+    navToSettings:() ->Unit,
+    navToLogin: () ->Unit
 ) {
 
     val lstmyfavoritewords =  vocalview.mywords.value
     val lstmyfavoritesentes = vocalview.lstfavoritesentes.value
 
+    var code by remember {
+        mutableStateOf(vocalview.GetCode())
+    }
 
     MyApp(viewModel = vocalview, content = {
         Scaffold(
@@ -59,14 +65,21 @@ fun AccountScreen(
 
                     item{
 
-                        HeaderAccount(vocalview)
+                        HeaderAccount(vocalview,navToLogin)
 
-                        LineColor(height = 10f)
-                        SubTitles("My favorites words",click = navToSeeMyWords )
+                        LineColor(height = 3f)
+                        SubTitles(vocalview.GetSettings().MyFavoriteWords[code]!!.replaceFirstChar {
+                            if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+
+                        },click = navToSeeMyWords ,vocalview = vocalview)
                         HListWord(lstmyfavoritewords,vocalview = vocalview)
 
-                        LineColor(height = 5f)
-                        SubTitles("My favorites Sentes", click = navToSeeMySentes)
+                        LineColor(height = 3f)
+                        SubTitles(vocalview.GetSettings().MyFavoritePhrases [code]!!.replaceFirstChar {
+                            if (it.isLowerCase()) it.titlecase(
+                                Locale.getDefault()
+                            ) else it.toString()
+                        }, click = navToSeeMySentes,vocalview = vocalview)
                         HListSentes(lstmyfavoritesentes, vocalview)
 
                     }

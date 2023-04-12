@@ -22,7 +22,7 @@ import com.example.betadiccompose.data.local_database.model.DataMyFavoriteWord
 import com.example.betadiccompose.data.network_database.model.*
 import com.example.betadiccompose.Domain.FirebaseRepository
 import com.example.betadiccompose.ui.Navigation.MainScreenState
-import com.google.android.play.core.review.ReviewManagerFactory
+
 import com.google.firebase.auth.AuthCredential
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -71,17 +71,25 @@ class VocabularyViewModel @Inject constructor (
     val hasUser: Boolean
         get() = auth.hasUser()
 
+
     var loginUiState by mutableStateOf(LoginUiState())
         private set
 
-    fun onUserNameChange(userName: String) {
-        loginUiState = loginUiState.copy(userName = userName)
+    //login
+    fun onUserNameChangeLogin(userName: String) {
+        loginUiState = loginUiState.copy(userLoginName = userName)
     }
 
-    fun onPasswordNameChange(password: String) {
-        loginUiState = loginUiState.copy(password = password)
+    fun onEmailChangeLogin(email: String) {
+        loginUiState = loginUiState.copy(userLoginEmail = email)
     }
 
+    fun onPasswordChangeLogin(password: String) {
+        loginUiState = loginUiState.copy(userLoginPassword = password)
+    }
+
+
+    //sing
     fun onUserNameChangeSignup(userName: String) {
         loginUiState = loginUiState.copy(userEmailSignUp = userName)
     }
@@ -90,57 +98,54 @@ class VocabularyViewModel @Inject constructor (
         loginUiState = loginUiState.copy(passwordSignUp = password)
     }
 
-    fun onConfirmPasswordChange(password: String) {
-        loginUiState = loginUiState.copy(confirmPasswordSignUp = password)
-    }
+
+
+
+    private fun validateBlankSingUp() =
+        loginUiState.userEmailSignUp.isNotBlank() &&
+                loginUiState.passwordSignUp.isNotBlank()
 
     private fun validateLoginForm() =
-        loginUiState.userName.isNotBlank() &&
-                loginUiState.password.isNotBlank()
+        loginUiState.userLoginEmail.isNotBlank() &&
+                loginUiState.userLoginName.isNotBlank() &&
+                loginUiState.userLoginPassword.isNotBlank()
 
-    private fun validateSignupForm() =
-        loginUiState.userEmailSignUp.isNotBlank() &&
-                loginUiState.passwordSignUp.isNotBlank() &&
-                loginUiState.confirmPasswordSignUp.isNotBlank()
 
-    fun createUser(context: Context) = viewModelScope.launch {
+
+    fun createUser(OnNavToHome:()->Unit) = viewModelScope.launch {
         try {
-            if (!validateSignupForm()) {
+            if (!validateLoginForm()) {
                 throw IllegalArgumentException("email and password can not be empty")
             }
 
-            if(loginUiState.passwordSignUp.length < 8){
+            if(loginUiState.userLoginName.length !in 4..10){
+                throw IllegalArgumentException("username must be between 4 to 10 characters")
+            }
+
+            if(loginUiState.userLoginPassword.length <=7){
                 throw IllegalArgumentException("password need to have more than 8 words")
             }
             loginUiState = loginUiState.copy(isLoading = true)
 
-            if (loginUiState.passwordSignUp != loginUiState.confirmPasswordSignUp
-            ) {
-                throw IllegalArgumentException(
-                    "Password do not match"
-                )
-            }
-
-            //loginUiState = loginUiState.copy(signUpError = null)
 
             auth.createUser(
-                loginUiState.userEmailSignUp,
-                loginUiState.passwordSignUp
+                CreateLocalUser ={
+                    CoroutineScope(Dispatchers.IO).launch {
+                        UpdateUserData(it)
+                    }
+                },
+                email = loginUiState.userLoginEmail.trim().trimStart(),
+                password = loginUiState.userLoginPassword.trim().trimStart(),
+                username = loginUiState.userLoginName.trimStart().trim()
             ) { isSuccessful ->
+
                 if (isSuccessful) {
-                    Toast.makeText(
-                        context,
-                        "success Login",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    prefs.setIsLogin(true)
+                    Toast.makeText(context, "Hi, Welcome", Toast.LENGTH_SHORT).show()
+                    OnNavToHome.invoke()
                     loginUiState = loginUiState.copy(isSuccessLogin = true)
+
                 } else {
-                    /*
-                    Toast.makeText(
-                        context,
-                        "Failed Login",
-                        Toast.LENGTH_SHORT
-                    ).show()*/
                     loginUiState = loginUiState.copy(isSuccessLogin = false)
                 }
 
@@ -148,45 +153,52 @@ class VocabularyViewModel @Inject constructor (
 
 
         } catch (e: Exception) {
-            // loginUiState = loginUiState.copy(signUpError = e.localizedMessage+" mistake")
-            e.printStackTrace()
-            println("Este es el error ${e.message}")
 
-            var error = ""
+            e.printStackTrace()
+
+            if("email and password can not be empty" == e.message){
+                Toast.makeText(context, "${e.message}", Toast.LENGTH_LONG).show()
+            }
+
+
+            if("username must be between 4 to 10 characters" == e.message){
+
+                loginUiState = loginUiState.copy(loginErrorUserName =  e.localizedMessage)
+                loginUiState = loginUiState.copy(loginErrorEmail = null)
+                loginUiState = loginUiState.copy(loginErrorPassword = null)
+
+                loginUiState.errorUserNameLogin = e.message!!
+            }
 
             if("The email address is already in use by another account." == e.message){
 
-                loginUiState = loginUiState.copy(signUpErrorEmail = e.localizedMessage)
-                loginUiState = loginUiState.copy(signUpErrorPassword = null)
-                loginUiState = loginUiState.copy(signUpErrorConfirPassword = null)
+                loginUiState = loginUiState.copy(loginErrorUserName = null)
+                loginUiState = loginUiState.copy(loginErrorEmail = e.localizedMessage)
+                loginUiState = loginUiState.copy(loginErrorPassword = null)
+
+                loginUiState.errorEmailLogin = e.message!!
+
             }
-            if("email and password can not be empty" == e.message){
-                loginUiState = loginUiState.copy(signUpErrorEmail = e.localizedMessage)
-                loginUiState = loginUiState.copy(signUpErrorPassword = e.localizedMessage)
-                loginUiState = loginUiState.copy(signUpErrorConfirPassword = e.localizedMessage)
-            }
+
 
             if("password need to have more than 8 words" == e.message){
 
-                loginUiState = loginUiState.copy(signUpErrorEmail = null)
-                loginUiState = loginUiState.copy(signUpErrorPassword = e.localizedMessage)
-                loginUiState = loginUiState.copy(signUpErrorConfirPassword = e.localizedMessage)
+                loginUiState = loginUiState.copy(loginErrorUserName = null)
+                loginUiState = loginUiState.copy(loginErrorEmail = null)
+                loginUiState = loginUiState.copy(loginErrorPassword = "La contraseña debe tener al menos 8 caracteres.")
+
+                loginUiState.errorPasswordlLogin = e.message!!
             }
 
             if("The email address is badly formatted." == e.message){
 
-                loginUiState = loginUiState.copy(signUpErrorEmail = e.localizedMessage)
-                loginUiState = loginUiState.copy(signUpErrorPassword = null)
-                loginUiState = loginUiState.copy(signUpErrorConfirPassword = null)
-            }
+                loginUiState = loginUiState.copy(loginErrorUserName = null)
+                loginUiState = loginUiState.copy(loginErrorEmail = e.localizedMessage)
+                loginUiState = loginUiState.copy(loginErrorPassword = null)
 
-            if("Password do not match" == e.message){
-                loginUiState = loginUiState.copy(signUpErrorEmail = null)
-                loginUiState = loginUiState.copy(signUpErrorPassword = e.localizedMessage)
-                loginUiState = loginUiState.copy(signUpErrorConfirPassword = e.localizedMessage)
-            }
+                loginUiState.errorEmailLogin = e.message!!
 
-            Toast.makeText(context, "${e.message}", Toast.LENGTH_SHORT).show()
+            }
 
 
         } finally {
@@ -196,31 +208,45 @@ class VocabularyViewModel @Inject constructor (
 
     }
 
-    fun loginUser(context: Context) = viewModelScope.launch {
+    fun IsLogin():Boolean = prefs.isLogin()
+
+    fun setIsLogin(value:Boolean){
+        prefs.setIsLogin(value)
+    }
+
+    fun SkipLogin( OnNavToHome: () -> Unit) = viewModelScope.launch {
+
+       // var user = DataUser()
+        //UpdateUserData(user)
+        prefs.setIsLogin(true)
+        OnNavToHome.invoke()
+    }
+
+    fun loginUser(OnNavToHome:()->Unit) = viewModelScope.launch {
         try {
-            if (!validateLoginForm()) {
+            if (!validateBlankSingUp()) {
                 throw IllegalArgumentException("email and password can not be empty")
             }
+
             loginUiState = loginUiState.copy(isLoading = true)
-            loginUiState = loginUiState.copy(loginError = null)
 
             auth.loginUser(
-                loginUiState.userName.trim(),
-                loginUiState.password.trim()
+                CreateLocalUser = { user ->
+                    CoroutineScope(Dispatchers.IO).launch {
+                        UpdateUserData(user)
+                    }
+                },
+                email = loginUiState.userEmailSignUp.trim().trimStart(),
+                password = loginUiState.passwordSignUp.trim().trimStart()
             ) { isSuccessful ->
                 if (isSuccessful) {
-                    Toast.makeText(
-                        context,
-                        "Hi, Welcome",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    loginUiState = loginUiState.copy(isSuccessLogin = true)
+
+                    prefs.setIsLogin(true)
+                    Toast.makeText(context, "Hi, Welcome", Toast.LENGTH_SHORT).show()
+                    //loginUiState = loginUiState.copy(isSuccessLogin = true)
+                    OnNavToHome.invoke()
+
                 } else {
-                    Toast.makeText(
-                        context,
-                        "Your email or password is wrong",
-                        Toast.LENGTH_LONG
-                    ).show()
                     loginUiState = loginUiState.copy(isSuccessLogin = false)
                 }
 
@@ -230,6 +256,37 @@ class VocabularyViewModel @Inject constructor (
         } catch (e: Exception) {
             loginUiState = loginUiState.copy(loginError = e.localizedMessage)
             e.printStackTrace()
+
+            if("email and password can not be empty" == e.message){
+                Toast.makeText(context, "${e.message}", Toast.LENGTH_LONG).show()
+            }
+
+
+            if("The email address is badly formatted." == e.message){
+
+                loginUiState = loginUiState.copy(signUpErrorEmail = e.localizedMessage)
+                loginUiState = loginUiState.copy(signUpErrorPassword = null)
+
+                loginUiState.errorEmail = e.message!!
+
+            }
+
+            if("There is no user record corresponding to this identifier. The user may have been deleted."== e.message){
+                loginUiState = loginUiState.copy(signUpErrorEmail = e.localizedMessage)
+                loginUiState = loginUiState.copy(signUpErrorPassword = null)
+                loginUiState.errorEmail = "No existe cuenta asociada a este correo"
+            }
+
+            if("The password is invalid or the user does not have a password."==e.message){
+                loginUiState = loginUiState.copy(signUpErrorPassword = e.localizedMessage)
+                loginUiState = loginUiState.copy(signUpErrorEmail = null)
+
+                loginUiState.errorPassword = "La contrasena es incorrecta"
+            }
+
+
+
+
         } finally {
             loginUiState = loginUiState.copy(isLoading = false)
         }
@@ -239,10 +296,11 @@ class VocabularyViewModel @Inject constructor (
 
     fun SingOut() {
         deleteUserData()
+        prefs.setIsLogin(false)
         auth.SingOut()
     }
 
-        fun SingInGoogleFirebase(
+    fun SingInGoogleFirebase(
             credential: AuthCredential,
             OnNavToHome:()->Unit) = viewModelScope.launch{
 
@@ -252,27 +310,14 @@ class VocabularyViewModel @Inject constructor (
                     CreateLocalUser = { user ->
                         CoroutineScope(Dispatchers.IO).launch {
                             UpdateUserData(user)
-
-                            /*
-                            println("el lenguaje es ${prefs.GetLearnLanguage()}")
-                            if(prefs.GetLearnLanguage() == "English"){
-                                setlevelLocal(user.English)
-
-                            }else if(prefs.GetLearnLanguage() == "Spanish"){
-                                setlevelLocal(user.Spanish)
-                            }
-                            */
                         }
                     },
                     credential){
-                    if(it){
-                        Toast.makeText(
-                            context,
-                            "success Login",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                    if(it) {
+                        prefs.setIsLogin(true)
+                        Toast.makeText(context, "hi, welcome", Toast.LENGTH_SHORT).show()
 
-                        loginUiState = loginUiState.copy(isLoading = false)
+
 
                         OnNavToHome.invoke()
 
@@ -290,6 +335,8 @@ class VocabularyViewModel @Inject constructor (
                 Toast.makeText(context, "${E.message}", Toast.LENGTH_SHORT).show()
             }
         }
+
+
 
         /*
         fun GetDataUser() {
@@ -971,13 +1018,23 @@ class VocabularyViewModel @Inject constructor (
         suspend fun getLives() = user.getlives()
 
 
-        suspend fun counAllUser()=user.countUser()
+    var CantUser:Int = 0
+
+    suspend fun counAllUser():Int{
+
+        CantUser = user.countUser()
+        return CantUser
+        }
 
 
         /***************  preferes  *******************/
 
-        fun saveLearnLenguage(language:String)=prefs.SaveLearnLanguage(language)
-        fun SaveLocalLanguage(language:String) = prefs.SaveLocalLanguage(language)
+        fun saveLearnLenguage(language:String){
+            prefs.SaveLearnLanguage(language)
+        }
+
+
+    fun SaveLocalLanguage(language:String) { prefs.SaveLocalLanguage(language) }
 
         fun SavePreferences(it: DataVocabulary) {
             prefs.SaveIndex(it)
@@ -1010,6 +1067,7 @@ class VocabularyViewModel @Inject constructor (
         fun GetLearnLenguage(): String = prefs.GetLearnLanguage()
 
         fun GetLocalLenguage(): String = prefs.GetLocalLanguage()
+
 
         fun GetCategoryName():String = prefs.GetNameCategory()
 
@@ -1163,6 +1221,7 @@ class VocabularyViewModel @Inject constructor (
                 getListOfWordsFromRoom()
             }
 
+            
 
         }
 
@@ -1170,26 +1229,31 @@ class VocabularyViewModel @Inject constructor (
         prefs.setTheme(theme)
     }
 
-    fun GetTheme() = prefs.getTheme()
+    
+    fun GetSettings()  =files.readLocalSettings(context)
 
-    fun GetFilesLocalLanguages() = files.getLocalLanguages(context)
+    fun GetCode():String {
+        var language = GetLocalLenguage()
+        var code = "af"
 
-
-
-    fun Review(){
-        val manager = ReviewManagerFactory.create(context)
-
-        val request = manager.requestReviewFlow()
-        request.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                // We got the ReviewInfo object
-                val reviewInfo = task.result
-            } else {
-                // There was some problem, log or handle the error code.
-                //@ReviewErrorCode val reviewErrorCode = (task.getException() as TaskException).errorCode
+        for( e in GetFilesLocalLanguages()){
+            if(e.language == language ){
+                code = e.code
             }
         }
+
+        return code
     }
+
+
+
+    fun GetTheme() = prefs.getTheme()
+
+    fun GetFilesLocalLanguages(): List<LocalFiles.MyCodes> {
+         return files.readLocalLanguege(context)
+    }
+
+
 
 }
 

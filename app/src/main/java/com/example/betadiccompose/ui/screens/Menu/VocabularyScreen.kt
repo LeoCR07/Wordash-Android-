@@ -2,7 +2,7 @@ package com.example.betadiccompose.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 
 import com.example.betadiccompose.R
@@ -28,9 +28,16 @@ fun VocabularyScreen(
     current: String?,
     onBack:()->Unit
 ) {
+
+    var code by remember {
+        mutableStateOf(vocalview.GetCode())
+    }
+
     MyApp(viewModel = vocalview, content = {
 
-        NavToBackDialog(onBack)
+
+        NavToBackDialog(onBack = onBack, viewmodel =vocalview,
+            texto = vocalview.GetSettings().AreYouSureYouWantToGoOut[code]!!)
 
         Scaffold(
             topBar = {

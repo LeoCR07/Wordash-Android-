@@ -7,10 +7,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -25,10 +22,14 @@ fun MySentes(
     vocalview: VocabularyViewModel,
 ) {
 
+    var code by remember {
+        mutableStateOf(vocalview.GetCode())
+    }
+
     MyApp(viewModel = vocalview, content = {
         Scaffold(
             topBar = {
-                TopApp(title = "Mis frases", viewModel = vocalview)
+                TopApp(title = vocalview.GetSettings().MyFavoritePhrases[code]!!, viewModel = vocalview)
             }){
 
             vocalview.getMyFavoriteSentes()

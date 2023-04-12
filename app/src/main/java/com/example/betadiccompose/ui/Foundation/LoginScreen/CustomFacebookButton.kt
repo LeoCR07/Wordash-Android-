@@ -3,6 +3,7 @@ package com.example.betadiccompose.ui.Foundation.LoginScreen
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -26,10 +27,13 @@ public fun CustomFacebookButton(
 
     val callbackManager = FacebookUtil.callbackManager
     val loginText = "facebbok"
+
+
     AndroidView(
         modifier = modifier,
         factory = ::LoginButton,
         update = { button ->
+            button.height = 500
           //  button.loginText = loginText
             //button.setLoginText(loginText)
             button.setPermissions("email")
@@ -50,6 +54,10 @@ public fun CustomFacebookButton(
                     onError(error)
                 }
             })
+
+
         }
     )
 }
+
+

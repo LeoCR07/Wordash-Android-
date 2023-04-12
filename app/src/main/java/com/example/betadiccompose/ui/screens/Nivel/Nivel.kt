@@ -9,9 +9,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.unit.dp
 import com.example.betadiccompose.R
-import com.example.betadiccompose.Runtime.MyApp
+
 import com.example.betadiccompose.Runtime.MyGame
 import com.example.betadiccompose.data.network_database.model.DataWorld
 import com.example.betadiccompose.ui.Foundation.GamesScreen.*
@@ -51,6 +52,9 @@ fun MakeNivel(viewModel: VocabularyViewModel, onBack: () -> Unit, NavToStudy: ()
 
     var opendialog = remember { mutableStateOf(false) }
 
+    var code by remember {
+        mutableStateOf(viewModel.GetCode())
+    }
 
     MyGame(viewModel = viewModel,content = {
 
@@ -63,7 +67,12 @@ fun MakeNivel(viewModel: VocabularyViewModel, onBack: () -> Unit, NavToStudy: ()
         ) {
 
             if (viewModel.step != 0) {
-                NavToBackDialog(onBack,)
+                NavToBackDialog(onBack = onBack, viewmodel = viewModel,
+                texto = viewModel.GetSettings().AreYouSureYouWantToGoOut[code]!!.replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(
+                        Locale.getDefault()
+                    ) else it.toString()
+                })
             }
 
 
@@ -87,7 +96,7 @@ fun MakeNivel(viewModel: VocabularyViewModel, onBack: () -> Unit, NavToStudy: ()
                 ) {
 
                     if (viewModel.step != 0 && viewModel.step != 20) {
-                        secondTopAppBarLevel(porcentaje, onBack)
+                        secondTopAppBarLevel(porcentaje, onBack,viewModel)
                         Spacer(modifier = Modifier.height(20.dp))
                     }
 

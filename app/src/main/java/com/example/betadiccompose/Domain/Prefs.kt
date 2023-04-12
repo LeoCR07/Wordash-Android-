@@ -3,9 +3,15 @@ package com.example.betadiccompose.Domain
 import android.content.Context
 import com.example.betadiccompose.data.network_database.model.DataVocabulary
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.util.*
 import javax.inject.Inject
 
-class Prefs @Inject constructor(@ApplicationContext context: Context) {
+class Prefs @Inject constructor(
+    files :LocalFiles,
+    @ApplicationContext context: Context) {
+
+    val file = files
+    val contexto = context
 
     private val db = "datos"  //Base de datos
     private val KeySubCats = "KeySubCats"
@@ -23,7 +29,7 @@ class Prefs @Inject constructor(@ApplicationContext context: Context) {
     private val Keyfirsttime:String = "timeFirstTime"
     private val KeyIndexCurrentLevel:String = "IndexCurrentLevel"
 
-
+    private val KeyIsLogin :String = "KeyIsLogin"
     private val KeyCountInterstitialAdGame:String = "KeyCountInterstitialAdGame"
     private val  KeyCountInterstitialAdVoca:String = "KeyCountInterstitialAdVoca"
 
@@ -96,10 +102,19 @@ class Prefs @Inject constructor(@ApplicationContext context: Context) {
     }
 
     fun GetLocalLanguage():String{
-        return storage.getString(KeyOld,"Spanish")!!
+        var idioma = "English"
+
+        val defaultLocale = Locale.getDefault()
+        val code = defaultLocale.language
+
+        for( e in file.readLocalLanguege(contexto)){
+            if(e.code == code){
+                println("code ${e.code}  $code")
+                idioma = e.language
+            }
+        }
+        return storage.getString(KeyOld,idioma)!!
     }
-
-
 
     /** Number of category **/
     fun SaveSubNumberCategory(number:Int){
@@ -169,4 +184,14 @@ class Prefs @Inject constructor(@ApplicationContext context: Context) {
     }
 
     fun getTheme()= storage.getInt(KeyTheme,0)!!
+
+    /**  Login **/
+    fun isLogin():Boolean= storage.getBoolean(KeyIsLogin,false)!!
+
+    fun setIsLogin(value:Boolean){
+        storage.edit().putBoolean(KeyIsLogin,value).apply()
+    }
+
+
+
 }

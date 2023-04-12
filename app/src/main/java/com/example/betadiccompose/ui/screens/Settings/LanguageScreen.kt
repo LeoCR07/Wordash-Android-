@@ -17,10 +17,18 @@ import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 import org.intellij.lang.annotations.Language
 
 @Composable
-fun LanguageScreen(viewmodel:VocabularyViewModel) {
+fun LanguageScreen(
+    onBack:()->Unit,
+    viewmodel:VocabularyViewModel) {
+
+    var code by remember{
+        mutableStateOf(viewmodel.GetCode())
+    }
+
     MyApp(viewModel = viewmodel, content =  {
 
         val lst = viewmodel.GetFilesLocalLanguages()
+
 
         var value by remember {
             mutableStateOf(viewmodel.GetLocalLenguage())
@@ -28,7 +36,7 @@ fun LanguageScreen(viewmodel:VocabularyViewModel) {
 
         Scaffold(
             topBar = {
-                TopApp(viewModel = viewmodel , opcion = 3, title = "Ajustes")
+                TopApp(viewModel = viewmodel , opcion = 3, title = viewmodel.GetSettings().YourLanguage[code], navToSettings = onBack)
             },
             content = {
                 LazyColumn(
@@ -39,9 +47,9 @@ fun LanguageScreen(viewmodel:VocabularyViewModel) {
                     verticalArrangement = Arrangement.Center){
 
                     items(lst) { item ->
-                        ItemOpcion(label = item , value = value  , selected = item ,click = {                    value = item
-                           // value = item
-                           // viewmodel.saveLearnLenguage(item)
+                        ItemOpcion(label = item.local, value = value , selected = item.language ,click = {
+                            value = item.language
+                           viewmodel.SaveLocalLanguage(item.language)
                         })
                         Spacer(modifier = Modifier.height(5.dp))
                     }

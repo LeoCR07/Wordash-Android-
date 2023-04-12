@@ -13,11 +13,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.betadiccompose.ui.Foundation.Shared.ExitDialog
-
+import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 
 
 @Composable
-fun secondTopAppBarLevel(percentage: Float, onBack: () -> Unit) {
+fun secondTopAppBarLevel(percentage: Float, onBack: () -> Unit,viewmodel:VocabularyViewModel) {
 
     var showAlertDialog by remember { mutableStateOf(false) }
     val interactionSource = remember { MutableInteractionSource() }
@@ -27,7 +27,8 @@ fun secondTopAppBarLevel(percentage: Float, onBack: () -> Unit) {
             hideAlertDialog = { showAlertDialog = false },
             showAlertDialog = {showAlertDialog = true },
             texto = "Estas seguro que deseas salir ?",
-            onBack = {onBack()}
+            onBack = {onBack()},
+            viewmodel = viewmodel
         )
     }
     Spacer(modifier = Modifier.height(20.dp).background(MaterialTheme.colors.background))

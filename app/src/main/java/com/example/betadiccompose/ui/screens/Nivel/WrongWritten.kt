@@ -4,10 +4,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -18,9 +18,7 @@ import com.example.betadiccompose.ui.Foundation.GamesScreen.RandomText
 import com.example.betadiccompose.ui.Foundation.Shared.Local_Animation
 import com.example.betadiccompose.ui.Foundation.Shared.Button.ElevatedButtonSample
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
-
-
-
+import java.util.*
 
 
 @Composable
@@ -29,6 +27,9 @@ fun WrongWritten(
     onMediaClick: (DataWorld,Int) -> Unit,
     lista: List<DataWorld>,
 ) {
+    var code by remember {
+        mutableStateOf(viewModel.GetCode())
+    }
 
     var idAux = 0
     var lstAux: List<DataWorld> = emptyList()
@@ -62,7 +63,11 @@ fun WrongWritten(
     ){
 
         Text(
-            text="¿Cual es la opción bien escrita?",
+            text= viewModel.GetSettings().WhatIsTheWellWrittenOption[code]!!.replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase(
+                    Locale.getDefault()
+                ) else it.toString()
+            },
             fontWeight = FontWeight.ExtraBold,
             fontSize = 29.sp,
             textAlign = TextAlign.Center

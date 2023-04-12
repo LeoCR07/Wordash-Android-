@@ -7,20 +7,26 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class FirebaseRepository @Inject constructor(
-    prefs: Prefs
+    prefs: Prefs,
+     users : User
 ){
 
 
+    val user = users
     private var preference = prefs
     private val db = FirebaseFirestore.getInstance()
+    val auth = FirebaseAuth.getInstance()
 
     val currentUser: FirebaseUser?= Firebase.auth.currentUser
     fun hasUser():Boolean = Firebase.auth.currentUser != null
@@ -33,36 +39,56 @@ class FirebaseRepository @Inject constructor(
 
 
     suspend fun createUser(
+        CreateLocalUser:(DataUser)->Unit,
         email:String,
         password:String,
+        username: String,
         onComplete:(Boolean)->Unit)= withContext(Dispatchers.IO){
+
         Firebase.auth
             .createUserWithEmailAndPassword(email,password)
             .addOnCompleteListener{
                 if(it.isSuccessful){
-                    //currentUser?.updateProfile(UpdateProfile())
-                  //  CreateDataFirebaseStore(CreateLocalUser, UpdateLocalUser)
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val user = auth.currentUser
+                        val profileUpdates = UserProfileChangeRequest.Builder()
+                            .setDisplayName(username)
+                            .build()
+                        user?.updateProfile(profileUpdates)
+                            ?.addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    // El nombre de usuario se ha establecido correctamente
+                                }
+                            }
+                        CreateDataFirebaseStore(CreateLocalUser)
+                    }
+
                     onComplete.invoke(true)
+
+
                 }else{
                     onComplete.invoke(false)
                 }
             }.await()
+
+
     }
 
-    private fun UpdateProfile(): UserProfileChangeRequest {
+    private fun UpdateProfile(username:String): UserProfileChangeRequest {
 
-        val username = ""
-        val photoURI = Uri.parse("")
+       // val photoURI = Uri.parse("")
+        //    .setPhotoUri(photoURI)
 
         val result = UserProfileChangeRequest.Builder()
             .setDisplayName(username)
-            .setPhotoUri(photoURI)
             .build()
 
         return result
     }
 
     suspend fun loginUser(
+        CreateLocalUser:(DataUser)->Unit,
         email:String,
         password:String,
         onComplete:(Boolean)->Unit)= withContext(Dispatchers.IO){
@@ -71,6 +97,10 @@ class FirebaseRepository @Inject constructor(
             .signInWithEmailAndPassword(email,password)
             .addOnCompleteListener{
                 if(it.isSuccessful){
+                    CoroutineScope(Dispatchers.IO).launch {
+                        CreateDataFirebaseStore(CreateLocalUser)
+                    }
+
                     onComplete.invoke(true)
                 }else{
                     onComplete.invoke(false)
@@ -88,7 +118,10 @@ class FirebaseRepository @Inject constructor(
                 .signInWithCredential(credential)
                 .addOnCompleteListener{
                     if(it.isSuccessful){
-                        CreateDataFirebaseStore(CreateLocalUser)
+                        CoroutineScope(Dispatchers.IO).launch {
+                            CreateDataFirebaseStore(CreateLocalUser)
+                        }
+
                         onComplete.invoke(true)
                     }else{
                         onComplete.invoke(false)
@@ -113,15 +146,22 @@ class FirebaseRepository @Inject constructor(
                 }.await()
     }
 
-    fun CreateDataFirebaseStore(CreateLocalUser: (DataUser) -> Unit) {
+     suspend fun CreateDataFirebaseStore(CreateLocalUser: (DataUser) -> Unit, username:String = "use") {
 
-        println("usuarios 0")
+
+       var lst = user.GetDetaillsUser()
+
+
+        //lst.English
+        //lst.Spanish
+
+        println("usuarios 0 $username")
 
         val data = hashMapOf(
-            "crowns" to 0,
-            "english" to 1,
-            "spanish" to 1,
-            "exp" to 0
+            "crowns" to lst.crowns,
+            "english" to lst.English,
+            "spanish" to lst.Spanish,
+            "exp" to lst.exp
         )
 
         val docRef = db.collection("users").document(getUserId())
@@ -137,6 +177,7 @@ class FirebaseRepository @Inject constructor(
                     var english = (document.get("english") as Long).toInt()
                     var spanish = (document.get("spanish") as Long).toInt()
 
+
                     var user  = DataUser(
                         id = getUserId(),
                         email = getUserEmail(),
@@ -148,15 +189,24 @@ class FirebaseRepository @Inject constructor(
                         level = if(preference.GetLearnLanguage() == "English") english  else english
                         )
 
-
-
                     CreateLocalUser(user)
-
-
 
 
                 }else{
                     println("usuario: no tiene datos en firestore")
+
+                    if(username!="use"){
+                        val profileUpdates = userProfileChangeRequest {
+                            displayName = username
+                        }
+
+                        currentUser!!.updateProfile(profileUpdates)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    println("User profile updated.")
+                                }
+                            }
+                    }
 
                     // Crear datos en firebase
                     docRef.set(data)
@@ -164,7 +214,12 @@ class FirebaseRepository @Inject constructor(
                     var user  = DataUser(
                         id = getUserId(),
                         email = getUserEmail(),
-                        name = getUserName())
+                        name = getUserName(),
+                        exp = lst.exp,
+                        crowns = lst.crowns,
+                        English = lst.English,
+                        Spanish = lst.Spanish
+                    )
 
                     //Crear datos locales
                     CreateLocalUser(user)

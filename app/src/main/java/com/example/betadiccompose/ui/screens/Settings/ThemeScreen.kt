@@ -17,10 +17,19 @@ import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 
 
 @Composable
-fun ThemeScreen(viewmodel:VocabularyViewModel,click:()->Unit) {
+fun ThemeScreen(
+    onBack:()->Unit,
+    viewmodel:VocabularyViewModel,click:()->Unit) {
+    var code by remember{
+        mutableStateOf(viewmodel.GetCode())
+    }
+
     MyApp(viewModel = viewmodel, content = {
 
-        val lst = listOf("Día / Noche","Noche","Día")
+        val lst = listOf(
+            viewmodel.GetSettings().DayNight[code]!!,
+            viewmodel.GetSettings().Night[code]!!,
+            viewmodel.GetSettings().day[code])!!
 
         var value by remember {
             mutableStateOf(viewmodel.GetTheme())
@@ -28,7 +37,7 @@ fun ThemeScreen(viewmodel:VocabularyViewModel,click:()->Unit) {
 
         Scaffold(
             topBar = {
-                TopApp(viewModel = viewmodel , opcion = 3, title = "Ajustes")
+                TopApp(viewModel = viewmodel , opcion = 3, title = viewmodel.GetSettings().ApplicationTheme[code], navToSettings = onBack)
             },
             content = {
                 LazyColumn(
@@ -42,7 +51,7 @@ fun ThemeScreen(viewmodel:VocabularyViewModel,click:()->Unit) {
                         
                         item{
                             ItemOpcion(
-                                label = item,
+                                label = item!!,
                                 value = value.toString() , 
                                 click = { 
                                     value = index 

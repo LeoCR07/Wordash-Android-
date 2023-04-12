@@ -22,31 +22,31 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-
     private val viewModel : VocabularyViewModel by viewModels()
     private lateinit var analytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        var startDestination = LoginRoutes.Login.name
-
-
+        var startDestination = LoginRoutes.home.name
 
 
         CoroutineScope(Dispatchers.IO).launch {
+            try{
+                if(viewModel.counAllUser()==0){
+                    var user  = DataUser(id = "0")
+                    viewModel.insertDataUser(user)
+                }
+            }catch (e:Exception){
+                println("error inicio ${e.message}")
+            }
             //Niveles
             //setTheme(R.style.Theme_BetaDicCompose)
             //La primera vez que instalo el app
-            if(viewModel.counAllUser()==0){
 
-                //  println("user no")
-                var user  = DataUser(id = "0")
-                viewModel.insertDataUser(user)
-            }else{
-                println("user si")
-            }
         }
+
+
 
         setContent {
 
@@ -59,12 +59,13 @@ class MainActivity : ComponentActivity() {
 
 
 
-            if (viewModel?.hasUser){
+
+            if (viewModel.IsLogin()){
                 //Si el usuario ya esta reguistrado
                 startDestination = MenuRoutes.learn.name
             }
 
-            Navegation(viewModel,startDestination,window)
+           Navegation(viewModel,startDestination,window)
 
 
 

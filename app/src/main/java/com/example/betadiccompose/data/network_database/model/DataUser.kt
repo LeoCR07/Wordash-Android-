@@ -3,7 +3,7 @@ import com.example.betadiccompose.data.local_database.entity.UserEntity
 
 data class DataUser(
     val id:String = "",
-    val name:String = "",
+    val name:String = "No User",
     val email:String = "",
     val exp:Int = 0,
     val Spanish:Int = 1,

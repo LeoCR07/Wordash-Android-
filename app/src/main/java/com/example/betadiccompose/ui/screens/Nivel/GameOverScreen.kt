@@ -4,12 +4,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -18,8 +18,7 @@ import com.example.betadiccompose.R
 import com.example.betadiccompose.ui.Foundation.Shared.Local_Animation
 import com.example.betadiccompose.ui.Foundation.Shared.BtnSuper
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
-
-
+import java.util.*
 
 
 @Composable
@@ -30,6 +29,9 @@ fun GameOverScreen(
     viewmodel:VocabularyViewModel
 ) {
 
+    var code by remember {
+        mutableStateOf(viewmodel.GetCode())
+    }
 
     LaunchedEffect(key1 = true){
         viewmodel.SoundFromLocal(R.raw.ulost)
@@ -43,7 +45,11 @@ fun GameOverScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
         Text(
-            text = "Creo que deberias estudiar un poco mas",
+            text = viewmodel.GetSettings().YouNeedToPracticeMore[code]!!.replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase(
+                    Locale.getDefault()
+                ) else it.toString()
+            },
             fontSize = 35.sp,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center
@@ -55,7 +61,7 @@ fun GameOverScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
         BtnSuper(
-            title = "Ir a estudiar",
+            title = viewmodel.GetSettings().GoToStudy[code]!!,
             FontColor = Color.White,
             IsIcon = false,
             fontSize = 18.sp,
@@ -71,7 +77,7 @@ fun GameOverScreen(
         )
         Spacer(modifier = Modifier.height(10.dp))
         BtnSuper(
-            title = "Jugar de nuevo",
+            title = viewmodel.GetSettings().PlayAgain[code]!!,
             color = MaterialTheme.colors.background,
             FontColor = MaterialTheme.colors.secondaryVariant,
             IsIcon = false,
@@ -91,7 +97,7 @@ fun GameOverScreen(
         Spacer(modifier = Modifier.height(10.dp))
 
         BtnSuper(
-            title = "Salir",
+            title = viewmodel.GetSettings().GoOut[code]!!,
             color = MaterialTheme.colors.background,
             FontColor = MaterialTheme.colors.secondaryVariant,
             IsIcon = false,
