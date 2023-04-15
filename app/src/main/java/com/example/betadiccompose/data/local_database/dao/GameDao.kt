@@ -96,10 +96,10 @@ interface GameDao {
     suspend fun countUser():Int
 
     @Query("update user_table " +
-            "set id =:id, name =:name,email=:email,exp=:exp,spanish=:spanish,stars=:crowns,english=:english " +
+            "set id =:id, name =:name,email=:email,exp=:exp,spanish=:spanish,stars=:crowns,english=:english,level = :level " +
             "where id = '0'")
 
-    suspend fun UpdateuserData(id:String,name:String,email:String,exp:Int,spanish:Int,english:Int,crowns:Int)
+    suspend fun UpdateuserData(id:String,name:String,email:String,exp:Int,spanish:Int,english:Int,crowns:Int,level:Int)
 
 
 

@@ -11,16 +11,14 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -38,6 +36,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.launch
+import java.util.*
 
 @Composable
 fun OldLoginScreen(
@@ -52,7 +51,12 @@ fun OldLoginScreen(
         val context = LocalContext.current
 
 
-        /**  Facebook **/
+        /**  code of language **/
+        var code by remember{
+            mutableStateOf(viewmodel.GetCode())
+        }
+
+
         /**  Facebook **/
         var callbackManager = remember { CallbackManager.Factory.create() }
 
@@ -149,7 +153,9 @@ fun OldLoginScreen(
 
                     // Icono
                     Icon(
-                        painter = painterResource(R.drawable.flag_states),
+                        painter = painterResource(
+                            if(viewmodel.GetLearnLenguage() =="English")R.drawable.flag_states else R.drawable.flag_spain
+                        ),
                         contentDescription = "BTN",
                         modifier = Modifier
                             .size(50.dp)
@@ -159,7 +165,12 @@ fun OldLoginScreen(
 
                     Spacer(modifier = Modifier.height(40.dp))
 
-                    BtnLogin(icono = R.drawable.facebo, text = "Registrate con facebook") {
+                    /*
+                    BtnLogin(icono = R.drawable.facebo, text = "${viewmodel.GetSettings().ContinueWith[code]!!} facebook".replaceFirstChar {
+                        if (it.isLowerCase()) it.titlecase(
+                            Locale.getDefault()
+                        ) else it.toString()
+                    }) {
 
                         LoginManager.getInstance().logInWithReadPermissions(
                             context as Activity,
@@ -168,17 +179,27 @@ fun OldLoginScreen(
 
                     }
 
+                    */
+
 
                     Spacer(modifier = Modifier.height(15.dp))
 
-                    BtnLogin(icono = R.drawable.google_2, text = "Registrate con google") {
+                    BtnLogin(icono = R.drawable.google_2,text = "${viewmodel.GetSettings().ContinueWith[code]!!} Google".replaceFirstChar {
+                        if (it.isLowerCase()) it.titlecase(
+                            Locale.getDefault()
+                        ) else it.toString()
+                    }){
                         authResultLauncher.launch(signInRequestCode)
                     }
 
                     Spacer(modifier = Modifier.height(15.dp))
 
 
-                    BtnLogin(icono = R.drawable.email, text = "Registrate con tu correo") {
+                    BtnLogin(icono = R.drawable.email, text = "${viewmodel.GetSettings().ContinueWith[code]!!} ${viewmodel.GetSettings().Email[code]!!} ".replaceFirstChar {
+                        if (it.isLowerCase()) it.titlecase(
+                            Locale.getDefault()
+                        ) else it.toString()
+                    }) {
                         NavToSingUpScreen()
                     }
 
@@ -199,7 +220,12 @@ fun OldLoginScreen(
                 ) {
 
                     Row() {
-                        Text(text = "¿No tienes cuentas?")
+                        Text(
+                            text = viewmodel.GetSettings().YouDoNotHaveAnAccount[code]!!.replaceFirstChar {
+                            if (it.isLowerCase()) it.titlecase(
+                                Locale.getDefault()
+                            ) else it.toString()
+                        })
 
                         Spacer(modifier = Modifier.width(10.dp))
 
@@ -208,7 +234,11 @@ fun OldLoginScreen(
                                 .clickable() {
                                     RegisterScreen()
                                 },
-                            text = "Crear cuenta",
+                            text = viewmodel.GetSettings().CreateAccount[code]!!.replaceFirstChar {
+                                if (it.isLowerCase()) it.titlecase(
+                                    Locale.getDefault()
+                                ) else it.toString()
+                            },
                             color = MaterialTheme.colors.onSurface,
                             textDecoration = TextDecoration.Underline
                         )

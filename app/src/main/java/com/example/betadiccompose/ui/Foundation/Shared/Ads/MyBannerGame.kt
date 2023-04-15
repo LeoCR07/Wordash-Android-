@@ -9,7 +9,7 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 
 @Composable
-fun MyBanner() {
+fun MyBannerGame() {
     AndroidView(
 
         modifier = Modifier
@@ -17,7 +17,7 @@ fun MyBanner() {
         factory = {
             AdView(it).apply {
                 setAdSize(AdSize.BANNER)
-                adUnitId = "ca-app-pub-3940256099942544/6300978111"
+                adUnitId = "ca-app-pub-7052510061101888/8674956896"
                 loadAd(AdRequest.Builder().build())
             }
         })

@@ -3,8 +3,6 @@ package com.example.betadiccompose.Domain.Ads
 import android.app.Activity
 import android.content.ContentValues
 import android.util.Log
-import android.widget.Toast
-import androidx.compose.ui.platform.LocalContext
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -22,7 +20,7 @@ class AdMobRewarded  @Inject constructor(private val context: android.content.Co
     var rewardedAd: RewardedAd? = null
 
     fun LoadAd(){
-        val adUnitId = "ca-app-pub-3940256099942544/5224354917"
+        val adUnitId = "ca-app-pub-7052510061101888/6598585759"
         var adRequest = AdRequest.Builder().build()
 
 
@@ -30,14 +28,13 @@ class AdMobRewarded  @Inject constructor(private val context: android.content.Co
                 override fun onAdFailedToLoad(adError: LoadAdError) {
                     rewardedAd = null
                     println("el anuncio no cargo ${adError.message}")
-                    Toast.makeText(context,"el anuncio no cargo",Toast.LENGTH_LONG).show()
                     LoadAd()
                 }
 
                 override fun onAdLoaded(ad: RewardedAd) {
                     println("Ad was loaded.")
                     rewardedAd = ad
-                    Toast.makeText(context,"reaward is ready",Toast.LENGTH_LONG).show()
+
                 }
             })
     }
@@ -54,7 +51,6 @@ class AdMobRewarded  @Inject constructor(private val context: android.content.Co
 
                 })
             } ?: run {
-                Toast.makeText(context,"el anuncio esta cargando, intenta de nuevo",Toast.LENGTH_LONG).show()
                 Log.d(ContentValues.TAG, "The rewarded ad wasn't ready yet.")
                 LoadAd()
             }
@@ -76,19 +72,16 @@ class AdMobRewarded  @Inject constructor(private val context: android.content.Co
                     // Called when ad fails to show.
                     //Log.e(TAG, "Ad failed to show fullscreen content.")
                     println(" ${p0.message}")
-                    Toast.makeText(context,"onAdFailedToShowFullScreenContent",Toast.LENGTH_LONG).show()
                     rewardedAd = null
                 }
 
                 override fun onAdImpression() {
                     // Called when an impression is recorded for an ad.
-                    Toast.makeText(context,"impresion",Toast.LENGTH_LONG).show()
                     println("impresion")
                 }
 
                 override fun onAdShowedFullScreenContent() {
                     // Called when ad is shown.
-                    Toast.makeText(context,"Ad showed fullscreen content.",Toast.LENGTH_LONG).show()
                     println("Ad showed fullscreen content.")
                 }
             }

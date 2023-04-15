@@ -65,7 +65,7 @@ fun HeaderAccount(vocalview: VocabularyViewModel, navToLogin: () -> Unit) {
 
             if(vocalview.hasUser){
                 Text(
-                    text =  if(vocalview.GetLearnLenguage()=="English") "Hello, ${vocalview.lstdatauser.value.name}" else  "Hola  , ${vocalview.lstdatauser.value.name}",
+                    text =  if(vocalview.GetLearnLenguage()=="English") "Hello, ${vocalview.lstdatauser.value.name.trim().trimStart()}" else  "Hola , ${vocalview.lstdatauser.value.name.trim().trimStart()}",
                     textAlign = TextAlign.Center,
                     fontSize = 22.sp,
                     color = MaterialTheme.colors.secondaryVariant,

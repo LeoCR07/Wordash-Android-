@@ -7,6 +7,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.betadiccompose.Runtime.MyApp
@@ -14,6 +15,7 @@ import com.example.betadiccompose.Runtime.MyApp
 import com.example.betadiccompose.ui.Foundation.Settings.ItemOpcion
 import com.example.betadiccompose.ui.Foundation.Shared.TopApp
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
+import java.util.*
 
 
 @Composable
@@ -51,7 +53,11 @@ fun ThemeScreen(
                         
                         item{
                             ItemOpcion(
-                                label = item!!,
+                                label = item!!.replaceFirstChar {
+                                    if (it.isLowerCase()) it.titlecase(
+                                        Locale.getDefault()
+                                    ) else it.toString()
+                                },
                                 value = value.toString() , 
                                 click = { 
                                     value = index 

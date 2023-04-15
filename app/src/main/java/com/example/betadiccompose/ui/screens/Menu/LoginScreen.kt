@@ -11,16 +11,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -39,6 +37,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.launch
+import java.util.*
 
 
 @Composable
@@ -52,6 +51,10 @@ fun LoginScreen(
 
         val context = LocalContext.current
 
+        /**  code of language **/
+        var code by remember{
+            mutableStateOf(viewmodel.GetCode())
+        }
 
         /**  Facebook **/
         var callbackManager = remember { CallbackManager.Factory.create() }
@@ -146,7 +149,9 @@ fun LoginScreen(
 
                     // Icono
                     androidx.compose.material.Icon(
-                        painter = painterResource(R.drawable.flag_states),
+                        painter = painterResource(
+                            if(viewmodel.GetLearnLenguage() =="English")R.drawable.flag_states else R.drawable.flag_spain
+                        ),
                         contentDescription = "BTN",
                         modifier = Modifier
                             .size(50.dp)
@@ -155,23 +160,37 @@ fun LoginScreen(
 
                     Spacer(modifier = Modifier.height(40.dp))
 
-                    BtnLogin(icono = R.drawable.facebo, text = "Registrate con facebook"){
+                    /*
+                    BtnLogin(icono = R.drawable.facebo, text = "${viewmodel.GetSettings().ContinueWith[code]!!} facebook".replaceFirstChar {
+                        if (it.isLowerCase()) it.titlecase(
+                            Locale.getDefault()
+                        ) else it.toString()
+                    }) {
 
                         LoginManager.getInstance().logInWithReadPermissions(context as Activity, listOf("email", "public_profile"))
 
                     }
 
+                    */
+
 
                     Spacer(modifier = Modifier.height(15.dp))
 
-                    BtnLogin(icono = R.drawable.google_2,text = "Registrate con google"){
+                    BtnLogin(icono = R.drawable.google_2,text = "${viewmodel.GetSettings().ContinueWith[code]!!} Google".replaceFirstChar {
+                        if (it.isLowerCase()) it.titlecase(
+                            Locale.getDefault()
+                        ) else it.toString()
+                    }){
                         authResultLauncher.launch(signInRequestCode)
                     }
 
                     Spacer(modifier = Modifier.height(15.dp))
 
-
-                    BtnLogin(icono = R.drawable.email,text ="Registrate con tu correo"){
+                    BtnLogin(icono = R.drawable.email, text = "${viewmodel.GetSettings().ContinueWith[code]!!} ${viewmodel.GetSettings().Email[code]!!} ".replaceFirstChar {
+                        if (it.isLowerCase()) it.titlecase(
+                            Locale.getDefault()
+                        ) else it.toString()
+                    }) {
                         NavToSingUpScreen()
                     }
 
@@ -179,7 +198,11 @@ fun LoginScreen(
 
                     Text(
                         color = MaterialTheme.colors.secondaryVariant,
-                        text = "O",
+                        text = viewmodel.GetSettings().Or[code]!!.replaceFirstChar {
+                            if (it.isLowerCase()) it.titlecase(
+                                Locale.getDefault()
+                            ) else it.toString()
+                        },
                         fontWeight = FontWeight.Bold
                     )
 
@@ -193,7 +216,11 @@ fun LoginScreen(
                                     NavToMainScreen.invoke()
                                 }
                             },
-                        text = "Omitir",
+                        text = viewmodel.GetSettings().skip[code]!!.replaceFirstChar {
+                            if (it.isLowerCase()) it.titlecase(
+                                Locale.getDefault()
+                            ) else it.toString()
+                        },
                         textDecoration = TextDecoration.Underline
                     )
 
@@ -211,8 +238,11 @@ fun LoginScreen(
 
                     Row() {
                         Text(
-                            color = MaterialTheme.colors.secondaryVariant,
-                            text = "¿No tienes cuentas?")
+                            text = viewmodel.GetSettings().YouDoNotHaveAnAccount[code]!!.replaceFirstChar {
+                                if (it.isLowerCase()) it.titlecase(
+                                    Locale.getDefault()
+                                ) else it.toString()
+                            })
 
                         Spacer(modifier = Modifier.width(10.dp))
 
@@ -221,9 +251,14 @@ fun LoginScreen(
                                 .clickable() {
                                     RegisterScreen()
                                 },
-                            text = "Crear cuenta",
+                            text = viewmodel.GetSettings().CreateAccount[code]!!.replaceFirstChar {
+                                if (it.isLowerCase()) it.titlecase(
+                                    Locale.getDefault()
+                                ) else it.toString()
+                            },
                             color = MaterialTheme.colors.onSurface,
-                            textDecoration = TextDecoration.Underline)
+                            textDecoration = TextDecoration.Underline
+                        )
                     }
 
                     Spacer(modifier = Modifier.height(20.dp))

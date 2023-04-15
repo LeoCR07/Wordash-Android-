@@ -9,7 +9,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.unit.dp
 import com.example.betadiccompose.R
 
@@ -17,7 +16,8 @@ import com.example.betadiccompose.Runtime.MyGame
 import com.example.betadiccompose.data.network_database.model.DataWorld
 import com.example.betadiccompose.ui.Foundation.GamesScreen.*
 import com.example.betadiccompose.ui.Foundation.Game.GameOver.GameOverScreen
-import com.example.betadiccompose.ui.Foundation.MyBanner
+import com.example.betadiccompose.ui.Foundation.MyBannerGame
+import com.example.betadiccompose.ui.Foundation.MyBannerWords
 
 import com.example.betadiccompose.ui.Foundation.Shared.NavToBackDialog
 import com.example.betadiccompose.ui.Foundation.Shared.Nivel.PopUpNoLives
@@ -61,7 +61,7 @@ fun MakeNivel(viewModel: VocabularyViewModel, onBack: () -> Unit, NavToStudy: ()
         Scaffold(
             modifier = Modifier.background(MaterialTheme.colors.onPrimary),
             bottomBar = {
-                MyBanner()
+                MyBannerGame()
             }
 
         ) {

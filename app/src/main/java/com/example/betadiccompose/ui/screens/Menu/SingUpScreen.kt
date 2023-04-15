@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -32,6 +33,7 @@ import com.example.betadiccompose.ui.Foundation.Shared.BtnSuper
 import com.example.betadiccompose.ui.Foundation.Shared.Button.BtnLogin
 import com.example.betadiccompose.ui.Foundation.Shared.Button.OutlinedButtonSample
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
+import java.util.*
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,6 +43,11 @@ fun SingUpScreen(
     viewmodel: VocabularyViewModel,
     onNavToAccount : ()->Unit,
 ) {
+
+    /**  code of language **/
+    var code by remember{
+        mutableStateOf(viewmodel.GetCode())
+    }
 
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -79,7 +86,9 @@ fun SingUpScreen(
 
                     // Icono
                     androidx.compose.material.Icon(
-                        painter = painterResource(R.drawable.flag_states),
+                        painter = painterResource(
+                            if(viewmodel.GetLearnLenguage() =="English")R.drawable.flag_states else R.drawable.flag_spain
+                        ),
                         contentDescription = "BTN",
                         modifier = Modifier
                             .size(60.dp)
@@ -93,7 +102,11 @@ fun SingUpScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .align(Alignment.Start),
-                        text = "Email",
+                        text = viewmodel.GetSettings().Email[code]!!.replaceFirstChar {
+                            if (it.isLowerCase()) it.titlecase(
+                                Locale.getDefault()
+                            ) else it.toString()
+                        },
                         color = androidx.compose.material.MaterialTheme.colors.secondaryVariant,
                         fontWeight = FontWeight.ExtraBold,
                         fontSize = 18.sp
@@ -115,7 +128,11 @@ fun SingUpScreen(
                             cursorColor = Color.DarkGray
                         ),
                         isError = isErrorEmail,
-                        placeholder = { Text("Email") },
+                        placeholder = { Text(viewmodel.GetSettings().Email[code]!!.replaceFirstChar {
+                            if (it.isLowerCase()) it.titlecase(
+                                Locale.getDefault()
+                            ) else it.toString()
+                        }) },
                         singleLine = true,
                         textStyle = TextStyle(fontSize = 18.sp, color = androidx.compose.material.MaterialTheme.colors.secondaryVariant)
 
@@ -129,7 +146,11 @@ fun SingUpScreen(
                     Text(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .align(Alignment.Start), text = "Contraseña",
+                            .align(Alignment.Start), text = viewmodel.GetSettings().Password[code]!!.replaceFirstChar {
+                            if (it.isLowerCase()) it.titlecase(
+                                Locale.getDefault()
+                            ) else it.toString()
+                        },
                         fontWeight = FontWeight.ExtraBold,
                         color = androidx.compose.material.MaterialTheme.colors.secondaryVariant,
                         fontSize = 18.sp
@@ -147,7 +168,11 @@ fun SingUpScreen(
                             unfocusedBorderColor = Color.LightGray,
                             cursorColor = Color.DarkGray
                         ),
-                        placeholder = { Text("Contraseña") },
+                        placeholder = { Text(viewmodel.GetSettings().Password[code]!!.replaceFirstChar {
+                            if (it.isLowerCase()) it.titlecase(
+                                Locale.getDefault()
+                            ) else it.toString()
+                        }) },
                         visualTransformation = if (visibility_1) VisualTransformation.None else PasswordVisualTransformation(),
                         isError = isErrorEmailPassword,
                         trailingIcon = {
@@ -194,7 +219,11 @@ fun SingUpScreen(
                                 outlineColor = androidx.compose.material.MaterialTheme.colors.secondaryVariant,
                                 IsIcon = false,
                                 color =androidx.compose.material.MaterialTheme.colors.onPrimary,
-                                title = "Continuar",
+                                title = viewmodel.GetSettings().ContinueBtn[code]!!.replaceFirstChar {
+                                    if (it.isLowerCase()) it.titlecase(
+                                        Locale.getDefault()
+                                    ) else it.toString()
+                                },
                                 fontSize = 15.sp,
                                 Outline = true,
                                 FontColor = androidx.compose.material.MaterialTheme.colors.secondaryVariant,

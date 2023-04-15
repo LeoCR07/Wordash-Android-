@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        var startDestination = LoginRoutes.home.name
+        var startDestination = LoginRoutes.first.name
 
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -49,7 +49,6 @@ class MainActivity : ComponentActivity() {
 
 
         setContent {
-
             //window.setBackgroundDrawableResource(MaterialTheme.colors.background.toArgb())
             MobileAds.initialize(this)
             analytics = Firebase.analytics
@@ -57,8 +56,7 @@ class MainActivity : ComponentActivity() {
             viewModel.LoadInterstital()
             viewModel.LoadRewarded()
 
-
-
+            setTheme(R.style.Theme_BetaDicCompose)
 
             if (viewModel.IsLogin()){
                 //Si el usuario ya esta reguistrado

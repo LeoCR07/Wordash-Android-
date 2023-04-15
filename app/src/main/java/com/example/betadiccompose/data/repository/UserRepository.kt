@@ -36,7 +36,7 @@ class UserRepository  @Inject constructor(
             spanish = user.Spanish,
             english = user.English,
             crowns = user.crowns,
-
+            level = user.level
             )
     }
 

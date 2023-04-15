@@ -29,10 +29,12 @@ fun LanguageScreen(
 
         val lst = viewmodel.GetFilesLocalLanguages()
 
-
         var value by remember {
             mutableStateOf(viewmodel.GetLocalLenguage())
         }
+
+
+        val sortedList = lst.sortedBy { it.local }
 
         Scaffold(
             topBar = {
@@ -46,7 +48,7 @@ fun LanguageScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center){
 
-                    items(lst) { item ->
+                    items(sortedList) { item ->
                         ItemOpcion(label = item.local, value = value , selected = item.language ,click = {
                             value = item.language
                            viewmodel.SaveLocalLanguage(item.language)

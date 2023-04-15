@@ -233,7 +233,7 @@ fun Sort(
                                 println("c ${c}")
 
                                 if(/*temp[contador]+""*/ twoChars == c){
-                                    viewModel.SoundFromLocal(R.raw.dm)
+                             //       viewModel.SoundFromLocal(R.raw.dm)
                                     result+=c
                                     contador+=2
                                     BtnEnabled = false
@@ -304,7 +304,7 @@ fun Sort(
                             onClick = {
 
                                 if(temp[contador] == c){
-                                    viewModel.SoundFromLocal(R.raw.dm)
+                                  //  viewModel.SoundFromLocal(R.raw.dm)
                                     result+=c
                                     contador++
                                     BtnEnabled = false

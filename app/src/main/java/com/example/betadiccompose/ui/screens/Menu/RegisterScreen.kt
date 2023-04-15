@@ -1,6 +1,8 @@
 package com.example.betadiccompose.ui.screens.Menu
 
 import android.app.Activity
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -19,17 +21,23 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.betadiccompose.Domain.AuthResultContract
 import com.example.betadiccompose.R
 import com.example.betadiccompose.Runtime.MyGame
 import com.example.betadiccompose.ui.Foundation.Shared.BtnSuper
 import com.example.betadiccompose.ui.Foundation.Shared.Button.BtnLogin
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
 import com.facebook.login.LoginManager
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.GoogleAuthProvider
+import kotlinx.coroutines.launch
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,6 +46,55 @@ fun RegisterScreen(
     viewmodel: VocabularyViewModel,
     onNavToAccount : ()->Unit,
 ) {
+
+
+    /** Google **/
+    val coroutineScope = rememberCoroutineScope()
+    val signInRequestCode = 1
+
+    val authResultLauncher = rememberLauncherForActivityResult(contract = AuthResultContract()){
+            task ->
+        try {
+            val account = task?.getResult(ApiException::class.java)
+
+            if (account != null) {
+                println("cuenta 1: ${account.account?.name}")
+            }
+
+            if (account==null){
+                println("ERROR comes null")
+                //   text = "Google sign in failed _2"
+            }else{
+
+                println("WORKS")
+
+                coroutineScope.launch {
+                    val credential = GoogleAuthProvider.getCredential(account.idToken,null)
+
+
+                    viewmodel?.SingInGoogleFirebase(
+                        credential = credential,
+                        OnNavToHome ={
+                            NavToMainScreen.invoke()
+                        }
+                    )
+
+
+                }
+
+
+            }
+
+        }catch (e: ApiException){
+            //  text="Google sign in failed _1"
+        }
+    }
+
+
+    /**  code of language **/
+    var code by remember{
+        mutableStateOf(viewmodel.GetCode())
+    }
 
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -86,22 +143,34 @@ fun RegisterScreen(
 
                         Spacer(modifier = Modifier.height(30.dp))
 
-                        BtnLogin(icono = R.drawable.facebo, text = "Registrate con facebook"){
+                        /*
+                        BtnLogin(icono = R.drawable.facebo, text = "${viewmodel.GetSettings().ContinueWith[code]!!} facebook".replaceFirstChar {
+                            if (it.isLowerCase()) it.titlecase(
+                                Locale.getDefault()
+                            ) else it.toString()
+                        }) {
 
                         }
+                        */
 
 
                         Spacer(modifier = Modifier.height(15.dp))
 
-                        BtnLogin(icono = R.drawable.google_2,text = "Registrate con google"){
-
+                        BtnLogin(icono = R.drawable.google_2,text = "${viewmodel.GetSettings().ContinueWith[code]!!} Google".replaceFirstChar {
+                            if (it.isLowerCase()) it.titlecase(
+                                Locale.getDefault()
+                            ) else it.toString()
+                        }){
+                            authResultLauncher.launch(signInRequestCode)
                         }
 
                         Spacer(modifier = Modifier.height(35.dp))
 
                         // Icono
                         Icon(
-                            painter = painterResource(R.drawable.flag_states),
+                            painter = painterResource(
+                                if(viewmodel.GetLearnLenguage() =="English")R.drawable.flag_states else R.drawable.flag_spain
+                            ),
                             contentDescription = "BTN",
                             modifier = Modifier
                                 .size(20.dp)
@@ -115,7 +184,11 @@ fun RegisterScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .align(Alignment.Start),
-                            text = "Username",
+                            text = viewmodel.GetSettings().Username[code]!!.replaceFirstChar {
+                                if (it.isLowerCase()) it.titlecase(
+                                    Locale.getDefault()
+                                ) else it.toString()
+                            },
                             color = MaterialTheme.colors.secondaryVariant,
                             fontWeight = FontWeight.ExtraBold,
                             fontSize = 18.sp
@@ -135,7 +208,11 @@ fun RegisterScreen(
                                 cursorColor = Color.DarkGray
                             ),
                             isError = isErrorUserName,
-                            placeholder = { Text("Username") },
+                            placeholder = { Text(viewmodel.GetSettings().Username[code]!!.replaceFirstChar {
+                                if (it.isLowerCase()) it.titlecase(
+                                    Locale.getDefault()
+                                ) else it.toString()
+                            }) },
                             singleLine = true,
                             textStyle = TextStyle(fontSize = 18.sp, color = MaterialTheme.colors.secondaryVariant)
 
@@ -153,7 +230,11 @@ fun RegisterScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .align(Alignment.Start),
-                            text = "Email",
+                            text = viewmodel.GetSettings().Email[code]!!.replaceFirstChar {
+                                if (it.isLowerCase()) it.titlecase(
+                                    Locale.getDefault()
+                                ) else it.toString()
+                            },
                             color = MaterialTheme.colors.secondaryVariant,
                             fontWeight = FontWeight.ExtraBold,
                             fontSize = 18.sp
@@ -174,7 +255,11 @@ fun RegisterScreen(
                                 cursorColor = Color.DarkGray
                             ),
                             isError = isErrorEmail,
-                            placeholder = { Text("Email") },
+                            placeholder = { Text(viewmodel.GetSettings().Email[code]!!.replaceFirstChar {
+                                if (it.isLowerCase()) it.titlecase(
+                                    Locale.getDefault()
+                                ) else it.toString()
+                            }) },
                             singleLine = true,
                             textStyle = TextStyle(fontSize = 18.sp, color = MaterialTheme.colors.secondaryVariant)
 
@@ -188,7 +273,11 @@ fun RegisterScreen(
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .align(Alignment.Start), text = "Contraseña (minimo 6 caracteres)",
+                                .align(Alignment.Start), text = viewmodel.GetSettings().PasswordMinimumCharacters[code]!!.replaceFirstChar {
+                                if (it.isLowerCase()) it.titlecase(
+                                    Locale.getDefault()
+                                ) else it.toString()
+                            },
                             fontWeight = FontWeight.ExtraBold,
                             color = MaterialTheme.colors.secondaryVariant,
                             fontSize = 18.sp
@@ -206,7 +295,11 @@ fun RegisterScreen(
                                 unfocusedBorderColor = Color.LightGray,
                                 cursorColor = Color.DarkGray
                             ),
-                            placeholder = { Text("Contraseña") },
+                            placeholder = { Text(viewmodel.GetSettings().Password[code]!!.replaceFirstChar {
+                                if (it.isLowerCase()) it.titlecase(
+                                    Locale.getDefault()
+                                ) else it.toString()
+                            }) },
                             visualTransformation = if (visibility_1) VisualTransformation.None else PasswordVisualTransformation(),
                             isError = isErrorPassword,
                             trailingIcon = {
@@ -240,7 +333,11 @@ fun RegisterScreen(
                         outlineColor = MaterialTheme.colors.secondaryVariant,
                         IsIcon = false,
                         color = MaterialTheme.colors.onPrimary,
-                        title = "Continuar",
+                        title = viewmodel.GetSettings().ContinueBtn[code]!!.replaceFirstChar {
+                            if (it.isLowerCase()) it.titlecase(
+                                Locale.getDefault()
+                            ) else it.toString()
+                        },
                         fontSize = 15.sp,
                         Outline = true,
                         FontColor = MaterialTheme.colors.secondaryVariant,

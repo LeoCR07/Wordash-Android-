@@ -9,6 +9,7 @@ import android.media.PlaybackParams
 import android.os.Build
 import android.widget.Toast
 import androidx.compose.runtime.*
+import androidx.compose.ui.text.capitalize
 import androidx.lifecycle.*
 import com.example.betadiccompose.Domain.*
 import com.example.betadiccompose.Domain.Ads.AdMobInterstital
@@ -71,6 +72,9 @@ class VocabularyViewModel @Inject constructor (
     val hasUser: Boolean
         get() = auth.hasUser()
 
+    /**  code of language **/
+    var code by mutableStateOf(GetCode())
+
 
     var loginUiState by mutableStateOf(LoginUiState())
         private set
@@ -132,6 +136,8 @@ class VocabularyViewModel @Inject constructor (
                 CreateLocalUser ={
                     CoroutineScope(Dispatchers.IO).launch {
                         UpdateUserData(it)
+
+
                     }
                 },
                 email = loginUiState.userLoginEmail.trim().trimStart(),
@@ -157,7 +163,11 @@ class VocabularyViewModel @Inject constructor (
             e.printStackTrace()
 
             if("email and password can not be empty" == e.message){
-                Toast.makeText(context, "${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "${GetSettings().PleaseFillAllSpaces[code]!!.replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(
+                        Locale.getDefault()
+                    ) else it.toString()
+                }}", Toast.LENGTH_LONG).show()
             }
 
 
@@ -167,7 +177,11 @@ class VocabularyViewModel @Inject constructor (
                 loginUiState = loginUiState.copy(loginErrorEmail = null)
                 loginUiState = loginUiState.copy(loginErrorPassword = null)
 
-                loginUiState.errorUserNameLogin = e.message!!
+                loginUiState.errorUserNameLogin = GetSettings().MinimumBetweenToCharacters[code]!!.replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(
+                        Locale.getDefault()
+                    ) else it.toString()
+                }
             }
 
             if("The email address is already in use by another account." == e.message){
@@ -176,7 +190,11 @@ class VocabularyViewModel @Inject constructor (
                 loginUiState = loginUiState.copy(loginErrorEmail = e.localizedMessage)
                 loginUiState = loginUiState.copy(loginErrorPassword = null)
 
-                loginUiState.errorEmailLogin = e.message!!
+                loginUiState.errorEmailLogin = GetSettings().ThisEmailAlreadyExistsAssociatedWithAnAccount[code]!!.replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(
+                        Locale.getDefault()
+                    ) else it.toString()
+                }
 
             }
 
@@ -187,7 +205,11 @@ class VocabularyViewModel @Inject constructor (
                 loginUiState = loginUiState.copy(loginErrorEmail = null)
                 loginUiState = loginUiState.copy(loginErrorPassword = "La contraseña debe tener al menos 8 caracteres.")
 
-                loginUiState.errorPasswordlLogin = e.message!!
+                loginUiState.errorPasswordlLogin = GetSettings().PasswordMinimumCharacters[code]!!.replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(
+                        Locale.getDefault()
+                    ) else it.toString()
+                }
             }
 
             if("The email address is badly formatted." == e.message){
@@ -196,7 +218,11 @@ class VocabularyViewModel @Inject constructor (
                 loginUiState = loginUiState.copy(loginErrorEmail = e.localizedMessage)
                 loginUiState = loginUiState.copy(loginErrorPassword = null)
 
-                loginUiState.errorEmailLogin = e.message!!
+                loginUiState.errorEmailLogin = GetSettings().EmailIsInTheWrongFormat[code]!!.replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(
+                        Locale.getDefault()
+                    ) else it.toString()
+                }
 
             }
 
@@ -218,6 +244,7 @@ class VocabularyViewModel @Inject constructor (
 
        // var user = DataUser()
         //UpdateUserData(user)
+        user.UpdateLevelUser(1)
         prefs.setIsLogin(true)
         OnNavToHome.invoke()
     }
@@ -234,6 +261,7 @@ class VocabularyViewModel @Inject constructor (
                 CreateLocalUser = { user ->
                     CoroutineScope(Dispatchers.IO).launch {
                         UpdateUserData(user)
+                        //getCurrentLanguage(GetLearnLenguage())
                     }
                 },
                 email = loginUiState.userEmailSignUp.trim().trimStart(),
@@ -258,7 +286,11 @@ class VocabularyViewModel @Inject constructor (
             e.printStackTrace()
 
             if("email and password can not be empty" == e.message){
-                Toast.makeText(context, "${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "${GetSettings().PleaseFillAllSpaces[code]!!.replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(
+                        Locale.getDefault()
+                    ) else it.toString()
+                }}", Toast.LENGTH_LONG).show()
             }
 
 
@@ -267,21 +299,36 @@ class VocabularyViewModel @Inject constructor (
                 loginUiState = loginUiState.copy(signUpErrorEmail = e.localizedMessage)
                 loginUiState = loginUiState.copy(signUpErrorPassword = null)
 
-                loginUiState.errorEmail = e.message!!
+                loginUiState.errorEmail = GetSettings().EmailIsInTheWrongFormat[code]!!.replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(
+                        Locale.getDefault()
+                    ) else it.toString()
+                }
 
             }
 
             if("There is no user record corresponding to this identifier. The user may have been deleted."== e.message){
+
                 loginUiState = loginUiState.copy(signUpErrorEmail = e.localizedMessage)
                 loginUiState = loginUiState.copy(signUpErrorPassword = null)
-                loginUiState.errorEmail = "No existe cuenta asociada a este correo"
+                loginUiState.errorEmail = GetSettings().ThisEmailDoesNotExistAssociatedWithAnAccount[code]!!.replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(
+                        Locale.getDefault()
+                    ) else it.toString()
+                }
+
+
             }
 
             if("The password is invalid or the user does not have a password."==e.message){
                 loginUiState = loginUiState.copy(signUpErrorPassword = e.localizedMessage)
                 loginUiState = loginUiState.copy(signUpErrorEmail = null)
 
-                loginUiState.errorPassword = "La contrasena es incorrecta"
+                loginUiState.errorPassword = GetSettings().PasswordIsWrong[code]!!.replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(
+                        Locale.getDefault()
+                    ) else it.toString()
+                }
             }
 
 
@@ -310,6 +357,7 @@ class VocabularyViewModel @Inject constructor (
                     CreateLocalUser = { user ->
                         CoroutineScope(Dispatchers.IO).launch {
                             UpdateUserData(user)
+                           // getCurrentLanguage(GetLearnLenguage())
                         }
                     },
                     credential){
@@ -724,6 +772,7 @@ class VocabularyViewModel @Inject constructor (
 
         fun SoundFromLocal(sound:Int){
             var mediaPlayer = MediaPlayer.create(context,sound)
+
             mediaPlayer.setOnPreparedListener(OnPreparedListener { mp ->
                 //works only from api 23
                 var myPlayBackParams: PlaybackParams? = null
@@ -1001,8 +1050,11 @@ class VocabularyViewModel @Inject constructor (
             }
 
             getDataUser()
-            var user = lstdatauser.value
-            auth.SetDataUserFireStore(lstdatauser.value.exp,english,spanish,totalCrowns)
+
+            if(hasUser){
+                auth.SetDataUserFireStore(lstdatauser.value.exp,english,spanish,totalCrowns)
+            }
+
 
         }
 

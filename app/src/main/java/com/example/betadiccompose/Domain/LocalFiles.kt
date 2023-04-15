@@ -62,7 +62,21 @@ class LocalFiles @Inject constructor(){
     val YouNeedToPracticeMore: Map<String, String>,
     val GoToStudy: Map<String, String>,
     val IForGotMyPassword: Map<String, String>,
-    )
+
+        val YouDoNotHaveAnAccount: Map<String, String>,
+        val CreateAccount: Map<String, String>,
+        val Username: Map<String, String>,
+        val PleaseFillAllSpaces: Map<String, String>,
+        val EmailIsInTheWrongFormat: Map<String, String>,
+        val MinimumBetweenToCharacters: Map<String, String>,
+        val ThisEmailAlreadyExistsAssociatedWithAnAccount: Map<String, String>,
+        val ThisEmailDoesNotExistAssociatedWithAnAccount: Map<String, String>,
+        val PasswordIsWrong: Map<String, String>,
+        val Or: Map<String, String>,
+        val IWantToLearn: Map<String, String>,
+        val MyLanguage: Map<String, String>,
+
+)
 
      fun readLocalLanguege(context: Context): List<MyCodes> {
 

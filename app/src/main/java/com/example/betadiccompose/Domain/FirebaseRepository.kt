@@ -186,7 +186,7 @@ class FirebaseRepository @Inject constructor(
                         English = english,
                         Spanish = spanish,
                         crowns = (document.get("crowns") as Long).toInt(),
-                        level = if(preference.GetLearnLanguage() == "English") english  else english
+                        level = if(preference.GetLearnLanguage() == "English") english  else spanish
                         )
 
                     CreateLocalUser(user)

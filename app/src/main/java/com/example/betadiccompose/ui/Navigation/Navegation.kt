@@ -55,9 +55,13 @@ fun Navegation(
     VocaVM.getMyFavoriteWords()
 
 
-    context.setTheme(R.style.Theme_BetaDicCompose)
+   // context.setTheme(R.style.Theme_BetaDicCompose)
+
     LaunchedEffect(key1 = true ){
+
+
         delay(500)
+
 
         val calendar = Calendar.getInstance()
         val hora = calendar.get(Calendar.HOUR_OF_DAY)
@@ -74,6 +78,8 @@ fun Navegation(
             }
         }
 
+
+
     }
 
 
@@ -85,6 +91,12 @@ fun Navegation(
        // startDestination = MenuRoutes.play.name
     ) {
 
+
+        composable(LoginRoutes.first.name){
+            SelectLanguage(viewmodel = VocaVM, NavToLogin = {
+                navController.navigate(LoginRoutes.home.name)
+            })
+        }
 
         composable(LoginRoutes.home.name){
             LoginScreen(
@@ -111,9 +123,6 @@ fun Navegation(
             })
         }
 
-        composable("SelectLanguage"){
-            SelectLanguage(VocaVM)
-        }
 
         composable(LoginRoutes.login.name){
 

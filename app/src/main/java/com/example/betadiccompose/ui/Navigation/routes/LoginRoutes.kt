@@ -4,5 +4,6 @@ enum class LoginRoutes {
     SingUp,
     home,
     login,
-    oldlogin
+    oldlogin,
+    first
 }

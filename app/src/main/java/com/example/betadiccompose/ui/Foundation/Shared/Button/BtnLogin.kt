@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.betadiccompose.R
@@ -54,7 +55,10 @@ fun BtnLogin(
                 .width(10.dp)
                 .weight(0.1f))
 
-            Text(text = text,modifier = Modifier.weight(6f))
+            Text(
+                text = text,
+                modifier = Modifier.weight(6f),
+            textAlign = TextAlign.Start)
 
         }
 

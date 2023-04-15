@@ -15,21 +15,18 @@ class AdMobInterstital @Inject constructor(private val context: android.content.
    // var context = mainActivity.applicationContext
 
     fun LoadAd(){
-        val adUnitId = "ca-app-pub-3940256099942544/1033173712"
+        val adUnitId = "ca-app-pub-7052510061101888/3992356290"
         var adRequest = AdRequest.Builder().build()
 
         InterstitialAd.load(context,adUnitId,adRequest, object : InterstitialAdLoadCallback() {
             override fun onAdFailedToLoad(adError: LoadAdError) {
                 mInterstitialAd = null
                 println("the interstial is failed")
-                Toast.makeText(context,"the interstial is failed",Toast.LENGTH_LONG).show()
             }
 
             override fun onAdLoaded(interstitialAd: InterstitialAd) {
                 mInterstitialAd = interstitialAd
                 println("Ad was loaded")
-                Toast.makeText(context,"Ad was loaded",Toast.LENGTH_LONG).show()
-
             }
         })
     }
@@ -47,7 +44,6 @@ class AdMobInterstital @Inject constructor(private val context: android.content.
                 override fun onAdDismissedFullScreenContent() {
                     // Called when ad is dismissed.
                     println("Ad dismissed fullscreen content.")
-                    Toast.makeText(context,"Ad dismissed fullscreen content.",Toast.LENGTH_SHORT).show()
                     mInterstitialAd = null
                     LoadAd()
                 }
@@ -55,14 +51,12 @@ class AdMobInterstital @Inject constructor(private val context: android.content.
                 override fun onAdFailedToShowFullScreenContent(p0: AdError) {
                     // Called when ad fails to show.
                     println("Ad failed to show fullscreen content.")
-                    Toast.makeText(context,"Ad failed to show fullscreen content.",Toast.LENGTH_SHORT).show()
                     mInterstitialAd = null
                 }
 
                 override fun onAdImpression() {
                     // Called when an impression is recorded for an ad.
                     println("Ad recorded an impression.")
-                    Toast.makeText(context,"Ad recorded an impression.",Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onAdShowedFullScreenContent() {
@@ -74,7 +68,7 @@ class AdMobInterstital @Inject constructor(private val context: android.content.
             mInterstitialAd?.show(activity)
         } else {
             LoadAd()
-            Toast.makeText(context,"The interstitial ad wasn't ready yet.",Toast.LENGTH_SHORT).show()
+
             println("The interstitial ad wasn't ready yet.")
         }
     }
