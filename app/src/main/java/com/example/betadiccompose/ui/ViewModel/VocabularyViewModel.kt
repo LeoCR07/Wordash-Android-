@@ -1243,6 +1243,7 @@ class VocabularyViewModel @Inject constructor (
         }
 
 
+
         /** Cambio de idioma **/
 
         suspend fun getCurrentLanguage(language:String){
@@ -1306,6 +1307,13 @@ class VocabularyViewModel @Inject constructor (
     }
 
 
+    /**  Review **/
+
+    fun GetReview() = prefs.getReview()
+
+    fun SetReview(){
+        prefs.setReview()
+    }
 
 }
 

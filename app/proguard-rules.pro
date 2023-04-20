@@ -1,6 +1,18 @@
 # Add project specific ProGuard rules here.
 # You can control the set of applied configuration files using the
 # proguardFiles setting in build.gradle.
+
+# Habilitar ofuscación y reducción de código
+-optimizationpasses 5
+-dontusemixedcaseclassnames
+-dontskipnonpubliclibraryclasses
+-dontpreverify
+
+# Mantener todas las clases en el paquete "com.example.miaplicacion"
+-keep class com.example.miaplicacion.** { *; }
+
+
+
 #
 # For more details, see
 #   http://developer.android.com/guide/developing/tools/proguard.html

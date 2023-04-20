@@ -1,5 +1,6 @@
 package com.example.betadiccompose.ui.Foundation.ScreenNiveles
 
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 
@@ -28,6 +29,7 @@ import com.example.betadiccompose.ui.Foundation.Vocabulary.GamesScreen.ReviewScr
 import com.example.betadiccompose.ui.Foundation.Vocabulary.GamesScreen.SpeakToTalk
 import com.example.betadiccompose.ui.Foundation.Vocabulary.GamesScreen.WrongWritten
 import com.example.betadiccompose.ui.ViewModel.VocabularyViewModel
+import com.google.android.play.core.review.ReviewManagerFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -55,6 +57,8 @@ fun MakeNivel(viewModel: VocabularyViewModel, onBack: () -> Unit, NavToStudy: ()
     var code by remember {
         mutableStateOf(viewModel.GetCode())
     }
+
+    val reviewManager = ReviewManagerFactory.create(context)
 
     MyGame(viewModel = viewModel,content = {
 
@@ -180,27 +184,52 @@ fun MakeNivel(viewModel: VocabularyViewModel, onBack: () -> Unit, NavToStudy: ()
                                 index = viewModel.step
                             )
 
-                            4, 10, 15 -> Sonido(
-                                lista = lst.value,
-                                viewModel = viewModel,
-                                onMediaClick = { item,id,m1,m2,m3,m4,m5,m6 ->
+                            4, 10, 15 -> {
+
+                                if (!viewModel.GetReview()) {
 
 
-                                    if (id == item) {
-                                        m1.release()
-                                        m2.release()
-                                        m3.release()
-                                        m4.release()
-                                        m5.release()
-                                        m6.release()
-                                        viewModel.SoundFromLocal(R.raw.rigth)
-                                        viewModel.step++
-                                    } else {
-                                        viewModel.step = 0
-                                    }
-                                },
+                                    reviewManager.requestReviewFlow()
+                                        .addOnCompleteListener { reviewInfo ->
+                                            if (reviewInfo.isSuccessful) {
+                                                val reviewFlow = reviewManager.launchReviewFlow(
+                                                    context as Activity,
+                                                    reviewInfo.result
+                                                )
+                                                reviewFlow.addOnCompleteListener { _ ->
+                                                    viewModel.SetReview()
+                                                    // La reseña ha sido enviada o el usuario ha cancelado
+                                                }
+                                            } else {
+                                                println(" Error al solicitar la reseña")
+                                            }
+                                        }
 
-                                )
+                                }
+
+                                Sonido(
+                                    lista = lst.value,
+                                    viewModel = viewModel,
+                                    onMediaClick = { item,id,m1,m2,m3,m4,m5,m6 ->
+
+
+                                        if (id == item) {
+                                            m1.release()
+                                            m2.release()
+                                            m3.release()
+                                            m4.release()
+                                            m5.release()
+                                            m6.release()
+                                            viewModel.SoundFromLocal(R.raw.rigth)
+                                            viewModel.step++
+                                        } else {
+                                            viewModel.step = 0
+                                        }
+                                    },
+
+                                    )
+
+                            }
                             2, 14, 18 -> WrongWritten(
                                 lista = lst.value,
                                 viewModel = viewModel,
@@ -304,4 +333,5 @@ fun MakeNivel(viewModel: VocabularyViewModel, onBack: () -> Unit, NavToStudy: ()
 
     })
 }
+
 

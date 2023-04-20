@@ -13,6 +13,7 @@ class Prefs @Inject constructor(
     val file = files
     val contexto = context
 
+    private val KeyReview = "KeyReview"
     private val db = "datos"  //Base de datos
     private val KeySubCats = "KeySubCats"
     private val KeyNameSubCat = "KeySubCatsName"
@@ -192,6 +193,10 @@ class Prefs @Inject constructor(
         storage.edit().putBoolean(KeyIsLogin,value).apply()
     }
 
+    fun getReview() = storage.getBoolean(KeyReview,false)
 
+    fun setReview(){
+        storage.edit().putBoolean(KeyReview,true).apply()
+    }
 
 }
