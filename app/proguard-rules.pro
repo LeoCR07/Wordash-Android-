@@ -2,15 +2,17 @@
 # You can control the set of applied configuration files using the
 # proguardFiles setting in build.gradle.
 
-# Habilitar ofuscación y reducción de código
--optimizationpasses 5
--dontusemixedcaseclassnames
--dontskipnonpubliclibraryclasses
--dontpreverify
+# Agregar reglas para la biblioteca BouncyCastle
+-keep class org.bouncycastle.** { *; }
+-dontwarn org.bouncycastle.**
 
-# Mantener todas las clases en el paquete "com.example.miaplicacion"
--keep class com.example.miaplicacion.** { *; }
+# Agregar reglas para la biblioteca Conscrypt
+-keep class org.conscrypt.** { *; }
+-dontwarn org.conscrypt.**
 
+# Agregar reglas para la biblioteca OpenJSSE
+-keep class org.openjsse.** { *; }
+-dontwarn org.openjsse.**
 
 
 #

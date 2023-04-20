@@ -20,7 +20,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/dicvocabulary_3_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.splash"
+        android:theme="@style/Theme.BetaDicCompose"
         tools:targetApi="31">
         <activity
             android:name=".MainActivity"
